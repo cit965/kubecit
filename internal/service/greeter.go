@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 
 	v1 "kubecit/api/helloworld/v1"
 	"kubecit/internal/biz"
@@ -26,4 +27,10 @@ func (s *GreeterService) SayHello(ctx context.Context, in *v1.HelloRequest) (*v1
 		return nil, err
 	}
 	return &v1.HelloReply{Message: "Hello cit" + g.Hello}, nil
+}
+
+// UserRegister register a user with username and password
+func (s *GreeterService) UserRegister(ctx context.Context, in *v1.UserRegisterRequest) (*v1.UserRegisterResponse, error) {
+	fmt.Println(in.Username, in.Password)
+	return &v1.UserRegisterResponse{Result: "success"}, nil
 }

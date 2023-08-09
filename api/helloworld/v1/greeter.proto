@@ -17,7 +17,25 @@ service Greeter {
       get: "/helloworld/{name}"
     };
   }
+
+  // Register a user
+  rpc UserRegister (UserRegisterRequest) returns (UserRegisterResponse) {
+    option (google.api.http) = {
+      post: "/user/register"
+      body: "*"
+    };
+  }
 }
+
+message UserRegisterRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message UserRegisterResponse {
+  string result = 1;
+}
+
 
 // The request message containing the user's name.
 message HelloRequest {
