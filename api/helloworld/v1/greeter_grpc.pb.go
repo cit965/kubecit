@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion7
 const (
 	Greeter_SayHello_FullMethodName     = "/helloworld.v1.Greeter/SayHello"
 	Greeter_UserRegister_FullMethodName = "/helloworld.v1.Greeter/UserRegister"
+	Greeter_UserList_FullMethodName     = "/helloworld.v1.Greeter/UserList"
 )
 
 // GreeterClient is the client API for Greeter service.
@@ -31,6 +32,7 @@ type GreeterClient interface {
 	SayHello(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*HelloReply, error)
 	// Register a user
 	UserRegister(ctx context.Context, in *UserRegisterRequest, opts ...grpc.CallOption) (*UserRegisterResponse, error)
+	UserList(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*UserListResponse, error)
 }
 
 type greeterClient struct {
@@ -59,6 +61,15 @@ func (c *greeterClient) UserRegister(ctx context.Context, in *UserRegisterReques
 	return out, nil
 }
 
+func (c *greeterClient) UserList(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*UserListResponse, error) {
+	out := new(UserListResponse)
+	err := c.cc.Invoke(ctx, Greeter_UserList_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // GreeterServer is the server API for Greeter service.
 // All implementations must embed UnimplementedGreeterServer
 // for forward compatibility
@@ -67,6 +78,7 @@ type GreeterServer interface {
 	SayHello(context.Context, *HelloRequest) (*HelloReply, error)
 	// Register a user
 	UserRegister(context.Context, *UserRegisterRequest) (*UserRegisterResponse, error)
+	UserList(context.Context, *Empty) (*UserListResponse, error)
 	mustEmbedUnimplementedGreeterServer()
 }
 
@@ -79,6 +91,9 @@ func (UnimplementedGreeterServer) SayHello(context.Context, *HelloRequest) (*Hel
 }
 func (UnimplementedGreeterServer) UserRegister(context.Context, *UserRegisterRequest) (*UserRegisterResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UserRegister not implemented")
+}
+func (UnimplementedGreeterServer) UserList(context.Context, *Empty) (*UserListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UserList not implemented")
 }
 func (UnimplementedGreeterServer) mustEmbedUnimplementedGreeterServer() {}
 
@@ -129,6 +144,24 @@ func _Greeter_UserRegister_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Greeter_UserList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GreeterServer).UserList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Greeter_UserList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GreeterServer).UserList(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Greeter_ServiceDesc is the grpc.ServiceDesc for Greeter service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -143,6 +176,10 @@ var Greeter_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UserRegister",
 			Handler:    _Greeter_UserRegister_Handler,
+		},
+		{
+			MethodName: "UserList",
+			Handler:    _Greeter_UserList_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

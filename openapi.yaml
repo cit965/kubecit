@@ -26,6 +26,18 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/helloworld.v1.HelloReply'
+    /user:
+        get:
+            tags:
+                - Greeter
+            operationId: Greeter_UserList
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/helloworld.v1.UserListResponse'
     /user/register:
         post:
             tags:
@@ -53,6 +65,20 @@ components:
                 message:
                     type: string
             description: The response message containing the greetings
+        helloworld.v1.User:
+            type: object
+            properties:
+                username:
+                    type: string
+                password:
+                    type: string
+        helloworld.v1.UserListResponse:
+            type: object
+            properties:
+                users:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/helloworld.v1.User'
         helloworld.v1.UserRegisterRequest:
             type: object
             properties:
