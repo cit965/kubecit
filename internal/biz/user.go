@@ -8,6 +8,7 @@ import (
 type User struct {
 	Username string
 	Password string
+	Age      int
 }
 
 // UserRepo is a Greater repo.
@@ -26,6 +27,10 @@ func NewUserUsecase(repo UserRepo, logger log.Logger) *UserUsecase {
 	return &UserUsecase{repo: repo, log: log.NewHelper(logger)}
 }
 
-func (u *UserUsecase) RegisterUser(ctx context.Context) {
-	u.repo.Register(ctx, nil)
+func (u *UserUsecase) RegisterUser(ctx context.Context, user *User) (*User, error) {
+	userResult, err := u.repo.Register(ctx, user)
+	if err != nil {
+		return nil, err
+	}
+	return userResult, nil
 }
