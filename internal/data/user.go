@@ -31,3 +31,20 @@ func (u *userRepo) Register(ctx context.Context, user *biz.User) (*biz.User, err
 		Age:      userEnt.Age,
 	}, nil
 }
+
+func (u *userRepo) List(ctx context.Context) ([]*biz.User, error) {
+	users, err := u.data.db.User.Query().All(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	var userResults []*biz.User
+	for _, user := range users {
+		userResults = append(userResults, &biz.User{
+			Username: user.Name,
+			Password: user.Password,
+			Age:      user.Age,
+		})
+	}
+	return userResults, nil
+}

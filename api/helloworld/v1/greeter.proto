@@ -25,6 +25,26 @@ service Greeter {
       body: "*"
     };
   }
+
+  rpc UserList (Empty) returns (UserListResponse) {
+    option (google.api.http) = {
+      get: "/user"
+    };
+  }
+}
+
+
+message Empty {
+
+}
+
+message User {
+  string username = 1;
+  string password = 2;
+}
+
+message UserListResponse{
+  repeated User users = 1;
 }
 
 message UserRegisterRequest {

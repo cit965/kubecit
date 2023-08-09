@@ -42,3 +42,19 @@ func (s *GreeterService) UserRegister(ctx context.Context, in *v1.UserRegisterRe
 	}
 	return &v1.UserRegisterResponse{Result: "success"}, nil
 }
+
+func (s *GreeterService) UserList(ctx context.Context, in *v1.Empty) (*v1.UserListResponse, error) {
+	users, err := s.userCase.UserList(ctx)
+	if err != nil {
+		return nil, err
+	}
+	userRes := []*v1.User{}
+
+	for _, v := range users {
+		userRes = append(userRes, &v1.User{
+			Username: v.Username,
+			Password: v.Password,
+		})
+	}
+	return &v1.UserListResponse{Users: userRes}, nil
+}
