@@ -1,6 +1,8 @@
 package server
 
 import (
+	"fmt"
+	"github.com/go-kratos/swagger-api/openapiv2"
 	v1 "kubecit/api/helloworld/v1"
 	"kubecit/internal/conf"
 	"kubecit/internal/service"
@@ -27,6 +29,13 @@ func NewHTTPServer(c *conf.Server, greeter *service.GreeterService, logger log.L
 		opts = append(opts, http.Timeout(c.Http.Timeout.AsDuration()))
 	}
 	srv := http.NewServer(opts...)
+	openAPIhandler := openapiv2.NewHandler()
+	srv.HandlePrefix("/q/", openAPIhandler)
 	v1.RegisterGreeterHTTPServer(srv, greeter)
+
+	srv.WalkRoute(func(info http.RouteInfo) error {
+		fmt.Printf("%-50s \t %s\n", info.Path, info.Method)
+		return nil
+	})
 	return srv
 }
