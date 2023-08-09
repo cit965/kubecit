@@ -12,12 +12,13 @@ import (
 type GreeterService struct {
 	v1.UnimplementedGreeterServer
 
-	uc *biz.GreeterUsecase
+	uc       *biz.GreeterUsecase
+	userCase *biz.UserUsecase
 }
 
 // NewGreeterService new a greeter service.
-func NewGreeterService(uc *biz.GreeterUsecase) *GreeterService {
-	return &GreeterService{uc: uc}
+func NewGreeterService(uc *biz.GreeterUsecase, userCase *biz.UserUsecase) *GreeterService {
+	return &GreeterService{uc: uc, userCase: userCase}
 }
 
 // SayHello implements helloworld.GreeterServer.
@@ -32,5 +33,6 @@ func (s *GreeterService) SayHello(ctx context.Context, in *v1.HelloRequest) (*v1
 // UserRegister register a user with username and password
 func (s *GreeterService) UserRegister(ctx context.Context, in *v1.UserRegisterRequest) (*v1.UserRegisterResponse, error) {
 	fmt.Println(in.Username, in.Password)
+	s.userCase.RegisterUser(ctx)
 	return &v1.UserRegisterResponse{Result: "success"}, nil
 }
