@@ -33,6 +33,12 @@ func (s *GreeterService) SayHello(ctx context.Context, in *v1.HelloRequest) (*v1
 // UserRegister register a user with username and password
 func (s *GreeterService) UserRegister(ctx context.Context, in *v1.UserRegisterRequest) (*v1.UserRegisterResponse, error) {
 	fmt.Println(in.Username, in.Password)
-	s.userCase.RegisterUser(ctx)
+	_, err := s.userCase.RegisterUser(ctx, &biz.User{
+		Username: in.Username,
+		Password: in.Password,
+	})
+	if err != nil {
+		return nil, err
+	}
 	return &v1.UserRegisterResponse{Result: "success"}, nil
 }

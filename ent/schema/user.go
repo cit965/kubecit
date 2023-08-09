@@ -17,6 +17,7 @@ func (User) Fields() []ent.Field {
 			Positive(),
 		field.String("name").
 			Default("unknown"),
+		field.String("password").Default("123456"),
 	}
 }
 
