@@ -13,7 +13,7 @@
 | IPV4AddressPrivate | []string  | 172.10.11.82                            |
 | IPV6AddressPublic  | []string  | 2001:0db8:86a3:08d3:1319:8a2e:0370:7344 |
 | IPV4AddressPublic  | []string  | 123.207.11.190                          |
-| Memory             | int       | 32768(MB)                               |
+| Memory             | int       | 32768                                   |
 | CPU                | int       | 8                                       |
 | CreatedTime        | time.Time | 2020-09-22T00:00:00+00:00               |
 | ExpiredTime        | time.Time | 2020-09-22T00:00:00+00:00               |
