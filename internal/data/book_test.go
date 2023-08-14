@@ -47,8 +47,6 @@ var _ = Describe("Book", func() {
 		}); err != nil {
 			log.Fatalf("Could not connect to database: %s", err)
 		}
-
-		fmt.Println("xxx")
 		c := &conf.Data{
 			Database: &conf.Data_Database{
 				Driver: "mysql",

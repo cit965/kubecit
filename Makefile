@@ -54,6 +54,11 @@ run: build
 	kratos run
 
 
+.PHONY: test
+test:
+	go test -v ./...
+
+
 .PHONY: generate
 # generate
 generate:
