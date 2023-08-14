@@ -1,6 +1,6 @@
 name: Go package
 
-on: [pull]
+on: [push]
 
 jobs:
   build:
