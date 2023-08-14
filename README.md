@@ -13,4 +13,4 @@ CIT社区多元管理平台
 
 在根目录执行 `make init` 安装 wire proto 等依赖
 
-在根目录执行``make run` 启动服务
+在根目录执行 `make run` 启动服务
