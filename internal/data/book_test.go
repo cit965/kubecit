@@ -12,6 +12,7 @@ import (
 	"kubecit/internal/conf"
 	"kubecit/internal/data"
 	"log"
+	"os"
 )
 
 var db *sql.DB
@@ -20,8 +21,8 @@ var cleaner func()
 var _ = Describe("Book", func() {
 	var ro biz.UserRepo
 	BeforeEach(func() {
-		// uses a sensible default on windows (tcp/http) and linux/osx (socket)
-		pool, err := dockertest.NewPool("unix:///Users/z/.docker/run/docker.sock")
+		dockerEndpoint := os.Getenv("DOCKER_HOST")
+		pool, err := dockertest.NewPool(dockerEndpoint)
 		if err != nil {
 			log.Fatalf("Could not construct pool: %s", err)
 		}
