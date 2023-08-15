@@ -20,3 +20,27 @@
 ```shell
 export DOCKER_HOST=unix:///Users/z/.docker/run/docker.sock & make test
 ```
+
+## 生成表
+
+1. 想要添加一张 clusters 表，可以执行如下命令：
+
+```shell
+go run -mod=mod entgo.io/ent/cmd/ent new Cluster
+```
+
+2. 在 scheme/cluster.go 文件中添加表字段如下：
+```go
+// Fields of the Cluster.
+func (Cluster) Fields() []ent.Field {
+	return []ent.Field{
+		field.String("kubeconfig").
+			Default("unknown"),
+	}
+}
+```
+3. 执行如下命令，生成 CRUD 代码
+
+```shell
+ go generate ./ent
+```
