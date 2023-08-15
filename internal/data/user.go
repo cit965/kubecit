@@ -20,7 +20,7 @@ func NewUserRepo(data *Data, logger log.Logger) biz.UserRepo {
 	}
 }
 
-func (u *userRepo) Register(ctx context.Context, user *biz.User) (*biz.User, error) {
+func (u *userRepo) Create(ctx context.Context, user *biz.User) (*biz.User, error) {
 	userEnt, err := u.data.db.User.Create().SetName(user.Username).SetAge(1).SetPassword(user.Password).Save(ctx)
 	if err != nil {
 		fmt.Println(err)

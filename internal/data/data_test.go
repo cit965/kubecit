@@ -18,7 +18,7 @@ import (
 var db *sql.DB
 var cleaner func()
 
-var _ = Describe("Book", func() {
+var _ = Describe("Data", func() {
 	var ro biz.UserRepo
 	BeforeEach(func() {
 		dockerEndpoint := os.Getenv("DOCKER_HOST")
