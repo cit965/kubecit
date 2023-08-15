@@ -52,7 +52,7 @@ func (Cluster) Fields() []ent.Field {
 ```go
 //go:generate mockgen -destination=../mocks/mrepo/user.go -package=mrepo . UserRepo
 ```
-2. 执行以下命令，你会看见 internal/mocks 目录生成
+2. 在 biz 目录下执行以下命令，internal/mocks 目录下生成 mock 代码
 
 ```go
 mockgen -destination=../mocks/mrepo/user.go -package=mrepo . UserRepo

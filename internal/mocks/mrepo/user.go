@@ -35,6 +35,21 @@ func (m *MockUserRepo) EXPECT() *MockUserRepoMockRecorder {
 	return m.recorder
 }
 
+// Create mocks base method.
+func (m *MockUserRepo) Create(arg0 context.Context, arg1 *biz.User) (*biz.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Create", arg0, arg1)
+	ret0, _ := ret[0].(*biz.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Create indicates an expected call of Create.
+func (mr *MockUserRepoMockRecorder) Create(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockUserRepo)(nil).Create), arg0, arg1)
+}
+
 // List mocks base method.
 func (m *MockUserRepo) List(arg0 context.Context) ([]*biz.User, error) {
 	m.ctrl.T.Helper()
@@ -48,19 +63,4 @@ func (m *MockUserRepo) List(arg0 context.Context) ([]*biz.User, error) {
 func (mr *MockUserRepoMockRecorder) List(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockUserRepo)(nil).List), arg0)
-}
-
-// Register mocks base method.
-func (m *MockUserRepo) Register(arg0 context.Context, arg1 *biz.User) (*biz.User, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Register", arg0, arg1)
-	ret0, _ := ret[0].(*biz.User)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// Register indicates an expected call of Register.
-func (mr *MockUserRepoMockRecorder) Register(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Register", reflect.TypeOf((*MockUserRepo)(nil).Register), arg0, arg1)
 }
