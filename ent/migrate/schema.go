@@ -8,6 +8,17 @@ import (
 )
 
 var (
+	// ClustersColumns holds the columns for the "clusters" table.
+	ClustersColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "kubeconfig", Type: field.TypeString, Default: "unknown"},
+	}
+	// ClustersTable holds the schema information for the "clusters" table.
+	ClustersTable = &schema.Table{
+		Name:       "clusters",
+		Columns:    ClustersColumns,
+		PrimaryKey: []*schema.Column{ClustersColumns[0]},
+	}
 	// UsersColumns holds the columns for the "users" table.
 	UsersColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -23,6 +34,7 @@ var (
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
+		ClustersTable,
 		UsersTable,
 	}
 )

@@ -28,5 +28,4 @@ var _ = Describe("UserUsecase", func() {
 		Ω(err).ToNot(HaveOccurred())
 		Ω(l.Username).To(Equal("xxx"))
 	})
-
 })
