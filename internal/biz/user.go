@@ -15,7 +15,7 @@ type User struct {
 //
 //go:generate mockgen -destination=../mocks/mrepo/user.go -package=mrepo . UserRepo
 type UserRepo interface {
-	Register(context.Context, *User) (*User, error)
+	Create(context.Context, *User) (*User, error)
 
 	List(ctx context.Context) ([]*User, error)
 }
@@ -32,7 +32,7 @@ func NewUserUsecase(repo UserRepo, logger log.Logger) *UserUsecase {
 }
 
 func (u *UserUsecase) RegisterUser(ctx context.Context, user *User) (*User, error) {
-	userResult, err := u.repo.Register(ctx, user)
+	userResult, err := u.repo.Create(ctx, user)
 	if err != nil {
 		return nil, err
 	}

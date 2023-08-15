@@ -44,3 +44,39 @@ func (Cluster) Fields() []ent.Field {
 ```shell
  go generate ./ent
 ```
+
+## mock 测试
+
+1. 在你需要mock掉的inteface上加一下注解
+
+```go
+//go:generate mockgen -destination=../mocks/mrepo/user.go -package=mrepo . UserRepo
+```
+2. 执行以下命令，你会看见 internal/mocks 目录生成
+
+```go
+mockgen -destination=../mocks/mrepo/user.go -package=mrepo . UserRepo
+```
+
+3. 在你需要替换的地方使用如下：
+
+```go
+	BeforeEach(func() {
+	    // 使用 gomock 替换 userRepo
+		mUserRepo = mrepo.NewMockUserRepo(ctl)
+		userCase = biz.NewUserUsecase(mUserRepo, nil)
+	})
+
+	It("Create", func() {
+		info := &biz.User{
+			Username: "xxx",
+			Password: "admin123456",
+		}
+		// 设置返回值
+		mUserRepo.EXPECT().Register(ctx, gomock.Any()).Return(info, nil)
+		l, err := userCase.RegisterUser(ctx, info)
+		Ω(err).ShouldNot(HaveOccurred())
+		Ω(err).ToNot(HaveOccurred())
+		Ω(l.Username).To(Equal("xxx"))
+	})
+```
