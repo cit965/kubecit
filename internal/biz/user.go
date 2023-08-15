@@ -11,26 +11,26 @@ type User struct {
 	Age      int
 }
 
-// UserRepo is a Greater repo.
+// UserRepo 接口，定义了 data 层需要提供的能力，此接口实现者为 data/user.go 文件中的 userRepo
 //
 //go:generate mockgen -destination=../mocks/mrepo/user.go -package=mrepo . UserRepo
 type UserRepo interface {
 	Create(context.Context, *User) (*User, error)
-
 	List(ctx context.Context) ([]*User, error)
 }
 
-// UserUsecase is a User usecase.
+// UserUsecase 用户领域结构体，可以包含多个与用户业务相关的 repo
 type UserUsecase struct {
 	repo UserRepo
 	log  *log.Helper
 }
 
-// NewGreeterUsecase new a Greeter usecase.
+// NewUserUsecase 用户领域构造方法
 func NewUserUsecase(repo UserRepo, logger log.Logger) *UserUsecase {
 	return &UserUsecase{repo: repo, log: log.NewHelper(logger)}
 }
 
+// RegisterUser 注册一个用户
 func (u *UserUsecase) RegisterUser(ctx context.Context, user *User) (*User, error) {
 	userResult, err := u.repo.Create(ctx, user)
 	if err != nil {
@@ -39,6 +39,7 @@ func (u *UserUsecase) RegisterUser(ctx context.Context, user *User) (*User, erro
 	return userResult, nil
 }
 
+// UserList 列出所有用户
 func (u *UserUsecase) UserList(ctx context.Context) ([]*User, error) {
 	userResult, err := u.repo.List(ctx)
 	if err != nil {
