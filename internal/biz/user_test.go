@@ -22,7 +22,7 @@ var _ = Describe("UserUsecase", func() {
 			Username: "xxx",
 			Password: "admin123456",
 		}
-		mUserRepo.EXPECT().Register(ctx, gomock.Any()).Return(info, nil)
+		mUserRepo.EXPECT().Create(ctx, gomock.Any()).Return(info, nil)
 		l, err := userCase.RegisterUser(ctx, info)
 		Ω(err).ShouldNot(HaveOccurred())
 		Ω(err).ToNot(HaveOccurred())
