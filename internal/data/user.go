@@ -7,6 +7,7 @@ import (
 	"kubecit/internal/biz"
 )
 
+// userRepo 实现了 biz 层 UserRepo interface
 type userRepo struct {
 	data *Data
 	log  *log.Helper
@@ -20,6 +21,7 @@ func NewUserRepo(data *Data, logger log.Logger) biz.UserRepo {
 	}
 }
 
+// Create 在用户表插入一个用户，注意返回值 为 biz.User
 func (u *userRepo) Create(ctx context.Context, user *biz.User) (*biz.User, error) {
 	userEnt, err := u.data.db.User.Create().SetName(user.Username).SetAge(1).SetPassword(user.Password).Save(ctx)
 	if err != nil {
@@ -32,6 +34,7 @@ func (u *userRepo) Create(ctx context.Context, user *biz.User) (*biz.User, error
 	}, nil
 }
 
+// List 列出用户表所有用户
 func (u *userRepo) List(ctx context.Context) ([]*biz.User, error) {
 	users, err := u.data.db.User.Query().All(ctx)
 	if err != nil {
