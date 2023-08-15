@@ -23,7 +23,7 @@ export DOCKER_HOST=unix:///Users/z/.docker/run/docker.sock & make test
 
 ## 生成表
 
-1. 想要添加一张 cluster 表，可以执行如下命令：
+1. 想要添加一张 clusters 表，可以执行如下命令：
 
 ```shell
 go run -mod=mod entgo.io/ent/cmd/ent new Cluster
