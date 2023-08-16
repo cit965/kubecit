@@ -3,8 +3,7 @@ name: Go package
 on:
   pull_request:
     types: [opened, reopened,edited]
-  issue_comment:
-    types: [created, deleted]
+  push:
 
 
 jobs:
