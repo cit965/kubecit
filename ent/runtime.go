@@ -18,6 +18,10 @@ func init() {
 	clusterDescKubeconfig := clusterFields[0].Descriptor()
 	// cluster.DefaultKubeconfig holds the default value on creation for the kubeconfig field.
 	cluster.DefaultKubeconfig = clusterDescKubeconfig.Default.(string)
+	// clusterDescAlias is the schema descriptor for alias field.
+	clusterDescAlias := clusterFields[1].Descriptor()
+	// cluster.DefaultAlias holds the default value on creation for the alias field.
+	cluster.DefaultAlias = clusterDescAlias.Default.(string)
 	userFields := schema.User{}.Fields()
 	_ = userFields
 	// userDescAge is the schema descriptor for age field.

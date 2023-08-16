@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+package cluster.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "kubecit/api/cluster/v1;v1";
+option java_multiple_files = true;
+option java_package = "dev.kratos.api.cluster.v1";
+option java_outer_classname = "clusterProtoV1";
+
+// The cluster service definition.
+service Cluster {
+  // List all clusters
+  rpc ClusterList (ClusterListRequest) returns (ClusterListResponse) {
+    option (google.api.http) = {
+      get: "/clusters"
+    };
+  }
+
+  // Register a cluster
+  rpc ClusterRegister (ClusterRegisterRequest) returns (ClusterRegisterResponse) {
+    option (google.api.http) = {
+      post: "/cluster"
+      body: "*"
+    };
+  }
+
+  // Delete a cluster
+  rpc ClusterDelete (ClusterBase) returns (ClusterDeleteResponse) {
+    option (google.api.http) = {
+      delete: "/cluster/{id}"
+    };
+  }
+
+  // Get a cluster
+  rpc ClusterGet (ClusterBase) returns (ClusterBase) {
+    option (google.api.http) = {
+      get: "/cluster/{id}"
+    };
+  }
+
+  // Update a cluster
+  rpc ClusterUpdate (ClusterBase) returns (ClusterBase) {
+    option (google.api.http) = {
+      put: "/cluster/{id}"
+      body: "*"
+    };
+  }
+}
+
+message ClusterListRequest {}
+
+message ClusterDeleteResponse{}
+
+message ClusterBase {
+  int64 id = 1;
+  string kubeconfig = 2;
+  string alias = 3;
+}
+
+message ClusterRegisterRequest{
+  string kubeconfig = 1;
+  string alias = 2;
+}
+
+message ClusterRegisterResponse{
+  ClusterBase cluster = 1;
+}
+
+message ClusterListResponse {
+  repeated ClusterBase clusters = 1;
+}

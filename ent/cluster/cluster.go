@@ -13,6 +13,8 @@ const (
 	FieldID = "id"
 	// FieldKubeconfig holds the string denoting the kubeconfig field in the database.
 	FieldKubeconfig = "kubeconfig"
+	// FieldAlias holds the string denoting the alias field in the database.
+	FieldAlias = "alias"
 	// Table holds the table name of the cluster in the database.
 	Table = "clusters"
 )
@@ -21,6 +23,7 @@ const (
 var Columns = []string{
 	FieldID,
 	FieldKubeconfig,
+	FieldAlias,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -36,6 +39,8 @@ func ValidColumn(column string) bool {
 var (
 	// DefaultKubeconfig holds the default value on creation for the "kubeconfig" field.
 	DefaultKubeconfig string
+	// DefaultAlias holds the default value on creation for the "alias" field.
+	DefaultAlias string
 )
 
 // OrderOption defines the ordering options for the Cluster queries.
@@ -49,4 +54,9 @@ func ByID(opts ...sql.OrderTermOption) OrderOption {
 // ByKubeconfig orders the results by the kubeconfig field.
 func ByKubeconfig(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldKubeconfig, opts...).ToFunc()
+}
+
+// ByAlias orders the results by the alias field.
+func ByAlias(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldAlias, opts...).ToFunc()
 }

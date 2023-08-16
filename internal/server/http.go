@@ -2,18 +2,19 @@ package server
 
 import (
 	"fmt"
-	"github.com/go-kratos/swagger-api/openapiv2"
-	v1 "kubecit/api/helloworld/v1"
-	"kubecit/internal/conf"
-	"kubecit/internal/service"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	"github.com/go-kratos/kratos/v2/transport/http"
+	"github.com/go-kratos/swagger-api/openapiv2"
+
+	v1 "kubecit/api/helloworld/v1"
+	"kubecit/internal/conf"
+	"kubecit/internal/service"
 )
 
 // NewHTTPServer new an HTTP server.
-func NewHTTPServer(c *conf.Server, greeter *service.GreeterService, logger log.Logger) *http.Server {
+func NewHTTPServer(c *conf.Server, greeter *service.GreeterService, cluster *service.ClusterService, logger log.Logger) *http.Server {
 	var opts = []http.ServerOption{
 		http.Middleware(
 			recovery.Recovery(),
@@ -32,6 +33,7 @@ func NewHTTPServer(c *conf.Server, greeter *service.GreeterService, logger log.L
 	openAPIhandler := openapiv2.NewHandler()
 	srv.HandlePrefix("/q/", openAPIhandler)
 	v1.RegisterGreeterHTTPServer(srv, greeter)
+	v1.RegisterClusterHTTPServer(srv, cluster)
 
 	srv.WalkRoute(func(info http.RouteInfo) error {
 		fmt.Printf("%-50s \t %s\n", info.Path, info.Method)

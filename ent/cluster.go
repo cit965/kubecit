@@ -17,7 +17,9 @@ type Cluster struct {
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
 	// Kubeconfig holds the value of the "kubeconfig" field.
-	Kubeconfig   string `json:"kubeconfig,omitempty"`
+	Kubeconfig string `json:"kubeconfig,omitempty"`
+	// Alias holds the value of the "alias" field.
+	Alias        string `json:"alias,omitempty"`
 	selectValues sql.SelectValues
 }
 
@@ -28,7 +30,7 @@ func (*Cluster) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case cluster.FieldID:
 			values[i] = new(sql.NullInt64)
-		case cluster.FieldKubeconfig:
+		case cluster.FieldKubeconfig, cluster.FieldAlias:
 			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -56,6 +58,12 @@ func (c *Cluster) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field kubeconfig", values[i])
 			} else if value.Valid {
 				c.Kubeconfig = value.String
+			}
+		case cluster.FieldAlias:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field alias", values[i])
+			} else if value.Valid {
+				c.Alias = value.String
 			}
 		default:
 			c.selectValues.Set(columns[i], values[i])
@@ -95,6 +103,9 @@ func (c *Cluster) String() string {
 	builder.WriteString(fmt.Sprintf("id=%v, ", c.ID))
 	builder.WriteString("kubeconfig=")
 	builder.WriteString(c.Kubeconfig)
+	builder.WriteString(", ")
+	builder.WriteString("alias=")
+	builder.WriteString(c.Alias)
 	builder.WriteByte(')')
 	return builder.String()
 }

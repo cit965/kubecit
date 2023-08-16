@@ -33,6 +33,20 @@ func (cc *ClusterCreate) SetNillableKubeconfig(s *string) *ClusterCreate {
 	return cc
 }
 
+// SetAlias sets the "alias" field.
+func (cc *ClusterCreate) SetAlias(s string) *ClusterCreate {
+	cc.mutation.SetAlias(s)
+	return cc
+}
+
+// SetNillableAlias sets the "alias" field if the given value is not nil.
+func (cc *ClusterCreate) SetNillableAlias(s *string) *ClusterCreate {
+	if s != nil {
+		cc.SetAlias(*s)
+	}
+	return cc
+}
+
 // Mutation returns the ClusterMutation object of the builder.
 func (cc *ClusterCreate) Mutation() *ClusterMutation {
 	return cc.mutation
@@ -72,12 +86,19 @@ func (cc *ClusterCreate) defaults() {
 		v := cluster.DefaultKubeconfig
 		cc.mutation.SetKubeconfig(v)
 	}
+	if _, ok := cc.mutation.Alias(); !ok {
+		v := cluster.DefaultAlias
+		cc.mutation.SetAlias(v)
+	}
 }
 
 // check runs all checks and user-defined validators on the builder.
 func (cc *ClusterCreate) check() error {
 	if _, ok := cc.mutation.Kubeconfig(); !ok {
 		return &ValidationError{Name: "kubeconfig", err: errors.New(`ent: missing required field "Cluster.kubeconfig"`)}
+	}
+	if _, ok := cc.mutation.Alias(); !ok {
+		return &ValidationError{Name: "alias", err: errors.New(`ent: missing required field "Cluster.alias"`)}
 	}
 	return nil
 }
@@ -108,6 +129,10 @@ func (cc *ClusterCreate) createSpec() (*Cluster, *sqlgraph.CreateSpec) {
 	if value, ok := cc.mutation.Kubeconfig(); ok {
 		_spec.SetField(cluster.FieldKubeconfig, field.TypeString, value)
 		_node.Kubeconfig = value
+	}
+	if value, ok := cc.mutation.Alias(); ok {
+		_spec.SetField(cluster.FieldAlias, field.TypeString, value)
+		_node.Alias = value
 	}
 	return _node, _spec
 }

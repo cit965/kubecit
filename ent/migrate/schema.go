@@ -12,6 +12,7 @@ var (
 	ClustersColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "kubeconfig", Type: field.TypeString, Default: "unknown"},
+		{Name: "alias", Type: field.TypeString, Default: ""},
 	}
 	// ClustersTable holds the schema information for the "clusters" table.
 	ClustersTable = &schema.Table{

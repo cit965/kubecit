@@ -15,6 +15,8 @@ func (Cluster) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("kubeconfig").
 			Default("unknown"),
+		field.String("alias").
+			Default(""),
 	}
 }
 

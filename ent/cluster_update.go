@@ -41,6 +41,20 @@ func (cu *ClusterUpdate) SetNillableKubeconfig(s *string) *ClusterUpdate {
 	return cu
 }
 
+// SetAlias sets the "alias" field.
+func (cu *ClusterUpdate) SetAlias(s string) *ClusterUpdate {
+	cu.mutation.SetAlias(s)
+	return cu
+}
+
+// SetNillableAlias sets the "alias" field if the given value is not nil.
+func (cu *ClusterUpdate) SetNillableAlias(s *string) *ClusterUpdate {
+	if s != nil {
+		cu.SetAlias(*s)
+	}
+	return cu
+}
+
 // Mutation returns the ClusterMutation object of the builder.
 func (cu *ClusterUpdate) Mutation() *ClusterMutation {
 	return cu.mutation
@@ -85,6 +99,9 @@ func (cu *ClusterUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := cu.mutation.Kubeconfig(); ok {
 		_spec.SetField(cluster.FieldKubeconfig, field.TypeString, value)
 	}
+	if value, ok := cu.mutation.Alias(); ok {
+		_spec.SetField(cluster.FieldAlias, field.TypeString, value)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, cu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{cluster.Label}
@@ -115,6 +132,20 @@ func (cuo *ClusterUpdateOne) SetKubeconfig(s string) *ClusterUpdateOne {
 func (cuo *ClusterUpdateOne) SetNillableKubeconfig(s *string) *ClusterUpdateOne {
 	if s != nil {
 		cuo.SetKubeconfig(*s)
+	}
+	return cuo
+}
+
+// SetAlias sets the "alias" field.
+func (cuo *ClusterUpdateOne) SetAlias(s string) *ClusterUpdateOne {
+	cuo.mutation.SetAlias(s)
+	return cuo
+}
+
+// SetNillableAlias sets the "alias" field if the given value is not nil.
+func (cuo *ClusterUpdateOne) SetNillableAlias(s *string) *ClusterUpdateOne {
+	if s != nil {
+		cuo.SetAlias(*s)
 	}
 	return cuo
 }
@@ -192,6 +223,9 @@ func (cuo *ClusterUpdateOne) sqlSave(ctx context.Context) (_node *Cluster, err e
 	}
 	if value, ok := cuo.mutation.Kubeconfig(); ok {
 		_spec.SetField(cluster.FieldKubeconfig, field.TypeString, value)
+	}
+	if value, ok := cuo.mutation.Alias(); ok {
+		_spec.SetField(cluster.FieldAlias, field.TypeString, value)
 	}
 	_node = &Cluster{config: cuo.config}
 	_spec.Assign = _node.assignValues

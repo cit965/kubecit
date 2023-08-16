@@ -35,6 +35,7 @@ type ClusterMutation struct {
 	typ           string
 	id            *int
 	kubeconfig    *string
+	alias         *string
 	clearedFields map[string]struct{}
 	done          bool
 	oldValue      func(context.Context) (*Cluster, error)
@@ -175,6 +176,42 @@ func (m *ClusterMutation) ResetKubeconfig() {
 	m.kubeconfig = nil
 }
 
+// SetAlias sets the "alias" field.
+func (m *ClusterMutation) SetAlias(s string) {
+	m.alias = &s
+}
+
+// Alias returns the value of the "alias" field in the mutation.
+func (m *ClusterMutation) Alias() (r string, exists bool) {
+	v := m.alias
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAlias returns the old "alias" field's value of the Cluster entity.
+// If the Cluster object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ClusterMutation) OldAlias(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldAlias is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldAlias requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAlias: %w", err)
+	}
+	return oldValue.Alias, nil
+}
+
+// ResetAlias resets all changes to the "alias" field.
+func (m *ClusterMutation) ResetAlias() {
+	m.alias = nil
+}
+
 // Where appends a list predicates to the ClusterMutation builder.
 func (m *ClusterMutation) Where(ps ...predicate.Cluster) {
 	m.predicates = append(m.predicates, ps...)
@@ -209,9 +246,12 @@ func (m *ClusterMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *ClusterMutation) Fields() []string {
-	fields := make([]string, 0, 1)
+	fields := make([]string, 0, 2)
 	if m.kubeconfig != nil {
 		fields = append(fields, cluster.FieldKubeconfig)
+	}
+	if m.alias != nil {
+		fields = append(fields, cluster.FieldAlias)
 	}
 	return fields
 }
@@ -223,6 +263,8 @@ func (m *ClusterMutation) Field(name string) (ent.Value, bool) {
 	switch name {
 	case cluster.FieldKubeconfig:
 		return m.Kubeconfig()
+	case cluster.FieldAlias:
+		return m.Alias()
 	}
 	return nil, false
 }
@@ -234,6 +276,8 @@ func (m *ClusterMutation) OldField(ctx context.Context, name string) (ent.Value,
 	switch name {
 	case cluster.FieldKubeconfig:
 		return m.OldKubeconfig(ctx)
+	case cluster.FieldAlias:
+		return m.OldAlias(ctx)
 	}
 	return nil, fmt.Errorf("unknown Cluster field %s", name)
 }
@@ -249,6 +293,13 @@ func (m *ClusterMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetKubeconfig(v)
+		return nil
+	case cluster.FieldAlias:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAlias(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Cluster field %s", name)
@@ -301,6 +352,9 @@ func (m *ClusterMutation) ResetField(name string) error {
 	switch name {
 	case cluster.FieldKubeconfig:
 		m.ResetKubeconfig()
+		return nil
+	case cluster.FieldAlias:
+		m.ResetAlias()
 		return nil
 	}
 	return fmt.Errorf("unknown Cluster field %s", name)
