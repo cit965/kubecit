@@ -22,19 +22,12 @@
 | OSType             | string    | Centos7.9                               |
 | Manufacturer       | string    | TencentCloud                            |
 | Zone               | string    | ap-guangzhou-1                          |
-| SystemDisk         | *Disk     |                                         |
-| DataDisks          | []*Disk   |                                         |
 | SecurityGroups     | []string  | VPC-PRD,VPC-Serivce                     |
 | BillType           | string    | NOTIFY_AND_MANUAL_RENEW                 |
 | ChargeType         | string    | POSTPAID_BY_HOUR                        |
 | IsActive           | bool      | True                                    |
 | InstanceType       | string    | S2.SMALL2                               |
 
-### Disk
-| Field    | Type   | Examples  |
-|----------|--------|-----------|
-| DiskType | String | CLOUD_SSD |
-| DiskSize | int    | 100       |
 
 ## 云主机同步功能接口
 ```go
