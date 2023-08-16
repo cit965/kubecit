@@ -11,6 +11,7 @@
 
 ## 命令
 
+
 在根目录执行 `make init` 安装 wire proto 等依赖
 
 在根目录执行 `make run` 启动服务
@@ -46,6 +47,8 @@ func (Cluster) Fields() []ent.Field {
 ```
 
 ## mock 测试
+
+[详细文档](doc/test.md)
 
 1. 在你需要mock掉的inteface上加一下注解
 
