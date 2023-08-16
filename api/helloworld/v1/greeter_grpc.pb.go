@@ -19,9 +19,11 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Greeter_SayHello_FullMethodName     = "/helloworld.v1.Greeter/SayHello"
-	Greeter_UserRegister_FullMethodName = "/helloworld.v1.Greeter/UserRegister"
-	Greeter_UserList_FullMethodName     = "/helloworld.v1.Greeter/UserList"
+	Greeter_SayHello_FullMethodName      = "/helloworld.v1.Greeter/SayHello"
+	Greeter_UserRegister_FullMethodName  = "/helloworld.v1.Greeter/UserRegister"
+	Greeter_UserList_FullMethodName      = "/helloworld.v1.Greeter/UserList"
+	Greeter_ClusterList_FullMethodName   = "/helloworld.v1.Greeter/ClusterList"
+	Greeter_NamespaceList_FullMethodName = "/helloworld.v1.Greeter/NamespaceList"
 )
 
 // GreeterClient is the client API for Greeter service.
@@ -33,6 +35,8 @@ type GreeterClient interface {
 	// Register a user
 	UserRegister(ctx context.Context, in *UserRegisterRequest, opts ...grpc.CallOption) (*UserRegisterResponse, error)
 	UserList(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*UserListResponse, error)
+	ClusterList(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*ClusterListResponse, error)
+	NamespaceList(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error)
 }
 
 type greeterClient struct {
@@ -70,6 +74,24 @@ func (c *greeterClient) UserList(ctx context.Context, in *Empty, opts ...grpc.Ca
 	return out, nil
 }
 
+func (c *greeterClient) ClusterList(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*ClusterListResponse, error) {
+	out := new(ClusterListResponse)
+	err := c.cc.Invoke(ctx, Greeter_ClusterList_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *greeterClient) NamespaceList(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error) {
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, Greeter_NamespaceList_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // GreeterServer is the server API for Greeter service.
 // All implementations must embed UnimplementedGreeterServer
 // for forward compatibility
@@ -79,6 +101,8 @@ type GreeterServer interface {
 	// Register a user
 	UserRegister(context.Context, *UserRegisterRequest) (*UserRegisterResponse, error)
 	UserList(context.Context, *Empty) (*UserListResponse, error)
+	ClusterList(context.Context, *Empty) (*ClusterListResponse, error)
+	NamespaceList(context.Context, *Empty) (*Empty, error)
 	mustEmbedUnimplementedGreeterServer()
 }
 
@@ -94,6 +118,12 @@ func (UnimplementedGreeterServer) UserRegister(context.Context, *UserRegisterReq
 }
 func (UnimplementedGreeterServer) UserList(context.Context, *Empty) (*UserListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UserList not implemented")
+}
+func (UnimplementedGreeterServer) ClusterList(context.Context, *Empty) (*ClusterListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ClusterList not implemented")
+}
+func (UnimplementedGreeterServer) NamespaceList(context.Context, *Empty) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method NamespaceList not implemented")
 }
 func (UnimplementedGreeterServer) mustEmbedUnimplementedGreeterServer() {}
 
@@ -162,6 +192,42 @@ func _Greeter_UserList_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Greeter_ClusterList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GreeterServer).ClusterList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Greeter_ClusterList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GreeterServer).ClusterList(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Greeter_NamespaceList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GreeterServer).NamespaceList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Greeter_NamespaceList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GreeterServer).NamespaceList(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Greeter_ServiceDesc is the grpc.ServiceDesc for Greeter service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -180,6 +246,14 @@ var Greeter_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UserList",
 			Handler:    _Greeter_UserList_Handler,
+		},
+		{
+			MethodName: "ClusterList",
+			Handler:    _Greeter_ClusterList_Handler,
+		},
+		{
+			MethodName: "NamespaceList",
+			Handler:    _Greeter_NamespaceList_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

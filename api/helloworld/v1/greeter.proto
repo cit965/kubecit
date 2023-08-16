@@ -31,6 +31,19 @@ service Greeter {
       get: "/user"
     };
   }
+
+
+  rpc ClusterList (Empty) returns (ClusterListResponse) {
+    option (google.api.http) = {
+      get: "/clusters"
+    };
+  }
+
+  rpc NamespaceList (Empty) returns (Empty) {
+    option (google.api.http) = {
+      get: "/namespaces"
+    };
+  }
 }
 
 
@@ -45,6 +58,15 @@ message User {
 
 message UserListResponse{
   repeated User users = 1;
+}
+
+message Cluster {
+  string kubeconfig = 1;
+  int32  id = 2;
+}
+
+message  ClusterListResponse{
+  repeated Cluster clusters = 1;
 }
 
 message UserRegisterRequest {

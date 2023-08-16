@@ -11,15 +11,15 @@ import (
 )
 
 // ProviderSet is data providers.
-var ProviderSet = wire.NewSet(NewData, NewGreeterRepo, NewUserRepo)
+var ProviderSet = wire.NewSet(NewData, NewGreeterRepo, NewUserRepo, NewClusterRepo, NewK8sRepoGetter)
 
-// Data .
+// Data contains config and db client
 type Data struct {
 	conf *conf.Data
 	db   *ent.Client
 }
 
-// NewData .
+// NewData 构造方法，初始化了数据库 client
 func NewData(c *conf.Data, logger log.Logger) (*Data, func(), error) {
 	cleanup := func() {
 		log.NewHelper(logger).Info("closing the data resources")

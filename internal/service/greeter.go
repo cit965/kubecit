@@ -12,13 +12,14 @@ import (
 type GreeterService struct {
 	v1.UnimplementedGreeterServer
 
-	uc       *biz.GreeterUsecase
-	userCase *biz.UserUsecase
+	uc          *biz.GreeterUsecase
+	userCase    *biz.UserUsecase
+	clusterCase *biz.ClusterUsecase
 }
 
 // NewGreeterService new a greeter service.
-func NewGreeterService(uc *biz.GreeterUsecase, userCase *biz.UserUsecase) *GreeterService {
-	return &GreeterService{uc: uc, userCase: userCase}
+func NewGreeterService(uc *biz.GreeterUsecase, userCase *biz.UserUsecase, clusterCase *biz.ClusterUsecase) *GreeterService {
+	return &GreeterService{uc: uc, userCase: userCase, clusterCase: clusterCase}
 }
 
 // SayHello implements helloworld.GreeterServer.
@@ -57,4 +58,26 @@ func (s *GreeterService) UserList(ctx context.Context, in *v1.Empty) (*v1.UserLi
 		})
 	}
 	return &v1.UserListResponse{Users: userRes}, nil
+}
+
+func (s *GreeterService) ClusterList(ctx context.Context, in *v1.Empty) (*v1.ClusterListResponse, error) {
+	result, err := s.clusterCase.List(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	var res []*v1.Cluster
+	for _, v := range result {
+		tmp := &v1.Cluster{
+			Kubeconfig: v.Kubeconfig,
+			Id:         int32(v.Id),
+		}
+		res = append(res, tmp)
+	}
+	return &v1.ClusterListResponse{Clusters: res}, nil
+}
+
+func (s *GreeterService) NamespaceList(ctx context.Context, in *v1.Empty) (*v1.Empty, error) {
+	s.clusterCase.ListNamespaces(ctx, 1)
+	return nil, nil
 }

@@ -7,6 +7,7 @@ import (
 	"kubecit/internal/biz"
 )
 
+// userRepo 实现了 biz 层 UserRepo interface
 type userRepo struct {
 	data *Data
 	log  *log.Helper
@@ -20,7 +21,8 @@ func NewUserRepo(data *Data, logger log.Logger) biz.UserRepo {
 	}
 }
 
-func (u *userRepo) Register(ctx context.Context, user *biz.User) (*biz.User, error) {
+// Create 在用户表插入一个用户，注意返回值 为 biz.User
+func (u *userRepo) Create(ctx context.Context, user *biz.User) (*biz.User, error) {
 	userEnt, err := u.data.db.User.Create().SetName(user.Username).SetAge(1).SetPassword(user.Password).Save(ctx)
 	if err != nil {
 		fmt.Println(err)
@@ -32,6 +34,12 @@ func (u *userRepo) Register(ctx context.Context, user *biz.User) (*biz.User, err
 	}, nil
 }
 
+// Create 在用户表删除一个用户，注意返回值 为 biz.User
+func (u *userRepo) Delete(ctx context.Context, id int) error {
+	return u.data.db.User.DeleteOneID(id).Exec(ctx)
+}
+
+// List 列出用户表所有用户
 func (u *userRepo) List(ctx context.Context) ([]*biz.User, error) {
 	users, err := u.data.db.User.Query().All(ctx)
 	if err != nil {
@@ -41,6 +49,7 @@ func (u *userRepo) List(ctx context.Context) ([]*biz.User, error) {
 	var userResults []*biz.User
 	for _, user := range users {
 		userResults = append(userResults, &biz.User{
+			Id:       user.ID,
 			Username: user.Name,
 			Password: user.Password,
 			Age:      user.Age,

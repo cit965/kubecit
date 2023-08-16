@@ -3,6 +3,7 @@
 package ent
 
 import (
+	"kubecit/ent/cluster"
 	"kubecit/ent/schema"
 	"kubecit/ent/user"
 )
@@ -11,6 +12,12 @@ import (
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
+	clusterFields := schema.Cluster{}.Fields()
+	_ = clusterFields
+	// clusterDescKubeconfig is the schema descriptor for kubeconfig field.
+	clusterDescKubeconfig := clusterFields[0].Descriptor()
+	// cluster.DefaultKubeconfig holds the default value on creation for the kubeconfig field.
+	cluster.DefaultKubeconfig = clusterDescKubeconfig.Default.(string)
 	userFields := schema.User{}.Fields()
 	_ = userFields
 	// userDescAge is the schema descriptor for age field.
