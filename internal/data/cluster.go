@@ -40,3 +40,29 @@ func (c *clusterRepo) List(ctx context.Context) ([]*biz.Cluster, error) {
 	}
 	return result, nil
 }
+
+func (c *clusterRepo) Register(ctx context.Context, cluster *biz.Cluster) (*biz.Cluster, error) {
+	clusterEnt, err := c.data.db.Cluster.Create().SetKubeconfig(cluster.Kubeconfig).Save(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return &biz.Cluster{
+		Id:         clusterEnt.ID,
+		Kubeconfig: clusterEnt.Kubeconfig,
+	}, nil
+}
+
+func (c *clusterRepo) Update(ctx context.Context, cluster *biz.Cluster) (*biz.Cluster, error) {
+	data, err := c.data.db.Cluster.UpdateOneID(int(cluster.Id)).SetKubeconfig(cluster.Kubeconfig).Save(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return &biz.Cluster{
+		Id:         data.ID,
+		Kubeconfig: data.Kubeconfig,
+	}, nil
+}
+
+func (c *clusterRepo) Delete(ctx context.Context, id int) error {
+	return c.data.db.Cluster.DeleteOneID(id).Exec(ctx)
+}

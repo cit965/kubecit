@@ -92,3 +92,49 @@ func (s *GreeterService) DeploymentList(ctx context.Context, in *v1.DeploymentRe
 	}
 	return &v1.DeploymentResp{Deployments: deployments}, nil
 }
+
+func (s *GreeterService) ClusterGet(ctx context.Context, in *v1.ClusterBase) (reply *v1.ClusterBase, err error) {
+	cluster, err := s.clusterCase.GetCluster(ctx, int(in.Id))
+	if err != nil {
+		return nil, err
+	}
+	return &v1.ClusterBase{
+		Id:         int64(cluster.Id),
+		Kubeconfig: cluster.Kubeconfig,
+	}, nil
+}
+
+func (s *GreeterService) ClusterRegister(ctx context.Context, in *v1.ClusterKubeconfig) (*v1.ClusterBase, error) {
+	result, err := s.clusterCase.RegisterCluster(ctx, &biz.Cluster{
+		Kubeconfig: in.Kubeconfig,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &v1.ClusterBase{
+		Id:         int64(result.Id),
+		Kubeconfig: result.Kubeconfig,
+	}, nil
+}
+
+func (s *GreeterService) ClusterUpdate(ctx context.Context, in *v1.ClusterBase) (reply *v1.ClusterBase, err error) {
+	cluster, err := s.clusterCase.UpdateCluster(ctx, &biz.Cluster{
+		Id:         int(in.Id),
+		Kubeconfig: in.Kubeconfig,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &v1.ClusterBase{
+		Id:         int64(cluster.Id),
+		Kubeconfig: cluster.Kubeconfig,
+	}, nil
+}
+
+func (s *GreeterService) ClusterDelete(ctx context.Context, in *v1.ClusterBase) (reply *v1.Empty, err error) {
+	err = s.clusterCase.Delete(ctx, int(in.Id))
+	if err != nil {
+		return nil, err
+	}
+	return &v1.Empty{}, nil
+}

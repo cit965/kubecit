@@ -2,6 +2,7 @@ package biz
 
 import (
 	"context"
+	"fmt"
 	"github.com/go-kratos/kratos/v2/log"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -24,22 +25,18 @@ type ClusterUsecase struct {
 
 type ClusterRepo interface {
 	Get(ctx context.Context, id int) (*Cluster, error)
-
 	List(ctx context.Context) ([]*Cluster, error)
+	Register(ctx context.Context, cluster *Cluster) (*Cluster, error)
+	Update(ctx context.Context, cluster *Cluster) (*Cluster, error)
+	Delete(ctx context.Context, id int) error
 }
 
 type K8sRepo interface {
-	// 列出某 namespace 下所有 pod
-	ListPods(ctx context.Context, namespace string) (*corev1.PodList, error)
-	// 重启 pod
-	RestartPod(ctx context.Context, namespace, name string) error
-	// 列出集群中所有的 namespace 列表
-	ListNamespace(ctx context.Context) (*corev1.NamespaceList, error)
-	// 列出某个 namespace 下的deployment
-	ListDeployment(ctx context.Context, namespace string) (*appsv1.DeploymentList, error)
-	// 列出某 namespace 下有特定标签的pod
-	ListPodsByLabelSelector(ctx context.Context, namespace string, selector labels.Selector) (*corev1.PodList, error)
-
+	ListPods(ctx context.Context, namespace string) (*corev1.PodList, error)                                          // 列出某 namespace 下所有 pod
+	RestartPod(ctx context.Context, namespace, name string) error                                                     // 重启 pod
+	ListNamespace(ctx context.Context) (*corev1.NamespaceList, error)                                                 // 列出集群中所有的 namespace 列表
+	ListDeployment(ctx context.Context, namespace string) (*appsv1.DeploymentList, error)                             // 列出某个 namespace 下的deployment
+	ListPodsByLabelSelector(ctx context.Context, namespace string, selector labels.Selector) (*corev1.PodList, error) // 列出某 namespace 下有特定标签的pod
 	ListIngress(ctx context.Context, namespace string) (*networkingv1.IngressList, error)
 	ListServiceByNamespace(ctx context.Context, namespace string) (*corev1.ServiceList, error)
 	ListEvents(ctx context.Context, namespace, uid string) (*corev1.EventList, error)
@@ -96,4 +93,72 @@ func (c *ClusterUsecase) ListNamespaces(ctx context.Context, id int) ([]string, 
 		result = append(result, v.Name)
 	}
 	return result, nil
+}
+
+func (c *ClusterUsecase) RegisterCluster(ctx context.Context, cluster *Cluster) (*Cluster, error) {
+	if err := c.isExisted(ctx, cluster); err != nil {
+		return nil, err
+	}
+	if _, err := c.getter.GetRepo([]byte(cluster.Kubeconfig), c.log); err != nil {
+		return nil, fmt.Errorf("get k8s repo error: %v", err)
+	}
+	clusterResult, err := c.repo.Register(ctx, cluster)
+	if err != nil {
+		return nil, err
+	}
+	return clusterResult, nil
+}
+
+func (c *ClusterUsecase) ListCluster(ctx context.Context) ([]*Cluster, error) {
+	clusterResult, err := c.repo.List(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return clusterResult, nil
+}
+
+func (c *ClusterUsecase) GetCluster(ctx context.Context, id int) (*Cluster, error) {
+	clusterResult, err := c.repo.Get(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	return clusterResult, nil
+}
+
+func (c *ClusterUsecase) UpdateCluster(ctx context.Context, cluster *Cluster) (*Cluster, error) {
+	if err := c.isExisted(ctx, cluster); err != nil {
+		return nil, err
+	}
+	if _, err := c.getter.GetRepo([]byte(cluster.Kubeconfig), c.log); err != nil {
+		return nil, err
+	}
+	clusterResult, err := c.repo.Update(ctx, cluster)
+	if err != nil {
+		return nil, err
+	}
+	return clusterResult, nil
+}
+
+func (c *ClusterUsecase) Delete(ctx context.Context, id int) error {
+	err := c.repo.Delete(ctx, id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (c *ClusterUsecase) isExisted(ctx context.Context, cluster *Cluster) error {
+	clusters, err := c.repo.List(ctx)
+	if err != nil {
+		return err
+	}
+	if len(clusters) > 0 {
+		// check kubeconfig is existed
+		for _, v := range clusters {
+			if v.Kubeconfig == cluster.Kubeconfig {
+				return fmt.Errorf("kubeconfig is existed")
+			}
+		}
+	}
+	return nil
 }

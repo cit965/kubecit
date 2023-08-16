@@ -7,6 +7,97 @@ info:
     description: The greeting service definition.
     version: 0.0.1
 paths:
+    /cluster:
+        post:
+            tags:
+                - Greeter
+            description: Register a cluster
+            operationId: Greeter_ClusterRegister
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/helloworld.v1.ClusterKubeconfig'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/helloworld.v1.ClusterBase'
+    /cluster/{id}:
+        get:
+            tags:
+                - Greeter
+            description: Get a cluster
+            operationId: Greeter_ClusterGet
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: int64
+                - name: kubeconfig
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/helloworld.v1.ClusterBase'
+        put:
+            tags:
+                - Greeter
+            description: Update a cluster
+            operationId: Greeter_ClusterUpdate
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: int64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/helloworld.v1.ClusterBase'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/helloworld.v1.ClusterBase'
+        delete:
+            tags:
+                - Greeter
+            description: Delete a cluster
+            operationId: Greeter_ClusterDelete
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: int64
+                - name: kubeconfig
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/helloworld.v1.Empty'
     /clusters:
         get:
             tags:
@@ -122,6 +213,19 @@ components:
                 id:
                     type: integer
                     format: int32
+        helloworld.v1.ClusterBase:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                kubeconfig:
+                    type: string
+        helloworld.v1.ClusterKubeconfig:
+            type: object
+            properties:
+                kubeconfig:
+                    type: string
         helloworld.v1.ClusterListResponse:
             type: object
             properties:
@@ -136,6 +240,9 @@ components:
                     type: array
                     items:
                         type: string
+        helloworld.v1.Empty:
+            type: object
+            properties: {}
         helloworld.v1.HelloReply:
             type: object
             properties:
