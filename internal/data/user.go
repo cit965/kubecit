@@ -34,6 +34,11 @@ func (u *userRepo) Create(ctx context.Context, user *biz.User) (*biz.User, error
 	}, nil
 }
 
+// Create 在用户表删除一个用户，注意返回值 为 biz.User
+func (u *userRepo) Delete(ctx context.Context, id int) error {
+	return u.data.db.User.DeleteOneID(id).Exec(ctx)
+}
+
 // List 列出用户表所有用户
 func (u *userRepo) List(ctx context.Context) ([]*biz.User, error) {
 	users, err := u.data.db.User.Query().All(ctx)
@@ -44,6 +49,7 @@ func (u *userRepo) List(ctx context.Context) ([]*biz.User, error) {
 	var userResults []*biz.User
 	for _, user := range users {
 		userResults = append(userResults, &biz.User{
+			Id:       user.ID,
 			Username: user.Name,
 			Password: user.Password,
 			Age:      user.Age,
