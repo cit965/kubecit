@@ -6,6 +6,7 @@ import (
 )
 
 type User struct {
+	Id       int
 	Username string
 	Password string
 	Age      int
@@ -17,6 +18,7 @@ type User struct {
 type UserRepo interface {
 	Create(context.Context, *User) (*User, error)
 	List(ctx context.Context) ([]*User, error)
+	Delete(ctx context.Context, id int) error
 }
 
 // UserUsecase 用户领域结构体，可以包含多个与用户业务相关的 repo
