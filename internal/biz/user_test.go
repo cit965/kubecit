@@ -17,7 +17,7 @@ var _ = Describe("UserUsecase", func() {
 		userCase = biz.NewUserUsecase(mUserRepo, nil)
 	})
 
-	It("Create", func() {
+	It("register", func() {
 		info := &biz.User{
 			Username: "xxx",
 			Password: "admin123456",
@@ -27,5 +27,20 @@ var _ = Describe("UserUsecase", func() {
 		Ω(err).ShouldNot(HaveOccurred())
 		Ω(err).ToNot(HaveOccurred())
 		Ω(l.Username).To(Equal("xxx"))
+	})
+
+	It("list", func() {
+		info := &biz.User{
+			Username: "xxx",
+			Password: "admin123456",
+		}
+		users := []*biz.User{
+			info,
+		}
+		mUserRepo.EXPECT().List(ctx).Return(users, nil)
+		l, err := userCase.UserList(ctx)
+		Ω(err).ShouldNot(HaveOccurred())
+		Ω(err).ToNot(HaveOccurred())
+		Ω(len(l)).To(Equal(1))
 	})
 })
