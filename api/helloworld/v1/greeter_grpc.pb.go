@@ -36,7 +36,7 @@ type GreeterClient interface {
 	UserRegister(ctx context.Context, in *UserRegisterRequest, opts ...grpc.CallOption) (*UserRegisterResponse, error)
 	UserList(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*UserListResponse, error)
 	ClusterList(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*ClusterListResponse, error)
-	NamespaceList(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error)
+	NamespaceList(ctx context.Context, in *NamespaceReq, opts ...grpc.CallOption) (*NamespaceResp, error)
 }
 
 type greeterClient struct {
@@ -83,8 +83,8 @@ func (c *greeterClient) ClusterList(ctx context.Context, in *Empty, opts ...grpc
 	return out, nil
 }
 
-func (c *greeterClient) NamespaceList(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error) {
-	out := new(Empty)
+func (c *greeterClient) NamespaceList(ctx context.Context, in *NamespaceReq, opts ...grpc.CallOption) (*NamespaceResp, error) {
+	out := new(NamespaceResp)
 	err := c.cc.Invoke(ctx, Greeter_NamespaceList_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -102,7 +102,7 @@ type GreeterServer interface {
 	UserRegister(context.Context, *UserRegisterRequest) (*UserRegisterResponse, error)
 	UserList(context.Context, *Empty) (*UserListResponse, error)
 	ClusterList(context.Context, *Empty) (*ClusterListResponse, error)
-	NamespaceList(context.Context, *Empty) (*Empty, error)
+	NamespaceList(context.Context, *NamespaceReq) (*NamespaceResp, error)
 	mustEmbedUnimplementedGreeterServer()
 }
 
@@ -122,7 +122,7 @@ func (UnimplementedGreeterServer) UserList(context.Context, *Empty) (*UserListRe
 func (UnimplementedGreeterServer) ClusterList(context.Context, *Empty) (*ClusterListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ClusterList not implemented")
 }
-func (UnimplementedGreeterServer) NamespaceList(context.Context, *Empty) (*Empty, error) {
+func (UnimplementedGreeterServer) NamespaceList(context.Context, *NamespaceReq) (*NamespaceResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method NamespaceList not implemented")
 }
 func (UnimplementedGreeterServer) mustEmbedUnimplementedGreeterServer() {}
@@ -211,7 +211,7 @@ func _Greeter_ClusterList_Handler(srv interface{}, ctx context.Context, dec func
 }
 
 func _Greeter_NamespaceList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Empty)
+	in := new(NamespaceReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -223,7 +223,7 @@ func _Greeter_NamespaceList_Handler(srv interface{}, ctx context.Context, dec fu
 		FullMethod: Greeter_NamespaceList_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GreeterServer).NamespaceList(ctx, req.(*Empty))
+		return srv.(GreeterServer).NamespaceList(ctx, req.(*NamespaceReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }

@@ -2,7 +2,6 @@ package biz
 
 import (
 	"context"
-	"fmt"
 	"github.com/go-kratos/kratos/v2/log"
 	corev1 "k8s.io/api/core/v1"
 )
@@ -33,29 +32,30 @@ type K8sRepoGetter interface {
 }
 
 // NewClusterUsecase 集群领域构造方法
-func NewClusterUsecase(repo ClusterRepo, logger log.Logger) *ClusterUsecase {
-	return &ClusterUsecase{repo: repo, log: log.NewHelper(logger)}
+func NewClusterUsecase(repo ClusterRepo, getter K8sRepoGetter, logger log.Logger) *ClusterUsecase {
+	return &ClusterUsecase{repo: repo, getter: getter, log: log.NewHelper(logger)}
 }
 
 func (c *ClusterUsecase) List(ctx context.Context) ([]*Cluster, error) {
 	return c.repo.List(ctx)
 }
 
-func (c *ClusterUsecase) ListNamespaces(ctx context.Context, id int) error {
+func (c *ClusterUsecase) ListNamespaces(ctx context.Context, id int) ([]string, error) {
 	repo, err := c.repo.Get(ctx, id)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	k8sRepo, err := c.getter.GetRepo([]byte(repo.Kubeconfig), nil)
+	k8sRepo, err := c.getter.GetRepo([]byte(repo.Kubeconfig), c.log)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	namespaceList, err := k8sRepo.ListNamespace(ctx)
 	if err != nil {
-		return err
+		return nil, err
 	}
+	var result []string
 	for _, v := range namespaceList.Items {
-		fmt.Println(v.Name)
+		result = append(result, v.Name)
 	}
-	return nil
+	return result, nil
 }

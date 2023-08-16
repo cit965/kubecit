@@ -39,9 +39,9 @@ service Greeter {
     };
   }
 
-  rpc NamespaceList (Empty) returns (Empty) {
+  rpc NamespaceList (NamespaceReq) returns (NamespaceResp) {
     option (google.api.http) = {
-      get: "/namespaces"
+      get: "/namespaces/{cluster}"
     };
   }
 }
@@ -84,7 +84,16 @@ message HelloRequest {
   string name = 1;
 }
 
+message NamespaceResp {
+  repeated string namespaces =1;
+}
+
 // The response message containing the greetings
 message HelloReply {
   string message = 1;
+}
+
+
+message NamespaceReq{
+  int32 cluster = 1;
 }
