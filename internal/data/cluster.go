@@ -23,3 +23,16 @@ func (c *clusterRepo) Get(ctx context.Context, id int) (*biz.Cluster, error) {
 	clu, err := c.data.db.Cluster.Get(ctx, id)
 	return &biz.Cluster{Kubeconfig: clu.Kubeconfig}, err
 }
+
+func (c *clusterRepo) List(ctx context.Context) ([]*biz.Cluster, error) {
+	res, err := c.data.db.Cluster.Query().All(ctx)
+	if err != nil {
+		return nil, err
+	}
+	var result []*biz.Cluster
+	for _, v := range res {
+		tmp := &biz.Cluster{Kubeconfig: v.Kubeconfig, Id: v.ID}
+		result = append(result, tmp)
+	}
+	return result, nil
+}

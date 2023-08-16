@@ -7,6 +7,18 @@ info:
     description: The greeting service definition.
     version: 0.0.1
 paths:
+    /clusters:
+        get:
+            tags:
+                - Greeter
+            operationId: Greeter_ClusterList
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/helloworld.v1.ClusterListResponse'
     /helloworld/{name}:
         get:
             tags:
@@ -59,6 +71,21 @@ paths:
                                 $ref: '#/components/schemas/helloworld.v1.UserRegisterResponse'
 components:
     schemas:
+        helloworld.v1.Cluster:
+            type: object
+            properties:
+                kubeconfig:
+                    type: string
+                id:
+                    type: integer
+                    format: int32
+        helloworld.v1.ClusterListResponse:
+            type: object
+            properties:
+                clusters:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/helloworld.v1.Cluster'
         helloworld.v1.HelloReply:
             type: object
             properties:
