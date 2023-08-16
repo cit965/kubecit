@@ -4,7 +4,6 @@ go 1.18
 
 require (
 	entgo.io/ent v0.12.3
-	github.com/davecgh/go-spew v1.1.1
 	github.com/go-kratos/kratos/v2 v2.6.2
 	github.com/go-kratos/swagger-api v1.0.1
 	github.com/go-sql-driver/mysql v1.6.0
@@ -33,6 +32,7 @@ require (
 	github.com/apparentlymart/go-textseg/v13 v13.0.0 // indirect
 	github.com/cenkalti/backoff/v4 v4.1.3 // indirect
 	github.com/containerd/continuity v0.3.0 // indirect
+	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/docker/cli v20.10.17+incompatible // indirect
 	github.com/docker/docker v20.10.7+incompatible // indirect
 	github.com/docker/go-connections v0.4.0 // indirect

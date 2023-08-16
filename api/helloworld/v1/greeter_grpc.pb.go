@@ -19,11 +19,12 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Greeter_SayHello_FullMethodName      = "/helloworld.v1.Greeter/SayHello"
-	Greeter_UserRegister_FullMethodName  = "/helloworld.v1.Greeter/UserRegister"
-	Greeter_UserList_FullMethodName      = "/helloworld.v1.Greeter/UserList"
-	Greeter_ClusterList_FullMethodName   = "/helloworld.v1.Greeter/ClusterList"
-	Greeter_NamespaceList_FullMethodName = "/helloworld.v1.Greeter/NamespaceList"
+	Greeter_SayHello_FullMethodName       = "/helloworld.v1.Greeter/SayHello"
+	Greeter_UserRegister_FullMethodName   = "/helloworld.v1.Greeter/UserRegister"
+	Greeter_UserList_FullMethodName       = "/helloworld.v1.Greeter/UserList"
+	Greeter_ClusterList_FullMethodName    = "/helloworld.v1.Greeter/ClusterList"
+	Greeter_NamespaceList_FullMethodName  = "/helloworld.v1.Greeter/NamespaceList"
+	Greeter_DeploymentList_FullMethodName = "/helloworld.v1.Greeter/DeploymentList"
 )
 
 // GreeterClient is the client API for Greeter service.
@@ -37,6 +38,7 @@ type GreeterClient interface {
 	UserList(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*UserListResponse, error)
 	ClusterList(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*ClusterListResponse, error)
 	NamespaceList(ctx context.Context, in *NamespaceReq, opts ...grpc.CallOption) (*NamespaceResp, error)
+	DeploymentList(ctx context.Context, in *DeploymentReq, opts ...grpc.CallOption) (*DeploymentResp, error)
 }
 
 type greeterClient struct {
@@ -92,6 +94,15 @@ func (c *greeterClient) NamespaceList(ctx context.Context, in *NamespaceReq, opt
 	return out, nil
 }
 
+func (c *greeterClient) DeploymentList(ctx context.Context, in *DeploymentReq, opts ...grpc.CallOption) (*DeploymentResp, error) {
+	out := new(DeploymentResp)
+	err := c.cc.Invoke(ctx, Greeter_DeploymentList_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // GreeterServer is the server API for Greeter service.
 // All implementations must embed UnimplementedGreeterServer
 // for forward compatibility
@@ -103,6 +114,7 @@ type GreeterServer interface {
 	UserList(context.Context, *Empty) (*UserListResponse, error)
 	ClusterList(context.Context, *Empty) (*ClusterListResponse, error)
 	NamespaceList(context.Context, *NamespaceReq) (*NamespaceResp, error)
+	DeploymentList(context.Context, *DeploymentReq) (*DeploymentResp, error)
 	mustEmbedUnimplementedGreeterServer()
 }
 
@@ -124,6 +136,9 @@ func (UnimplementedGreeterServer) ClusterList(context.Context, *Empty) (*Cluster
 }
 func (UnimplementedGreeterServer) NamespaceList(context.Context, *NamespaceReq) (*NamespaceResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method NamespaceList not implemented")
+}
+func (UnimplementedGreeterServer) DeploymentList(context.Context, *DeploymentReq) (*DeploymentResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeploymentList not implemented")
 }
 func (UnimplementedGreeterServer) mustEmbedUnimplementedGreeterServer() {}
 
@@ -228,6 +243,24 @@ func _Greeter_NamespaceList_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Greeter_DeploymentList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeploymentReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GreeterServer).DeploymentList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Greeter_DeploymentList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GreeterServer).DeploymentList(ctx, req.(*DeploymentReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Greeter_ServiceDesc is the grpc.ServiceDesc for Greeter service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -254,6 +287,10 @@ var Greeter_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "NamespaceList",
 			Handler:    _Greeter_NamespaceList_Handler,
+		},
+		{
+			MethodName: "DeploymentList",
+			Handler:    _Greeter_DeploymentList_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

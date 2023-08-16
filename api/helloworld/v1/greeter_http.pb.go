@@ -20,6 +20,7 @@ var _ = binding.EncodeURL
 const _ = http.SupportPackageIsVersion1
 
 const OperationGreeterClusterList = "/helloworld.v1.Greeter/ClusterList"
+const OperationGreeterDeploymentList = "/helloworld.v1.Greeter/DeploymentList"
 const OperationGreeterNamespaceList = "/helloworld.v1.Greeter/NamespaceList"
 const OperationGreeterSayHello = "/helloworld.v1.Greeter/SayHello"
 const OperationGreeterUserList = "/helloworld.v1.Greeter/UserList"
@@ -27,6 +28,7 @@ const OperationGreeterUserRegister = "/helloworld.v1.Greeter/UserRegister"
 
 type GreeterHTTPServer interface {
 	ClusterList(context.Context, *Empty) (*ClusterListResponse, error)
+	DeploymentList(context.Context, *DeploymentReq) (*DeploymentResp, error)
 	NamespaceList(context.Context, *NamespaceReq) (*NamespaceResp, error)
 	// SayHello Sends a greeting
 	SayHello(context.Context, *HelloRequest) (*HelloReply, error)
@@ -42,6 +44,7 @@ func RegisterGreeterHTTPServer(s *http.Server, srv GreeterHTTPServer) {
 	r.GET("/user", _Greeter_UserList0_HTTP_Handler(srv))
 	r.GET("/clusters", _Greeter_ClusterList0_HTTP_Handler(srv))
 	r.GET("/namespaces/{cluster}", _Greeter_NamespaceList0_HTTP_Handler(srv))
+	r.GET("/deployments/{cluster}/{namespace}", _Greeter_DeploymentList0_HTTP_Handler(srv))
 }
 
 func _Greeter_SayHello0_HTTP_Handler(srv GreeterHTTPServer) func(ctx http.Context) error {
@@ -148,8 +151,31 @@ func _Greeter_NamespaceList0_HTTP_Handler(srv GreeterHTTPServer) func(ctx http.C
 	}
 }
 
+func _Greeter_DeploymentList0_HTTP_Handler(srv GreeterHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in DeploymentReq
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationGreeterDeploymentList)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.DeploymentList(ctx, req.(*DeploymentReq))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*DeploymentResp)
+		return ctx.Result(200, reply)
+	}
+}
+
 type GreeterHTTPClient interface {
 	ClusterList(ctx context.Context, req *Empty, opts ...http.CallOption) (rsp *ClusterListResponse, err error)
+	DeploymentList(ctx context.Context, req *DeploymentReq, opts ...http.CallOption) (rsp *DeploymentResp, err error)
 	NamespaceList(ctx context.Context, req *NamespaceReq, opts ...http.CallOption) (rsp *NamespaceResp, err error)
 	SayHello(ctx context.Context, req *HelloRequest, opts ...http.CallOption) (rsp *HelloReply, err error)
 	UserList(ctx context.Context, req *Empty, opts ...http.CallOption) (rsp *UserListResponse, err error)
@@ -169,6 +195,19 @@ func (c *GreeterHTTPClientImpl) ClusterList(ctx context.Context, in *Empty, opts
 	pattern := "/clusters"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationGreeterClusterList))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *GreeterHTTPClientImpl) DeploymentList(ctx context.Context, in *DeploymentReq, opts ...http.CallOption) (*DeploymentResp, error) {
+	var out DeploymentResp
+	pattern := "/deployments/{cluster}/{namespace}"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationGreeterDeploymentList))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {

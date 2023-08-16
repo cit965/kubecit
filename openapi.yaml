@@ -19,6 +19,30 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/helloworld.v1.ClusterListResponse'
+    /deployments/{cluster}/{namespace}:
+        get:
+            tags:
+                - Greeter
+            operationId: Greeter_DeploymentList
+            parameters:
+                - name: cluster
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: int32
+                - name: namespace
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/helloworld.v1.DeploymentResp'
     /helloworld/{name}:
         get:
             tags:
@@ -105,6 +129,13 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/helloworld.v1.Cluster'
+        helloworld.v1.DeploymentResp:
+            type: object
+            properties:
+                deployments:
+                    type: array
+                    items:
+                        type: string
         helloworld.v1.HelloReply:
             type: object
             properties:
