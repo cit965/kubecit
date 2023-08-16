@@ -44,6 +44,13 @@ service Greeter {
       get: "/namespaces/{cluster}"
     };
   }
+
+  rpc DeploymentList (DeploymentReq) returns (DeploymentResp) {
+    option (google.api.http) = {
+      get: "/deployments/{cluster}/{namespace}"
+    };
+  }
+
 }
 
 
@@ -96,4 +103,15 @@ message HelloReply {
 
 message NamespaceReq{
   int32 cluster = 1;
+}
+
+
+message DeploymentReq{
+  int32 cluster = 1;
+  string namespace = 2;
+}
+
+
+message DeploymentResp {
+  repeated string deployments =1;
 }

@@ -84,3 +84,11 @@ func (s *GreeterService) NamespaceList(ctx context.Context, in *v1.NamespaceReq)
 	}
 	return &v1.NamespaceResp{Namespaces: namespaces}, nil
 }
+
+func (s *GreeterService) DeploymentList(ctx context.Context, in *v1.DeploymentReq) (*v1.DeploymentResp, error) {
+	deployments, err := s.clusterCase.ListDeployments(ctx, int(in.Cluster), in.Namespace)
+	if err != nil {
+		return nil, err
+	}
+	return &v1.DeploymentResp{Deployments: deployments}, nil
+}

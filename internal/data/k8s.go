@@ -8,6 +8,7 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 	"kubecit/internal/biz"
 
+	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 )
 
@@ -27,6 +28,9 @@ func (k *k8sRepoGetter) GetRepo(kubeCfg []byte, help *log.Helper) (biz.K8sRepo, 
 
 func (k *k8sRepo) ListNamespace(ctx context.Context) (*corev1.NamespaceList, error) {
 	return k.clientSet.CoreV1().Namespaces().List(ctx, metav1.ListOptions{})
+}
+func (k *k8sRepo) ListDeployment(ctx context.Context, namespace string) (*appsv1.DeploymentList, error) {
+	return k.clientSet.AppsV1().Deployments(namespace).List(ctx, metav1.ListOptions{})
 }
 
 func NewK8sRepo(kubeCfg []byte, logger *log.Helper) (biz.K8sRepo, error) {

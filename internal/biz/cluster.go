@@ -3,6 +3,7 @@ package biz
 import (
 	"context"
 	"github.com/go-kratos/kratos/v2/log"
+	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 )
 
@@ -26,6 +27,7 @@ type ClusterRepo interface {
 
 type K8sRepo interface {
 	ListNamespace(ctx context.Context) (*corev1.NamespaceList, error)
+	ListDeployment(ctx context.Context, namespace string) (*appsv1.DeploymentList, error)
 }
 type K8sRepoGetter interface {
 	GetRepo(kubeCfg []byte, help *log.Helper) (K8sRepo, error)
@@ -38,6 +40,26 @@ func NewClusterUsecase(repo ClusterRepo, getter K8sRepoGetter, logger log.Logger
 
 func (c *ClusterUsecase) List(ctx context.Context) ([]*Cluster, error) {
 	return c.repo.List(ctx)
+}
+
+func (c *ClusterUsecase) ListDeployments(ctx context.Context, id int, namespace string) ([]string, error) {
+	repo, err := c.repo.Get(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	k8sRepo, err := c.getter.GetRepo([]byte(repo.Kubeconfig), c.log)
+	if err != nil {
+		return nil, err
+	}
+	deploymentList, err := k8sRepo.ListDeployment(ctx, namespace)
+	if err != nil {
+		return nil, err
+	}
+	var result []string
+	for _, v := range deploymentList.Items {
+		result = append(result, v.Name)
+	}
+	return result, nil
 }
 
 func (c *ClusterUsecase) ListNamespaces(ctx context.Context, id int) ([]string, error) {
