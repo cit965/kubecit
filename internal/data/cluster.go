@@ -20,7 +20,11 @@ func NewClusterRepo(data *Data, logger log.Logger) biz.ClusterRepo {
 }
 
 func (c *clusterRepo) Get(ctx context.Context, id int) (*biz.Cluster, error) {
-	clu, err := c.data.db.Cluster.Get(ctx, id)
+	clu, err := c.data.db.Cluster.Get(context.Background(), id)
+	if err != nil {
+		return nil, err
+	}
+	log.Info(clu)
 	return &biz.Cluster{Kubeconfig: clu.Kubeconfig}, err
 }
 

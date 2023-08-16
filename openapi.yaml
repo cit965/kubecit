@@ -38,18 +38,25 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/helloworld.v1.HelloReply'
-    /namespaces:
+    /namespaces/{cluster}:
         get:
             tags:
                 - Greeter
             operationId: Greeter_NamespaceList
+            parameters:
+                - name: cluster
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: int32
             responses:
                 "200":
                     description: OK
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/helloworld.v1.Empty'
+                                $ref: '#/components/schemas/helloworld.v1.NamespaceResp'
     /user:
         get:
             tags:
@@ -98,15 +105,19 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/helloworld.v1.Cluster'
-        helloworld.v1.Empty:
-            type: object
-            properties: {}
         helloworld.v1.HelloReply:
             type: object
             properties:
                 message:
                     type: string
             description: The response message containing the greetings
+        helloworld.v1.NamespaceResp:
+            type: object
+            properties:
+                namespaces:
+                    type: array
+                    items:
+                        type: string
         helloworld.v1.User:
             type: object
             properties:
