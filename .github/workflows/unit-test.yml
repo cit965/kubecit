@@ -3,6 +3,7 @@ name: Go package
 on:
   pull_request:
     types: [opened, reopened]
+  push:
 
 jobs:
   build:
