@@ -73,7 +73,7 @@ var _ = Describe("Data", func() {
 		Context("With more than 300 pages", func() {
 			It("should be a novel", func() {
 				ctx := context.Background()
-				user, _ := ro.Register(ctx, &biz.User{
+				user, _ := ro.Create(ctx, &biz.User{
 					Username: "testUser",
 					Password: "xx",
 					Age:      0,
