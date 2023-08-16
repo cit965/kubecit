@@ -76,3 +76,8 @@ func (s *GreeterService) ClusterList(ctx context.Context, in *v1.Empty) (*v1.Clu
 	}
 	return &v1.ClusterListResponse{Clusters: res}, nil
 }
+
+func (s *GreeterService) NamespaceList(ctx context.Context, in *v1.Empty) (*v1.Empty, error) {
+	s.clusterCase.ListNamespaces(ctx, 1)
+	return nil, nil
+}
