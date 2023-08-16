@@ -5,10 +5,10 @@
 ## 前置知识
 
 - go v1.21
-- kratos 框架
+- [kratos web框架](https://github.com/go-kratos/kratos)
 - k8s 基础知识
 
-## 命令
+## 启动项目
 
 
 在根目录执行 `make init` 安装 wire proto 等依赖
