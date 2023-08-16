@@ -7,7 +7,6 @@
 - go v1.21
 - kratos 框架
 - k8s 基础知识
-- cmdb
 
 ## 命令
 
