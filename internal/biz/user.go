@@ -42,7 +42,7 @@ func (u *UserUsecase) RegisterUser(ctx context.Context, user *User) (*User, erro
 }
 
 // UserList 列出所有用户
-func (u *UserUsecase) UserList(ctx context.Context) ([]*User, error) {
+func (u *UserUsecase) UserLi(ctx context.Context) ([]*User, error) {
 	userResult, err := u.repo.List(ctx)
 	if err != nil {
 		return nil, err
