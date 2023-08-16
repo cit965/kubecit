@@ -2,8 +2,8 @@ name: Go package
 
 on:
   pull_request:
-    types: [opened, reopened]
-  push:
+    types: [opened, reopened,edited]
+
 
 jobs:
   build:
