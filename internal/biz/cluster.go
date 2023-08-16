@@ -5,7 +5,9 @@ import (
 	"github.com/go-kratos/kratos/v2/log"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
+	networkingv1 "k8s.io/api/networking/v1"
 	"k8s.io/apimachinery/pkg/labels"
+	"k8s.io/client-go/rest"
 )
 
 type Cluster struct {
@@ -37,6 +39,11 @@ type K8sRepo interface {
 	ListDeployment(ctx context.Context, namespace string) (*appsv1.DeploymentList, error)
 	// 列出某 namespace 下有特定标签的pod
 	ListPodsByLabelSelector(ctx context.Context, namespace string, selector labels.Selector) (*corev1.PodList, error)
+
+	ListIngress(ctx context.Context, namespace string) (*networkingv1.IngressList, error)
+	ListServiceByNamespace(ctx context.Context, namespace string) (*corev1.ServiceList, error)
+	ListEvents(ctx context.Context, namespace, uid string) (*corev1.EventList, error)
+	GetPodLogReq(pod, namespace string, options *corev1.PodLogOptions) *rest.Request
 }
 type K8sRepoGetter interface {
 	GetRepo(kubeCfg []byte, help *log.Helper) (K8sRepo, error)
