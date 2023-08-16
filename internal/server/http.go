@@ -32,7 +32,6 @@ func NewHTTPServer(c *conf.Server, greeter *service.GreeterService, logger log.L
 	openAPIhandler := openapiv2.NewHandler()
 	srv.HandlePrefix("/q/", openAPIhandler)
 	v1.RegisterGreeterHTTPServer(srv, greeter)
-
 	srv.WalkRoute(func(info http.RouteInfo) error {
 		fmt.Printf("%-50s \t %s\n", info.Path, info.Method)
 		return nil

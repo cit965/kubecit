@@ -6,6 +6,9 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
+// CloudHost is the predicate function for cloudhost builders.
+type CloudHost func(*sql.Selector)
+
 // Cluster is the predicate function for cluster builders.
 type Cluster func(*sql.Selector)
 

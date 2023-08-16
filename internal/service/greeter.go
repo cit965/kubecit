@@ -3,6 +3,8 @@ package service
 import (
 	"context"
 	"fmt"
+	"kubecit/internal/data"
+	"time"
 
 	v1 "kubecit/api/helloworld/v1"
 	"kubecit/internal/biz"
@@ -12,14 +14,15 @@ import (
 type GreeterService struct {
 	v1.UnimplementedGreeterServer
 
-	uc          *biz.GreeterUsecase
-	userCase    *biz.UserUsecase
-	clusterCase *biz.ClusterUsecase
+	uc            *biz.GreeterUsecase
+	userCase      *biz.UserUsecase
+	clusterCase   *biz.ClusterUsecase
+	cloudHostCase *biz.CloudHostUsecase
 }
 
 // NewGreeterService new a greeter service.
-func NewGreeterService(uc *biz.GreeterUsecase, userCase *biz.UserUsecase, clusterCase *biz.ClusterUsecase) *GreeterService {
-	return &GreeterService{uc: uc, userCase: userCase, clusterCase: clusterCase}
+func NewGreeterService(uc *biz.GreeterUsecase, userCase *biz.UserUsecase, clusterCase *biz.ClusterUsecase, cloudHostCase *biz.CloudHostUsecase) *GreeterService {
+	return &GreeterService{uc: uc, userCase: userCase, clusterCase: clusterCase, cloudHostCase: cloudHostCase}
 }
 
 // SayHello implements helloworld.GreeterServer.
@@ -80,4 +83,87 @@ func (s *GreeterService) ClusterList(ctx context.Context, in *v1.Empty) (*v1.Clu
 func (s *GreeterService) NamespaceList(ctx context.Context, in *v1.Empty) (*v1.Empty, error) {
 	s.clusterCase.ListNamespaces(ctx, 1)
 	return nil, nil
+}
+
+func (s *GreeterService) GetInstance(ctx context.Context, in *v1.GetInstanceRequest) (*v1.GetInstanceReply, error) {
+	cloudHost, err := s.cloudHostCase.Get(ctx, in.UUID)
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	host := &v1.Host{}
+	err = data.ConvertType(cloudHost, host)
+	if err != nil {
+		return nil, err
+	}
+	res := &v1.GetInstanceReply{
+		Instance: host,
+	}
+	return res, nil
+}
+
+func (s *GreeterService) CreateInstance(ctx context.Context, in *v1.CreateInstanceRequest) (*v1.CreateInstanceReply, error) {
+	host := &biz.CloudHost{
+		UUID:               in.Instance.UUID,
+		State:              in.Instance.State,
+		IPV6AddressPrivate: in.Instance.IPV6AddressPrivate,
+		IPV4AddressPrivate: in.Instance.IPV4AddressPrivate,
+		IPV6AddressPublic:  in.Instance.IPV6AddressPublic,
+		IPV4AddressPublic:  in.Instance.IPV4AddressPublic,
+		Memory:             int(in.Instance.Memory),
+		CPU:                int(in.Instance.CPU),
+		CreatedTime:        time.Now(),
+		ExpiredTime:        time.Time{},
+		InstanceName:       in.Instance.InstanceName,
+		ImageName:          in.Instance.ImageName,
+		OSType:             in.Instance.OSType,
+		Manufacturer:       in.Instance.Manufacturer,
+		Zone:               in.Instance.Zone,
+		SecurityGroups:     in.Instance.SecurityGroups,
+		BillType:           in.Instance.BillType,
+		ChargeType:         in.Instance.ChargeType,
+		IsActive:           in.Instance.IsActive,
+		InstanceType:       in.Instance.InstanceType,
+	}
+
+	_, err := s.cloudHostCase.Create(ctx, host)
+	if err != nil {
+		return nil, err
+	}
+	res := &v1.CreateInstanceReply{
+		Instance: in.Instance,
+	}
+
+	return res, err
+}
+func (s *GreeterService) ListInstances(ctx context.Context, in *v1.ListInstancesRequest) (*v1.ListInstancesReply, error) {
+	cloudHosts, err := s.cloudHostCase.List(ctx)
+	if err != nil {
+		return nil, err
+	}
+	res := &v1.ListInstancesReply{Total: int64(len(cloudHosts))}
+	for _, v := range cloudHosts {
+		instance := &v1.Host{}
+		data.ConvertType(v, instance)
+		res.Instances = append(res.Instances, instance)
+	}
+	return res, nil
+}
+
+// TODO
+func (s *GreeterService) DeleteInstanceById(ctx context.Context, in *v1.DeleteInstanceRequest) (*v1.DeleteInstanceReply, error) {
+	return nil, nil
+}
+
+// TODO
+func (s *GreeterService) UpdateInstance(ctx context.Context, in *v1.UpdateInstanceRequest) (*v1.UpdateInstanceReply, error) {
+	return nil, nil
+}
+
+func (s *GreeterService) SyncFromTencent(ctx context.Context, in *v1.SyncFromTencentRequest) (*v1.SyncFromTencentReply, error) {
+	ok, total, err := s.cloudHostCase.Syncer(ctx, in.AccessKey, in.SecretKey, in.Region)
+	if !ok || err != nil {
+		return nil, err
+	}
+	return &v1.SyncFromTencentReply{Message: "sync finished", Total: total}, nil
 }

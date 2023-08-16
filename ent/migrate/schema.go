@@ -8,6 +8,36 @@ import (
 )
 
 var (
+	// CloudHostsColumns holds the columns for the "cloud_hosts" table.
+	CloudHostsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "uuid", Type: field.TypeString, Unique: true},
+		{Name: "state", Type: field.TypeString, Default: "RUNNING"},
+		{Name: "ipv6address_private", Type: field.TypeString},
+		{Name: "ipv6address_public", Type: field.TypeString},
+		{Name: "ipv4address_private", Type: field.TypeString},
+		{Name: "ipv4address_public", Type: field.TypeString},
+		{Name: "memory", Type: field.TypeInt},
+		{Name: "cpu", Type: field.TypeInt},
+		{Name: "created_time", Type: field.TypeTime},
+		{Name: "expired_time", Type: field.TypeTime},
+		{Name: "instance_name", Type: field.TypeString},
+		{Name: "image_name", Type: field.TypeString},
+		{Name: "os_type", Type: field.TypeString},
+		{Name: "manufacturer", Type: field.TypeString},
+		{Name: "zone", Type: field.TypeString},
+		{Name: "security_groups", Type: field.TypeString},
+		{Name: "bill_type", Type: field.TypeString},
+		{Name: "charge_type", Type: field.TypeString},
+		{Name: "is_active", Type: field.TypeBool, Default: true},
+		{Name: "instance_type", Type: field.TypeString},
+	}
+	// CloudHostsTable holds the schema information for the "cloud_hosts" table.
+	CloudHostsTable = &schema.Table{
+		Name:       "cloud_hosts",
+		Columns:    CloudHostsColumns,
+		PrimaryKey: []*schema.Column{CloudHostsColumns[0]},
+	}
 	// ClustersColumns holds the columns for the "clusters" table.
 	ClustersColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -34,6 +64,7 @@ var (
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
+		CloudHostsTable,
 		ClustersTable,
 		UsersTable,
 	}

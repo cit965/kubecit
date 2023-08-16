@@ -14,6 +14,8 @@ require (
 	github.com/onsi/ginkgo/v2 v2.11.0
 	github.com/onsi/gomega v1.27.10
 	github.com/ory/dockertest/v3 v3.10.0
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.724
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.724
 	go.uber.org/automaxprocs v1.5.1
 	google.golang.org/genproto v0.0.0-20220524023933-508584e28198
 	google.golang.org/grpc v1.46.2

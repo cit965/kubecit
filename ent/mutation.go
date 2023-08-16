@@ -6,10 +6,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"kubecit/ent/cloudhost"
 	"kubecit/ent/cluster"
 	"kubecit/ent/predicate"
 	"kubecit/ent/user"
 	"sync"
+	"time"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
@@ -24,9 +26,1431 @@ const (
 	OpUpdateOne = ent.OpUpdateOne
 
 	// Node types.
-	TypeCluster = "Cluster"
-	TypeUser    = "User"
+	TypeCloudHost = "CloudHost"
+	TypeCluster   = "Cluster"
+	TypeUser      = "User"
 )
+
+// CloudHostMutation represents an operation that mutates the CloudHost nodes in the graph.
+type CloudHostMutation struct {
+	config
+	op                 Op
+	typ                string
+	id                 *int
+	uuid               *string
+	state              *string
+	ipv6AddressPrivate *string
+	ipv6AddressPublic  *string
+	ipv4AddressPrivate *string
+	ipv4AddressPublic  *string
+	memory             *int
+	addmemory          *int
+	cpu                *int
+	addcpu             *int
+	createdTime        *time.Time
+	expiredTime        *time.Time
+	instanceName       *string
+	imageName          *string
+	osType             *string
+	manufacturer       *string
+	zone               *string
+	securityGroups     *string
+	billType           *string
+	chargeType         *string
+	isActive           *bool
+	instanceType       *string
+	clearedFields      map[string]struct{}
+	done               bool
+	oldValue           func(context.Context) (*CloudHost, error)
+	predicates         []predicate.CloudHost
+}
+
+var _ ent.Mutation = (*CloudHostMutation)(nil)
+
+// cloudhostOption allows management of the mutation configuration using functional options.
+type cloudhostOption func(*CloudHostMutation)
+
+// newCloudHostMutation creates new mutation for the CloudHost entity.
+func newCloudHostMutation(c config, op Op, opts ...cloudhostOption) *CloudHostMutation {
+	m := &CloudHostMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeCloudHost,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withCloudHostID sets the ID field of the mutation.
+func withCloudHostID(id int) cloudhostOption {
+	return func(m *CloudHostMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *CloudHost
+		)
+		m.oldValue = func(ctx context.Context) (*CloudHost, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().CloudHost.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withCloudHost sets the old CloudHost of the mutation.
+func withCloudHost(node *CloudHost) cloudhostOption {
+	return func(m *CloudHostMutation) {
+		m.oldValue = func(context.Context) (*CloudHost, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m CloudHostMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m CloudHostMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *CloudHostMutation) ID() (id int, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *CloudHostMutation) IDs(ctx context.Context) ([]int, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []int{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().CloudHost.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetUUID sets the "uuid" field.
+func (m *CloudHostMutation) SetUUID(s string) {
+	m.uuid = &s
+}
+
+// UUID returns the value of the "uuid" field in the mutation.
+func (m *CloudHostMutation) UUID() (r string, exists bool) {
+	v := m.uuid
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUUID returns the old "uuid" field's value of the CloudHost entity.
+// If the CloudHost object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *CloudHostMutation) OldUUID(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUUID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUUID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUUID: %w", err)
+	}
+	return oldValue.UUID, nil
+}
+
+// ResetUUID resets all changes to the "uuid" field.
+func (m *CloudHostMutation) ResetUUID() {
+	m.uuid = nil
+}
+
+// SetState sets the "state" field.
+func (m *CloudHostMutation) SetState(s string) {
+	m.state = &s
+}
+
+// State returns the value of the "state" field in the mutation.
+func (m *CloudHostMutation) State() (r string, exists bool) {
+	v := m.state
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldState returns the old "state" field's value of the CloudHost entity.
+// If the CloudHost object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *CloudHostMutation) OldState(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldState is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldState requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldState: %w", err)
+	}
+	return oldValue.State, nil
+}
+
+// ResetState resets all changes to the "state" field.
+func (m *CloudHostMutation) ResetState() {
+	m.state = nil
+}
+
+// SetIpv6AddressPrivate sets the "ipv6AddressPrivate" field.
+func (m *CloudHostMutation) SetIpv6AddressPrivate(s string) {
+	m.ipv6AddressPrivate = &s
+}
+
+// Ipv6AddressPrivate returns the value of the "ipv6AddressPrivate" field in the mutation.
+func (m *CloudHostMutation) Ipv6AddressPrivate() (r string, exists bool) {
+	v := m.ipv6AddressPrivate
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldIpv6AddressPrivate returns the old "ipv6AddressPrivate" field's value of the CloudHost entity.
+// If the CloudHost object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *CloudHostMutation) OldIpv6AddressPrivate(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldIpv6AddressPrivate is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldIpv6AddressPrivate requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldIpv6AddressPrivate: %w", err)
+	}
+	return oldValue.Ipv6AddressPrivate, nil
+}
+
+// ResetIpv6AddressPrivate resets all changes to the "ipv6AddressPrivate" field.
+func (m *CloudHostMutation) ResetIpv6AddressPrivate() {
+	m.ipv6AddressPrivate = nil
+}
+
+// SetIpv6AddressPublic sets the "ipv6AddressPublic" field.
+func (m *CloudHostMutation) SetIpv6AddressPublic(s string) {
+	m.ipv6AddressPublic = &s
+}
+
+// Ipv6AddressPublic returns the value of the "ipv6AddressPublic" field in the mutation.
+func (m *CloudHostMutation) Ipv6AddressPublic() (r string, exists bool) {
+	v := m.ipv6AddressPublic
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldIpv6AddressPublic returns the old "ipv6AddressPublic" field's value of the CloudHost entity.
+// If the CloudHost object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *CloudHostMutation) OldIpv6AddressPublic(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldIpv6AddressPublic is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldIpv6AddressPublic requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldIpv6AddressPublic: %w", err)
+	}
+	return oldValue.Ipv6AddressPublic, nil
+}
+
+// ResetIpv6AddressPublic resets all changes to the "ipv6AddressPublic" field.
+func (m *CloudHostMutation) ResetIpv6AddressPublic() {
+	m.ipv6AddressPublic = nil
+}
+
+// SetIpv4AddressPrivate sets the "ipv4AddressPrivate" field.
+func (m *CloudHostMutation) SetIpv4AddressPrivate(s string) {
+	m.ipv4AddressPrivate = &s
+}
+
+// Ipv4AddressPrivate returns the value of the "ipv4AddressPrivate" field in the mutation.
+func (m *CloudHostMutation) Ipv4AddressPrivate() (r string, exists bool) {
+	v := m.ipv4AddressPrivate
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldIpv4AddressPrivate returns the old "ipv4AddressPrivate" field's value of the CloudHost entity.
+// If the CloudHost object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *CloudHostMutation) OldIpv4AddressPrivate(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldIpv4AddressPrivate is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldIpv4AddressPrivate requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldIpv4AddressPrivate: %w", err)
+	}
+	return oldValue.Ipv4AddressPrivate, nil
+}
+
+// ResetIpv4AddressPrivate resets all changes to the "ipv4AddressPrivate" field.
+func (m *CloudHostMutation) ResetIpv4AddressPrivate() {
+	m.ipv4AddressPrivate = nil
+}
+
+// SetIpv4AddressPublic sets the "ipv4AddressPublic" field.
+func (m *CloudHostMutation) SetIpv4AddressPublic(s string) {
+	m.ipv4AddressPublic = &s
+}
+
+// Ipv4AddressPublic returns the value of the "ipv4AddressPublic" field in the mutation.
+func (m *CloudHostMutation) Ipv4AddressPublic() (r string, exists bool) {
+	v := m.ipv4AddressPublic
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldIpv4AddressPublic returns the old "ipv4AddressPublic" field's value of the CloudHost entity.
+// If the CloudHost object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *CloudHostMutation) OldIpv4AddressPublic(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldIpv4AddressPublic is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldIpv4AddressPublic requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldIpv4AddressPublic: %w", err)
+	}
+	return oldValue.Ipv4AddressPublic, nil
+}
+
+// ResetIpv4AddressPublic resets all changes to the "ipv4AddressPublic" field.
+func (m *CloudHostMutation) ResetIpv4AddressPublic() {
+	m.ipv4AddressPublic = nil
+}
+
+// SetMemory sets the "memory" field.
+func (m *CloudHostMutation) SetMemory(i int) {
+	m.memory = &i
+	m.addmemory = nil
+}
+
+// Memory returns the value of the "memory" field in the mutation.
+func (m *CloudHostMutation) Memory() (r int, exists bool) {
+	v := m.memory
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldMemory returns the old "memory" field's value of the CloudHost entity.
+// If the CloudHost object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *CloudHostMutation) OldMemory(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldMemory is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldMemory requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldMemory: %w", err)
+	}
+	return oldValue.Memory, nil
+}
+
+// AddMemory adds i to the "memory" field.
+func (m *CloudHostMutation) AddMemory(i int) {
+	if m.addmemory != nil {
+		*m.addmemory += i
+	} else {
+		m.addmemory = &i
+	}
+}
+
+// AddedMemory returns the value that was added to the "memory" field in this mutation.
+func (m *CloudHostMutation) AddedMemory() (r int, exists bool) {
+	v := m.addmemory
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetMemory resets all changes to the "memory" field.
+func (m *CloudHostMutation) ResetMemory() {
+	m.memory = nil
+	m.addmemory = nil
+}
+
+// SetCPU sets the "cpu" field.
+func (m *CloudHostMutation) SetCPU(i int) {
+	m.cpu = &i
+	m.addcpu = nil
+}
+
+// CPU returns the value of the "cpu" field in the mutation.
+func (m *CloudHostMutation) CPU() (r int, exists bool) {
+	v := m.cpu
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCPU returns the old "cpu" field's value of the CloudHost entity.
+// If the CloudHost object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *CloudHostMutation) OldCPU(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCPU is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCPU requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCPU: %w", err)
+	}
+	return oldValue.CPU, nil
+}
+
+// AddCPU adds i to the "cpu" field.
+func (m *CloudHostMutation) AddCPU(i int) {
+	if m.addcpu != nil {
+		*m.addcpu += i
+	} else {
+		m.addcpu = &i
+	}
+}
+
+// AddedCPU returns the value that was added to the "cpu" field in this mutation.
+func (m *CloudHostMutation) AddedCPU() (r int, exists bool) {
+	v := m.addcpu
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetCPU resets all changes to the "cpu" field.
+func (m *CloudHostMutation) ResetCPU() {
+	m.cpu = nil
+	m.addcpu = nil
+}
+
+// SetCreatedTime sets the "createdTime" field.
+func (m *CloudHostMutation) SetCreatedTime(t time.Time) {
+	m.createdTime = &t
+}
+
+// CreatedTime returns the value of the "createdTime" field in the mutation.
+func (m *CloudHostMutation) CreatedTime() (r time.Time, exists bool) {
+	v := m.createdTime
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedTime returns the old "createdTime" field's value of the CloudHost entity.
+// If the CloudHost object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *CloudHostMutation) OldCreatedTime(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedTime is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedTime requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedTime: %w", err)
+	}
+	return oldValue.CreatedTime, nil
+}
+
+// ResetCreatedTime resets all changes to the "createdTime" field.
+func (m *CloudHostMutation) ResetCreatedTime() {
+	m.createdTime = nil
+}
+
+// SetExpiredTime sets the "expiredTime" field.
+func (m *CloudHostMutation) SetExpiredTime(t time.Time) {
+	m.expiredTime = &t
+}
+
+// ExpiredTime returns the value of the "expiredTime" field in the mutation.
+func (m *CloudHostMutation) ExpiredTime() (r time.Time, exists bool) {
+	v := m.expiredTime
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldExpiredTime returns the old "expiredTime" field's value of the CloudHost entity.
+// If the CloudHost object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *CloudHostMutation) OldExpiredTime(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldExpiredTime is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldExpiredTime requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldExpiredTime: %w", err)
+	}
+	return oldValue.ExpiredTime, nil
+}
+
+// ResetExpiredTime resets all changes to the "expiredTime" field.
+func (m *CloudHostMutation) ResetExpiredTime() {
+	m.expiredTime = nil
+}
+
+// SetInstanceName sets the "instanceName" field.
+func (m *CloudHostMutation) SetInstanceName(s string) {
+	m.instanceName = &s
+}
+
+// InstanceName returns the value of the "instanceName" field in the mutation.
+func (m *CloudHostMutation) InstanceName() (r string, exists bool) {
+	v := m.instanceName
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldInstanceName returns the old "instanceName" field's value of the CloudHost entity.
+// If the CloudHost object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *CloudHostMutation) OldInstanceName(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldInstanceName is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldInstanceName requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldInstanceName: %w", err)
+	}
+	return oldValue.InstanceName, nil
+}
+
+// ResetInstanceName resets all changes to the "instanceName" field.
+func (m *CloudHostMutation) ResetInstanceName() {
+	m.instanceName = nil
+}
+
+// SetImageName sets the "imageName" field.
+func (m *CloudHostMutation) SetImageName(s string) {
+	m.imageName = &s
+}
+
+// ImageName returns the value of the "imageName" field in the mutation.
+func (m *CloudHostMutation) ImageName() (r string, exists bool) {
+	v := m.imageName
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldImageName returns the old "imageName" field's value of the CloudHost entity.
+// If the CloudHost object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *CloudHostMutation) OldImageName(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldImageName is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldImageName requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldImageName: %w", err)
+	}
+	return oldValue.ImageName, nil
+}
+
+// ResetImageName resets all changes to the "imageName" field.
+func (m *CloudHostMutation) ResetImageName() {
+	m.imageName = nil
+}
+
+// SetOsType sets the "osType" field.
+func (m *CloudHostMutation) SetOsType(s string) {
+	m.osType = &s
+}
+
+// OsType returns the value of the "osType" field in the mutation.
+func (m *CloudHostMutation) OsType() (r string, exists bool) {
+	v := m.osType
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldOsType returns the old "osType" field's value of the CloudHost entity.
+// If the CloudHost object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *CloudHostMutation) OldOsType(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldOsType is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldOsType requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldOsType: %w", err)
+	}
+	return oldValue.OsType, nil
+}
+
+// ResetOsType resets all changes to the "osType" field.
+func (m *CloudHostMutation) ResetOsType() {
+	m.osType = nil
+}
+
+// SetManufacturer sets the "manufacturer" field.
+func (m *CloudHostMutation) SetManufacturer(s string) {
+	m.manufacturer = &s
+}
+
+// Manufacturer returns the value of the "manufacturer" field in the mutation.
+func (m *CloudHostMutation) Manufacturer() (r string, exists bool) {
+	v := m.manufacturer
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldManufacturer returns the old "manufacturer" field's value of the CloudHost entity.
+// If the CloudHost object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *CloudHostMutation) OldManufacturer(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldManufacturer is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldManufacturer requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldManufacturer: %w", err)
+	}
+	return oldValue.Manufacturer, nil
+}
+
+// ResetManufacturer resets all changes to the "manufacturer" field.
+func (m *CloudHostMutation) ResetManufacturer() {
+	m.manufacturer = nil
+}
+
+// SetZone sets the "zone" field.
+func (m *CloudHostMutation) SetZone(s string) {
+	m.zone = &s
+}
+
+// Zone returns the value of the "zone" field in the mutation.
+func (m *CloudHostMutation) Zone() (r string, exists bool) {
+	v := m.zone
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldZone returns the old "zone" field's value of the CloudHost entity.
+// If the CloudHost object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *CloudHostMutation) OldZone(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldZone is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldZone requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldZone: %w", err)
+	}
+	return oldValue.Zone, nil
+}
+
+// ResetZone resets all changes to the "zone" field.
+func (m *CloudHostMutation) ResetZone() {
+	m.zone = nil
+}
+
+// SetSecurityGroups sets the "securityGroups" field.
+func (m *CloudHostMutation) SetSecurityGroups(s string) {
+	m.securityGroups = &s
+}
+
+// SecurityGroups returns the value of the "securityGroups" field in the mutation.
+func (m *CloudHostMutation) SecurityGroups() (r string, exists bool) {
+	v := m.securityGroups
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldSecurityGroups returns the old "securityGroups" field's value of the CloudHost entity.
+// If the CloudHost object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *CloudHostMutation) OldSecurityGroups(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldSecurityGroups is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldSecurityGroups requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldSecurityGroups: %w", err)
+	}
+	return oldValue.SecurityGroups, nil
+}
+
+// ResetSecurityGroups resets all changes to the "securityGroups" field.
+func (m *CloudHostMutation) ResetSecurityGroups() {
+	m.securityGroups = nil
+}
+
+// SetBillType sets the "billType" field.
+func (m *CloudHostMutation) SetBillType(s string) {
+	m.billType = &s
+}
+
+// BillType returns the value of the "billType" field in the mutation.
+func (m *CloudHostMutation) BillType() (r string, exists bool) {
+	v := m.billType
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldBillType returns the old "billType" field's value of the CloudHost entity.
+// If the CloudHost object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *CloudHostMutation) OldBillType(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldBillType is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldBillType requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldBillType: %w", err)
+	}
+	return oldValue.BillType, nil
+}
+
+// ResetBillType resets all changes to the "billType" field.
+func (m *CloudHostMutation) ResetBillType() {
+	m.billType = nil
+}
+
+// SetChargeType sets the "chargeType" field.
+func (m *CloudHostMutation) SetChargeType(s string) {
+	m.chargeType = &s
+}
+
+// ChargeType returns the value of the "chargeType" field in the mutation.
+func (m *CloudHostMutation) ChargeType() (r string, exists bool) {
+	v := m.chargeType
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldChargeType returns the old "chargeType" field's value of the CloudHost entity.
+// If the CloudHost object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *CloudHostMutation) OldChargeType(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldChargeType is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldChargeType requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldChargeType: %w", err)
+	}
+	return oldValue.ChargeType, nil
+}
+
+// ResetChargeType resets all changes to the "chargeType" field.
+func (m *CloudHostMutation) ResetChargeType() {
+	m.chargeType = nil
+}
+
+// SetIsActive sets the "isActive" field.
+func (m *CloudHostMutation) SetIsActive(b bool) {
+	m.isActive = &b
+}
+
+// IsActive returns the value of the "isActive" field in the mutation.
+func (m *CloudHostMutation) IsActive() (r bool, exists bool) {
+	v := m.isActive
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldIsActive returns the old "isActive" field's value of the CloudHost entity.
+// If the CloudHost object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *CloudHostMutation) OldIsActive(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldIsActive is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldIsActive requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldIsActive: %w", err)
+	}
+	return oldValue.IsActive, nil
+}
+
+// ResetIsActive resets all changes to the "isActive" field.
+func (m *CloudHostMutation) ResetIsActive() {
+	m.isActive = nil
+}
+
+// SetInstanceType sets the "instanceType" field.
+func (m *CloudHostMutation) SetInstanceType(s string) {
+	m.instanceType = &s
+}
+
+// InstanceType returns the value of the "instanceType" field in the mutation.
+func (m *CloudHostMutation) InstanceType() (r string, exists bool) {
+	v := m.instanceType
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldInstanceType returns the old "instanceType" field's value of the CloudHost entity.
+// If the CloudHost object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *CloudHostMutation) OldInstanceType(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldInstanceType is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldInstanceType requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldInstanceType: %w", err)
+	}
+	return oldValue.InstanceType, nil
+}
+
+// ResetInstanceType resets all changes to the "instanceType" field.
+func (m *CloudHostMutation) ResetInstanceType() {
+	m.instanceType = nil
+}
+
+// Where appends a list predicates to the CloudHostMutation builder.
+func (m *CloudHostMutation) Where(ps ...predicate.CloudHost) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// WhereP appends storage-level predicates to the CloudHostMutation builder. Using this method,
+// users can use type-assertion to append predicates that do not depend on any generated package.
+func (m *CloudHostMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.CloudHost, len(ps))
+	for i := range ps {
+		p[i] = ps[i]
+	}
+	m.Where(p...)
+}
+
+// Op returns the operation name.
+func (m *CloudHostMutation) Op() Op {
+	return m.op
+}
+
+// SetOp allows setting the mutation operation.
+func (m *CloudHostMutation) SetOp(op Op) {
+	m.op = op
+}
+
+// Type returns the node type of this mutation (CloudHost).
+func (m *CloudHostMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *CloudHostMutation) Fields() []string {
+	fields := make([]string, 0, 20)
+	if m.uuid != nil {
+		fields = append(fields, cloudhost.FieldUUID)
+	}
+	if m.state != nil {
+		fields = append(fields, cloudhost.FieldState)
+	}
+	if m.ipv6AddressPrivate != nil {
+		fields = append(fields, cloudhost.FieldIpv6AddressPrivate)
+	}
+	if m.ipv6AddressPublic != nil {
+		fields = append(fields, cloudhost.FieldIpv6AddressPublic)
+	}
+	if m.ipv4AddressPrivate != nil {
+		fields = append(fields, cloudhost.FieldIpv4AddressPrivate)
+	}
+	if m.ipv4AddressPublic != nil {
+		fields = append(fields, cloudhost.FieldIpv4AddressPublic)
+	}
+	if m.memory != nil {
+		fields = append(fields, cloudhost.FieldMemory)
+	}
+	if m.cpu != nil {
+		fields = append(fields, cloudhost.FieldCPU)
+	}
+	if m.createdTime != nil {
+		fields = append(fields, cloudhost.FieldCreatedTime)
+	}
+	if m.expiredTime != nil {
+		fields = append(fields, cloudhost.FieldExpiredTime)
+	}
+	if m.instanceName != nil {
+		fields = append(fields, cloudhost.FieldInstanceName)
+	}
+	if m.imageName != nil {
+		fields = append(fields, cloudhost.FieldImageName)
+	}
+	if m.osType != nil {
+		fields = append(fields, cloudhost.FieldOsType)
+	}
+	if m.manufacturer != nil {
+		fields = append(fields, cloudhost.FieldManufacturer)
+	}
+	if m.zone != nil {
+		fields = append(fields, cloudhost.FieldZone)
+	}
+	if m.securityGroups != nil {
+		fields = append(fields, cloudhost.FieldSecurityGroups)
+	}
+	if m.billType != nil {
+		fields = append(fields, cloudhost.FieldBillType)
+	}
+	if m.chargeType != nil {
+		fields = append(fields, cloudhost.FieldChargeType)
+	}
+	if m.isActive != nil {
+		fields = append(fields, cloudhost.FieldIsActive)
+	}
+	if m.instanceType != nil {
+		fields = append(fields, cloudhost.FieldInstanceType)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *CloudHostMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case cloudhost.FieldUUID:
+		return m.UUID()
+	case cloudhost.FieldState:
+		return m.State()
+	case cloudhost.FieldIpv6AddressPrivate:
+		return m.Ipv6AddressPrivate()
+	case cloudhost.FieldIpv6AddressPublic:
+		return m.Ipv6AddressPublic()
+	case cloudhost.FieldIpv4AddressPrivate:
+		return m.Ipv4AddressPrivate()
+	case cloudhost.FieldIpv4AddressPublic:
+		return m.Ipv4AddressPublic()
+	case cloudhost.FieldMemory:
+		return m.Memory()
+	case cloudhost.FieldCPU:
+		return m.CPU()
+	case cloudhost.FieldCreatedTime:
+		return m.CreatedTime()
+	case cloudhost.FieldExpiredTime:
+		return m.ExpiredTime()
+	case cloudhost.FieldInstanceName:
+		return m.InstanceName()
+	case cloudhost.FieldImageName:
+		return m.ImageName()
+	case cloudhost.FieldOsType:
+		return m.OsType()
+	case cloudhost.FieldManufacturer:
+		return m.Manufacturer()
+	case cloudhost.FieldZone:
+		return m.Zone()
+	case cloudhost.FieldSecurityGroups:
+		return m.SecurityGroups()
+	case cloudhost.FieldBillType:
+		return m.BillType()
+	case cloudhost.FieldChargeType:
+		return m.ChargeType()
+	case cloudhost.FieldIsActive:
+		return m.IsActive()
+	case cloudhost.FieldInstanceType:
+		return m.InstanceType()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *CloudHostMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case cloudhost.FieldUUID:
+		return m.OldUUID(ctx)
+	case cloudhost.FieldState:
+		return m.OldState(ctx)
+	case cloudhost.FieldIpv6AddressPrivate:
+		return m.OldIpv6AddressPrivate(ctx)
+	case cloudhost.FieldIpv6AddressPublic:
+		return m.OldIpv6AddressPublic(ctx)
+	case cloudhost.FieldIpv4AddressPrivate:
+		return m.OldIpv4AddressPrivate(ctx)
+	case cloudhost.FieldIpv4AddressPublic:
+		return m.OldIpv4AddressPublic(ctx)
+	case cloudhost.FieldMemory:
+		return m.OldMemory(ctx)
+	case cloudhost.FieldCPU:
+		return m.OldCPU(ctx)
+	case cloudhost.FieldCreatedTime:
+		return m.OldCreatedTime(ctx)
+	case cloudhost.FieldExpiredTime:
+		return m.OldExpiredTime(ctx)
+	case cloudhost.FieldInstanceName:
+		return m.OldInstanceName(ctx)
+	case cloudhost.FieldImageName:
+		return m.OldImageName(ctx)
+	case cloudhost.FieldOsType:
+		return m.OldOsType(ctx)
+	case cloudhost.FieldManufacturer:
+		return m.OldManufacturer(ctx)
+	case cloudhost.FieldZone:
+		return m.OldZone(ctx)
+	case cloudhost.FieldSecurityGroups:
+		return m.OldSecurityGroups(ctx)
+	case cloudhost.FieldBillType:
+		return m.OldBillType(ctx)
+	case cloudhost.FieldChargeType:
+		return m.OldChargeType(ctx)
+	case cloudhost.FieldIsActive:
+		return m.OldIsActive(ctx)
+	case cloudhost.FieldInstanceType:
+		return m.OldInstanceType(ctx)
+	}
+	return nil, fmt.Errorf("unknown CloudHost field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *CloudHostMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case cloudhost.FieldUUID:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUUID(v)
+		return nil
+	case cloudhost.FieldState:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetState(v)
+		return nil
+	case cloudhost.FieldIpv6AddressPrivate:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetIpv6AddressPrivate(v)
+		return nil
+	case cloudhost.FieldIpv6AddressPublic:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetIpv6AddressPublic(v)
+		return nil
+	case cloudhost.FieldIpv4AddressPrivate:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetIpv4AddressPrivate(v)
+		return nil
+	case cloudhost.FieldIpv4AddressPublic:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetIpv4AddressPublic(v)
+		return nil
+	case cloudhost.FieldMemory:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetMemory(v)
+		return nil
+	case cloudhost.FieldCPU:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCPU(v)
+		return nil
+	case cloudhost.FieldCreatedTime:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedTime(v)
+		return nil
+	case cloudhost.FieldExpiredTime:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetExpiredTime(v)
+		return nil
+	case cloudhost.FieldInstanceName:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetInstanceName(v)
+		return nil
+	case cloudhost.FieldImageName:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetImageName(v)
+		return nil
+	case cloudhost.FieldOsType:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetOsType(v)
+		return nil
+	case cloudhost.FieldManufacturer:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetManufacturer(v)
+		return nil
+	case cloudhost.FieldZone:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetZone(v)
+		return nil
+	case cloudhost.FieldSecurityGroups:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetSecurityGroups(v)
+		return nil
+	case cloudhost.FieldBillType:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetBillType(v)
+		return nil
+	case cloudhost.FieldChargeType:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetChargeType(v)
+		return nil
+	case cloudhost.FieldIsActive:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetIsActive(v)
+		return nil
+	case cloudhost.FieldInstanceType:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetInstanceType(v)
+		return nil
+	}
+	return fmt.Errorf("unknown CloudHost field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *CloudHostMutation) AddedFields() []string {
+	var fields []string
+	if m.addmemory != nil {
+		fields = append(fields, cloudhost.FieldMemory)
+	}
+	if m.addcpu != nil {
+		fields = append(fields, cloudhost.FieldCPU)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *CloudHostMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case cloudhost.FieldMemory:
+		return m.AddedMemory()
+	case cloudhost.FieldCPU:
+		return m.AddedCPU()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *CloudHostMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case cloudhost.FieldMemory:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddMemory(v)
+		return nil
+	case cloudhost.FieldCPU:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddCPU(v)
+		return nil
+	}
+	return fmt.Errorf("unknown CloudHost numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *CloudHostMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *CloudHostMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *CloudHostMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown CloudHost nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *CloudHostMutation) ResetField(name string) error {
+	switch name {
+	case cloudhost.FieldUUID:
+		m.ResetUUID()
+		return nil
+	case cloudhost.FieldState:
+		m.ResetState()
+		return nil
+	case cloudhost.FieldIpv6AddressPrivate:
+		m.ResetIpv6AddressPrivate()
+		return nil
+	case cloudhost.FieldIpv6AddressPublic:
+		m.ResetIpv6AddressPublic()
+		return nil
+	case cloudhost.FieldIpv4AddressPrivate:
+		m.ResetIpv4AddressPrivate()
+		return nil
+	case cloudhost.FieldIpv4AddressPublic:
+		m.ResetIpv4AddressPublic()
+		return nil
+	case cloudhost.FieldMemory:
+		m.ResetMemory()
+		return nil
+	case cloudhost.FieldCPU:
+		m.ResetCPU()
+		return nil
+	case cloudhost.FieldCreatedTime:
+		m.ResetCreatedTime()
+		return nil
+	case cloudhost.FieldExpiredTime:
+		m.ResetExpiredTime()
+		return nil
+	case cloudhost.FieldInstanceName:
+		m.ResetInstanceName()
+		return nil
+	case cloudhost.FieldImageName:
+		m.ResetImageName()
+		return nil
+	case cloudhost.FieldOsType:
+		m.ResetOsType()
+		return nil
+	case cloudhost.FieldManufacturer:
+		m.ResetManufacturer()
+		return nil
+	case cloudhost.FieldZone:
+		m.ResetZone()
+		return nil
+	case cloudhost.FieldSecurityGroups:
+		m.ResetSecurityGroups()
+		return nil
+	case cloudhost.FieldBillType:
+		m.ResetBillType()
+		return nil
+	case cloudhost.FieldChargeType:
+		m.ResetChargeType()
+		return nil
+	case cloudhost.FieldIsActive:
+		m.ResetIsActive()
+		return nil
+	case cloudhost.FieldInstanceType:
+		m.ResetInstanceType()
+		return nil
+	}
+	return fmt.Errorf("unknown CloudHost field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *CloudHostMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *CloudHostMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *CloudHostMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *CloudHostMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *CloudHostMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *CloudHostMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *CloudHostMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown CloudHost unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *CloudHostMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown CloudHost edge %s", name)
+}
 
 // ClusterMutation represents an operation that mutates the Cluster nodes in the graph.
 type ClusterMutation struct {

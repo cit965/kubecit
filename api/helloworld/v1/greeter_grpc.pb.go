@@ -19,11 +19,17 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Greeter_SayHello_FullMethodName      = "/helloworld.v1.Greeter/SayHello"
-	Greeter_UserRegister_FullMethodName  = "/helloworld.v1.Greeter/UserRegister"
-	Greeter_UserList_FullMethodName      = "/helloworld.v1.Greeter/UserList"
-	Greeter_ClusterList_FullMethodName   = "/helloworld.v1.Greeter/ClusterList"
-	Greeter_NamespaceList_FullMethodName = "/helloworld.v1.Greeter/NamespaceList"
+	Greeter_SayHello_FullMethodName           = "/helloworld.v1.Greeter/SayHello"
+	Greeter_UserRegister_FullMethodName       = "/helloworld.v1.Greeter/UserRegister"
+	Greeter_UserList_FullMethodName           = "/helloworld.v1.Greeter/UserList"
+	Greeter_ClusterList_FullMethodName        = "/helloworld.v1.Greeter/ClusterList"
+	Greeter_NamespaceList_FullMethodName      = "/helloworld.v1.Greeter/NamespaceList"
+	Greeter_GetInstance_FullMethodName        = "/helloworld.v1.Greeter/GetInstance"
+	Greeter_CreateInstance_FullMethodName     = "/helloworld.v1.Greeter/CreateInstance"
+	Greeter_ListInstances_FullMethodName      = "/helloworld.v1.Greeter/ListInstances"
+	Greeter_DeleteInstanceById_FullMethodName = "/helloworld.v1.Greeter/DeleteInstanceById"
+	Greeter_UpdateInstance_FullMethodName     = "/helloworld.v1.Greeter/UpdateInstance"
+	Greeter_SyncFromTencent_FullMethodName    = "/helloworld.v1.Greeter/SyncFromTencent"
 )
 
 // GreeterClient is the client API for Greeter service.
@@ -37,6 +43,12 @@ type GreeterClient interface {
 	UserList(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*UserListResponse, error)
 	ClusterList(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*ClusterListResponse, error)
 	NamespaceList(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error)
+	GetInstance(ctx context.Context, in *GetInstanceRequest, opts ...grpc.CallOption) (*GetInstanceReply, error)
+	CreateInstance(ctx context.Context, in *CreateInstanceRequest, opts ...grpc.CallOption) (*CreateInstanceReply, error)
+	ListInstances(ctx context.Context, in *ListInstancesRequest, opts ...grpc.CallOption) (*ListInstancesReply, error)
+	DeleteInstanceById(ctx context.Context, in *DeleteInstanceRequest, opts ...grpc.CallOption) (*DeleteInstanceReply, error)
+	UpdateInstance(ctx context.Context, in *UpdateInstanceRequest, opts ...grpc.CallOption) (*UpdateInstanceReply, error)
+	SyncFromTencent(ctx context.Context, in *SyncFromTencentRequest, opts ...grpc.CallOption) (*SyncFromTencentReply, error)
 }
 
 type greeterClient struct {
@@ -92,6 +104,60 @@ func (c *greeterClient) NamespaceList(ctx context.Context, in *Empty, opts ...gr
 	return out, nil
 }
 
+func (c *greeterClient) GetInstance(ctx context.Context, in *GetInstanceRequest, opts ...grpc.CallOption) (*GetInstanceReply, error) {
+	out := new(GetInstanceReply)
+	err := c.cc.Invoke(ctx, Greeter_GetInstance_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *greeterClient) CreateInstance(ctx context.Context, in *CreateInstanceRequest, opts ...grpc.CallOption) (*CreateInstanceReply, error) {
+	out := new(CreateInstanceReply)
+	err := c.cc.Invoke(ctx, Greeter_CreateInstance_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *greeterClient) ListInstances(ctx context.Context, in *ListInstancesRequest, opts ...grpc.CallOption) (*ListInstancesReply, error) {
+	out := new(ListInstancesReply)
+	err := c.cc.Invoke(ctx, Greeter_ListInstances_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *greeterClient) DeleteInstanceById(ctx context.Context, in *DeleteInstanceRequest, opts ...grpc.CallOption) (*DeleteInstanceReply, error) {
+	out := new(DeleteInstanceReply)
+	err := c.cc.Invoke(ctx, Greeter_DeleteInstanceById_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *greeterClient) UpdateInstance(ctx context.Context, in *UpdateInstanceRequest, opts ...grpc.CallOption) (*UpdateInstanceReply, error) {
+	out := new(UpdateInstanceReply)
+	err := c.cc.Invoke(ctx, Greeter_UpdateInstance_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *greeterClient) SyncFromTencent(ctx context.Context, in *SyncFromTencentRequest, opts ...grpc.CallOption) (*SyncFromTencentReply, error) {
+	out := new(SyncFromTencentReply)
+	err := c.cc.Invoke(ctx, Greeter_SyncFromTencent_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // GreeterServer is the server API for Greeter service.
 // All implementations must embed UnimplementedGreeterServer
 // for forward compatibility
@@ -103,6 +169,12 @@ type GreeterServer interface {
 	UserList(context.Context, *Empty) (*UserListResponse, error)
 	ClusterList(context.Context, *Empty) (*ClusterListResponse, error)
 	NamespaceList(context.Context, *Empty) (*Empty, error)
+	GetInstance(context.Context, *GetInstanceRequest) (*GetInstanceReply, error)
+	CreateInstance(context.Context, *CreateInstanceRequest) (*CreateInstanceReply, error)
+	ListInstances(context.Context, *ListInstancesRequest) (*ListInstancesReply, error)
+	DeleteInstanceById(context.Context, *DeleteInstanceRequest) (*DeleteInstanceReply, error)
+	UpdateInstance(context.Context, *UpdateInstanceRequest) (*UpdateInstanceReply, error)
+	SyncFromTencent(context.Context, *SyncFromTencentRequest) (*SyncFromTencentReply, error)
 	mustEmbedUnimplementedGreeterServer()
 }
 
@@ -124,6 +196,24 @@ func (UnimplementedGreeterServer) ClusterList(context.Context, *Empty) (*Cluster
 }
 func (UnimplementedGreeterServer) NamespaceList(context.Context, *Empty) (*Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method NamespaceList not implemented")
+}
+func (UnimplementedGreeterServer) GetInstance(context.Context, *GetInstanceRequest) (*GetInstanceReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetInstance not implemented")
+}
+func (UnimplementedGreeterServer) CreateInstance(context.Context, *CreateInstanceRequest) (*CreateInstanceReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateInstance not implemented")
+}
+func (UnimplementedGreeterServer) ListInstances(context.Context, *ListInstancesRequest) (*ListInstancesReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListInstances not implemented")
+}
+func (UnimplementedGreeterServer) DeleteInstanceById(context.Context, *DeleteInstanceRequest) (*DeleteInstanceReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteInstanceById not implemented")
+}
+func (UnimplementedGreeterServer) UpdateInstance(context.Context, *UpdateInstanceRequest) (*UpdateInstanceReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateInstance not implemented")
+}
+func (UnimplementedGreeterServer) SyncFromTencent(context.Context, *SyncFromTencentRequest) (*SyncFromTencentReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SyncFromTencent not implemented")
 }
 func (UnimplementedGreeterServer) mustEmbedUnimplementedGreeterServer() {}
 
@@ -228,6 +318,114 @@ func _Greeter_NamespaceList_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Greeter_GetInstance_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetInstanceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GreeterServer).GetInstance(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Greeter_GetInstance_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GreeterServer).GetInstance(ctx, req.(*GetInstanceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Greeter_CreateInstance_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateInstanceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GreeterServer).CreateInstance(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Greeter_CreateInstance_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GreeterServer).CreateInstance(ctx, req.(*CreateInstanceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Greeter_ListInstances_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListInstancesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GreeterServer).ListInstances(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Greeter_ListInstances_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GreeterServer).ListInstances(ctx, req.(*ListInstancesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Greeter_DeleteInstanceById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteInstanceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GreeterServer).DeleteInstanceById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Greeter_DeleteInstanceById_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GreeterServer).DeleteInstanceById(ctx, req.(*DeleteInstanceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Greeter_UpdateInstance_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateInstanceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GreeterServer).UpdateInstance(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Greeter_UpdateInstance_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GreeterServer).UpdateInstance(ctx, req.(*UpdateInstanceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Greeter_SyncFromTencent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SyncFromTencentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GreeterServer).SyncFromTencent(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Greeter_SyncFromTencent_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GreeterServer).SyncFromTencent(ctx, req.(*SyncFromTencentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Greeter_ServiceDesc is the grpc.ServiceDesc for Greeter service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -254,6 +452,30 @@ var Greeter_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "NamespaceList",
 			Handler:    _Greeter_NamespaceList_Handler,
+		},
+		{
+			MethodName: "GetInstance",
+			Handler:    _Greeter_GetInstance_Handler,
+		},
+		{
+			MethodName: "CreateInstance",
+			Handler:    _Greeter_CreateInstance_Handler,
+		},
+		{
+			MethodName: "ListInstances",
+			Handler:    _Greeter_ListInstances_Handler,
+		},
+		{
+			MethodName: "DeleteInstanceById",
+			Handler:    _Greeter_DeleteInstanceById_Handler,
+		},
+		{
+			MethodName: "UpdateInstance",
+			Handler:    _Greeter_UpdateInstance_Handler,
+		},
+		{
+			MethodName: "SyncFromTencent",
+			Handler:    _Greeter_SyncFromTencent_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

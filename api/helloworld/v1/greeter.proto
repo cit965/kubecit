@@ -3,6 +3,7 @@ syntax = "proto3";
 package helloworld.v1;
 
 import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
 
 option go_package = "kubecit/api/helloworld/v1;v1";
 option java_multiple_files = true;
@@ -44,6 +45,40 @@ service Greeter {
       get: "/namespaces"
     };
   }
+
+  rpc GetInstance(GetInstanceRequest) returns (GetInstanceReply) {
+    option (google.api.http) = {
+      get: "/cmdb/getInstance/{UUID}",
+    };
+  };
+  rpc CreateInstance(CreateInstanceRequest) returns (CreateInstanceReply) {
+    option (google.api.http) = {
+      post: "/cmdb/createInstance",
+      body: "*",
+    };
+  };
+  rpc ListInstances(ListInstancesRequest) returns (ListInstancesReply){
+    option (google.api.http) = {
+      get: "/cmdb/listInstances",
+    };
+  };
+  rpc DeleteInstanceById(DeleteInstanceRequest) returns (DeleteInstanceReply){
+    option (google.api.http) = {
+      delete: "/cmdb/deleteInstance/{UUID}",
+    };
+  };
+  rpc UpdateInstance(UpdateInstanceRequest) returns (UpdateInstanceReply){
+    option (google.api.http) = {
+      put: "/cmdb/updateInstance/{UUID}",
+      body: "*",
+    };
+  };
+  rpc SyncFromTencent(SyncFromTencentRequest) returns (SyncFromTencentReply) {
+    option (google.api.http) = {
+      post: "/cmdb/SyncFromTencent",
+      body: "*",
+    };
+  };
 }
 
 
@@ -88,3 +123,75 @@ message HelloRequest {
 message HelloReply {
   string message = 1;
 }
+
+message Host {
+  string UUID = 1;
+  string State = 2;
+  repeated string IPV6AddressPublic = 3;
+  repeated string IPV6AddressPrivate = 4;
+  repeated string IPV4AddressPublic = 5;
+  repeated string IPV4AddressPrivate = 6;
+  int64 Memory = 7;
+  int64 CPU = 8;
+  google.protobuf.Timestamp CreatedTime = 9;
+  google.protobuf.Timestamp ExpitedTime = 10;
+  string InstanceName = 11;
+  string ImageName = 12;
+  string OSType = 13;
+  string Manufacturer = 14;
+  string Zone = 15;
+  repeated string SecurityGroups = 16;
+  string BillType = 17;
+  string ChargeType = 18;
+  bool IsActive = 19;
+  string InstanceType = 20;
+
+}
+message SyncFromTencentRequest{
+  string accessKey = 1;
+  string secretKey = 2;
+  string region = 3;
+}
+
+message SyncFromTencentReply {
+  string message = 1;
+  int64 total = 2;
+}
+
+message GetInstanceRequest {
+  string UUID = 1;
+}
+
+message GetInstanceReply {
+  Host Instance = 1;
+}
+
+message CreateInstanceRequest {
+  Host Instance = 1;
+}
+
+message CreateInstanceReply {
+  Host Instance = 1;
+}
+
+message ListInstancesRequest {}
+
+message ListInstancesReply {
+  int64 total = 1;
+  repeated Host Instances = 2;
+}
+
+message UpdateInstanceRequest {
+  string UUID = 1;
+  Host Instance = 2;
+}
+
+message UpdateInstanceReply {
+  Host Instance = 1;
+}
+
+message DeleteInstanceRequest {
+  string UUID = 1;
+}
+
+message DeleteInstanceReply {}

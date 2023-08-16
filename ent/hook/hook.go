@@ -8,6 +8,18 @@ import (
 	"kubecit/ent"
 )
 
+// The CloudHostFunc type is an adapter to allow the use of ordinary
+// function as CloudHost mutator.
+type CloudHostFunc func(context.Context, *ent.CloudHostMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f CloudHostFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.CloudHostMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.CloudHostMutation", m)
+}
+
 // The ClusterFunc type is an adapter to allow the use of ordinary
 // function as Cluster mutator.
 type ClusterFunc func(context.Context, *ent.ClusterMutation) (ent.Value, error)

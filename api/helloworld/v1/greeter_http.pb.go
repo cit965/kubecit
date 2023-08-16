@@ -20,16 +20,28 @@ var _ = binding.EncodeURL
 const _ = http.SupportPackageIsVersion1
 
 const OperationGreeterClusterList = "/helloworld.v1.Greeter/ClusterList"
+const OperationGreeterCreateInstance = "/helloworld.v1.Greeter/CreateInstance"
+const OperationGreeterDeleteInstanceById = "/helloworld.v1.Greeter/DeleteInstanceById"
+const OperationGreeterGetInstance = "/helloworld.v1.Greeter/GetInstance"
+const OperationGreeterListInstances = "/helloworld.v1.Greeter/ListInstances"
 const OperationGreeterNamespaceList = "/helloworld.v1.Greeter/NamespaceList"
 const OperationGreeterSayHello = "/helloworld.v1.Greeter/SayHello"
+const OperationGreeterSyncFromTencent = "/helloworld.v1.Greeter/SyncFromTencent"
+const OperationGreeterUpdateInstance = "/helloworld.v1.Greeter/UpdateInstance"
 const OperationGreeterUserList = "/helloworld.v1.Greeter/UserList"
 const OperationGreeterUserRegister = "/helloworld.v1.Greeter/UserRegister"
 
 type GreeterHTTPServer interface {
 	ClusterList(context.Context, *Empty) (*ClusterListResponse, error)
+	CreateInstance(context.Context, *CreateInstanceRequest) (*CreateInstanceReply, error)
+	DeleteInstanceById(context.Context, *DeleteInstanceRequest) (*DeleteInstanceReply, error)
+	GetInstance(context.Context, *GetInstanceRequest) (*GetInstanceReply, error)
+	ListInstances(context.Context, *ListInstancesRequest) (*ListInstancesReply, error)
 	NamespaceList(context.Context, *Empty) (*Empty, error)
 	// SayHello Sends a greeting
 	SayHello(context.Context, *HelloRequest) (*HelloReply, error)
+	SyncFromTencent(context.Context, *SyncFromTencentRequest) (*SyncFromTencentReply, error)
+	UpdateInstance(context.Context, *UpdateInstanceRequest) (*UpdateInstanceReply, error)
 	UserList(context.Context, *Empty) (*UserListResponse, error)
 	// UserRegister Register a user
 	UserRegister(context.Context, *UserRegisterRequest) (*UserRegisterResponse, error)
@@ -42,6 +54,12 @@ func RegisterGreeterHTTPServer(s *http.Server, srv GreeterHTTPServer) {
 	r.GET("/user", _Greeter_UserList0_HTTP_Handler(srv))
 	r.GET("/clusters", _Greeter_ClusterList0_HTTP_Handler(srv))
 	r.GET("/namespaces", _Greeter_NamespaceList0_HTTP_Handler(srv))
+	r.GET("/cmdb/getInstance/{UUID}", _Greeter_GetInstance0_HTTP_Handler(srv))
+	r.POST("/cmdb/createInstance", _Greeter_CreateInstance0_HTTP_Handler(srv))
+	r.GET("/cmdb/listInstances", _Greeter_ListInstances0_HTTP_Handler(srv))
+	r.DELETE("/cmdb/deleteInstance/{UUID}", _Greeter_DeleteInstanceById0_HTTP_Handler(srv))
+	r.PUT("/cmdb/updateInstance/{UUID}", _Greeter_UpdateInstance0_HTTP_Handler(srv))
+	r.POST("/cmdb/SyncFromTencent", _Greeter_SyncFromTencent0_HTTP_Handler(srv))
 }
 
 func _Greeter_SayHello0_HTTP_Handler(srv GreeterHTTPServer) func(ctx http.Context) error {
@@ -145,10 +163,148 @@ func _Greeter_NamespaceList0_HTTP_Handler(srv GreeterHTTPServer) func(ctx http.C
 	}
 }
 
+func _Greeter_GetInstance0_HTTP_Handler(srv GreeterHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetInstanceRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationGreeterGetInstance)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetInstance(ctx, req.(*GetInstanceRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetInstanceReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Greeter_CreateInstance0_HTTP_Handler(srv GreeterHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in CreateInstanceRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationGreeterCreateInstance)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.CreateInstance(ctx, req.(*CreateInstanceRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*CreateInstanceReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Greeter_ListInstances0_HTTP_Handler(srv GreeterHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ListInstancesRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationGreeterListInstances)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListInstances(ctx, req.(*ListInstancesRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ListInstancesReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Greeter_DeleteInstanceById0_HTTP_Handler(srv GreeterHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in DeleteInstanceRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationGreeterDeleteInstanceById)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.DeleteInstanceById(ctx, req.(*DeleteInstanceRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*DeleteInstanceReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Greeter_UpdateInstance0_HTTP_Handler(srv GreeterHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in UpdateInstanceRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationGreeterUpdateInstance)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdateInstance(ctx, req.(*UpdateInstanceRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*UpdateInstanceReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Greeter_SyncFromTencent0_HTTP_Handler(srv GreeterHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in SyncFromTencentRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationGreeterSyncFromTencent)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.SyncFromTencent(ctx, req.(*SyncFromTencentRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*SyncFromTencentReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 type GreeterHTTPClient interface {
 	ClusterList(ctx context.Context, req *Empty, opts ...http.CallOption) (rsp *ClusterListResponse, err error)
+	CreateInstance(ctx context.Context, req *CreateInstanceRequest, opts ...http.CallOption) (rsp *CreateInstanceReply, err error)
+	DeleteInstanceById(ctx context.Context, req *DeleteInstanceRequest, opts ...http.CallOption) (rsp *DeleteInstanceReply, err error)
+	GetInstance(ctx context.Context, req *GetInstanceRequest, opts ...http.CallOption) (rsp *GetInstanceReply, err error)
+	ListInstances(ctx context.Context, req *ListInstancesRequest, opts ...http.CallOption) (rsp *ListInstancesReply, err error)
 	NamespaceList(ctx context.Context, req *Empty, opts ...http.CallOption) (rsp *Empty, err error)
 	SayHello(ctx context.Context, req *HelloRequest, opts ...http.CallOption) (rsp *HelloReply, err error)
+	SyncFromTencent(ctx context.Context, req *SyncFromTencentRequest, opts ...http.CallOption) (rsp *SyncFromTencentReply, err error)
+	UpdateInstance(ctx context.Context, req *UpdateInstanceRequest, opts ...http.CallOption) (rsp *UpdateInstanceReply, err error)
 	UserList(ctx context.Context, req *Empty, opts ...http.CallOption) (rsp *UserListResponse, err error)
 	UserRegister(ctx context.Context, req *UserRegisterRequest, opts ...http.CallOption) (rsp *UserRegisterResponse, err error)
 }
@@ -166,6 +322,58 @@ func (c *GreeterHTTPClientImpl) ClusterList(ctx context.Context, in *Empty, opts
 	pattern := "/clusters"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationGreeterClusterList))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *GreeterHTTPClientImpl) CreateInstance(ctx context.Context, in *CreateInstanceRequest, opts ...http.CallOption) (*CreateInstanceReply, error) {
+	var out CreateInstanceReply
+	pattern := "/cmdb/createInstance"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationGreeterCreateInstance))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *GreeterHTTPClientImpl) DeleteInstanceById(ctx context.Context, in *DeleteInstanceRequest, opts ...http.CallOption) (*DeleteInstanceReply, error) {
+	var out DeleteInstanceReply
+	pattern := "/cmdb/deleteInstance/{UUID}"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationGreeterDeleteInstanceById))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *GreeterHTTPClientImpl) GetInstance(ctx context.Context, in *GetInstanceRequest, opts ...http.CallOption) (*GetInstanceReply, error) {
+	var out GetInstanceReply
+	pattern := "/cmdb/getInstance/{UUID}"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationGreeterGetInstance))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *GreeterHTTPClientImpl) ListInstances(ctx context.Context, in *ListInstancesRequest, opts ...http.CallOption) (*ListInstancesReply, error) {
+	var out ListInstancesReply
+	pattern := "/cmdb/listInstances"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationGreeterListInstances))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
@@ -194,6 +402,32 @@ func (c *GreeterHTTPClientImpl) SayHello(ctx context.Context, in *HelloRequest, 
 	opts = append(opts, http.Operation(OperationGreeterSayHello))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *GreeterHTTPClientImpl) SyncFromTencent(ctx context.Context, in *SyncFromTencentRequest, opts ...http.CallOption) (*SyncFromTencentReply, error) {
+	var out SyncFromTencentReply
+	pattern := "/cmdb/SyncFromTencent"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationGreeterSyncFromTencent))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *GreeterHTTPClientImpl) UpdateInstance(ctx context.Context, in *UpdateInstanceRequest, opts ...http.CallOption) (*UpdateInstanceReply, error) {
+	var out UpdateInstanceReply
+	pattern := "/cmdb/updateInstance/{UUID}"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationGreeterUpdateInstance))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
