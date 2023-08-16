@@ -38,6 +38,12 @@ service Greeter {
       get: "/clusters"
     };
   }
+
+  rpc NamespaceList (Empty) returns (Empty) {
+    option (google.api.http) = {
+      get: "/namespaces"
+    };
+  }
 }
 
 

@@ -38,6 +38,18 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/helloworld.v1.HelloReply'
+    /namespaces:
+        get:
+            tags:
+                - Greeter
+            operationId: Greeter_NamespaceList
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/helloworld.v1.Empty'
     /user:
         get:
             tags:
@@ -86,6 +98,9 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/helloworld.v1.Cluster'
+        helloworld.v1.Empty:
+            type: object
+            properties: {}
         helloworld.v1.HelloReply:
             type: object
             properties:
