@@ -20,7 +20,9 @@
 export DOCKER_HOST=unix:///Users/z/.docker/run/docker.sock & make test
 ```
 
-## 生成表
+## 数据库
+
+服务启动会通过 ent 自动创建表
 
 1. 想要添加一张 clusters 表，可以执行如下命令：
 
