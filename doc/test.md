@@ -71,6 +71,8 @@ var _ = Describe("Data", func() {
 
 本节我们想测试 userUsecase 代码的正确性(注册用户逻辑)，由于 usecase 依赖 repo，我们需要mock掉repo。
 
-- 使用 gomock 库
+- 使用 gomock 库，在 repo 上添加注解
+- 执行 mockgen 命令生成 mock 代码
+- 使用 生成的代码来初始化 userUsecase
 
 
