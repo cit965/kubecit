@@ -2,7 +2,6 @@ package biz
 
 import (
 	"context"
-	"fmt"
 	"github.com/go-kratos/kratos/v2/log"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -23,6 +22,7 @@ type ClusterUsecase struct {
 	getter K8sRepoGetter
 }
 
+//go:generate mockgen -destination=../mocks/mrepo/cluster.go -package=mrepo . ClusterRepo
 type ClusterRepo interface {
 	Get(ctx context.Context, id int) (*Cluster, error)
 	List(ctx context.Context) ([]*Cluster, error)
@@ -96,12 +96,6 @@ func (c *ClusterUsecase) ListNamespaces(ctx context.Context, id int) ([]string, 
 }
 
 func (c *ClusterUsecase) RegisterCluster(ctx context.Context, cluster *Cluster) (*Cluster, error) {
-	if err := c.isExisted(ctx, cluster); err != nil {
-		return nil, err
-	}
-	if _, err := c.getter.GetRepo([]byte(cluster.Kubeconfig), c.log); err != nil {
-		return nil, fmt.Errorf("get k8s repo error: %v", err)
-	}
 	clusterResult, err := c.repo.Register(ctx, cluster)
 	if err != nil {
 		return nil, err
@@ -126,12 +120,6 @@ func (c *ClusterUsecase) GetCluster(ctx context.Context, id int) (*Cluster, erro
 }
 
 func (c *ClusterUsecase) UpdateCluster(ctx context.Context, cluster *Cluster) (*Cluster, error) {
-	if err := c.isExisted(ctx, cluster); err != nil {
-		return nil, err
-	}
-	if _, err := c.getter.GetRepo([]byte(cluster.Kubeconfig), c.log); err != nil {
-		return nil, err
-	}
 	clusterResult, err := c.repo.Update(ctx, cluster)
 	if err != nil {
 		return nil, err
@@ -143,22 +131,6 @@ func (c *ClusterUsecase) Delete(ctx context.Context, id int) error {
 	err := c.repo.Delete(ctx, id)
 	if err != nil {
 		return err
-	}
-	return nil
-}
-
-func (c *ClusterUsecase) isExisted(ctx context.Context, cluster *Cluster) error {
-	clusters, err := c.repo.List(ctx)
-	if err != nil {
-		return err
-	}
-	if len(clusters) > 0 {
-		// check kubeconfig is existed
-		for _, v := range clusters {
-			if v.Kubeconfig == cluster.Kubeconfig {
-				return fmt.Errorf("kubeconfig is existed")
-			}
-		}
 	}
 	return nil
 }
