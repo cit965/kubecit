@@ -30,6 +30,7 @@ const (
 	Greeter_DeleteInstanceById_FullMethodName = "/helloworld.v1.Greeter/DeleteInstanceById"
 	Greeter_UpdateInstance_FullMethodName     = "/helloworld.v1.Greeter/UpdateInstance"
 	Greeter_SyncFromTencent_FullMethodName    = "/helloworld.v1.Greeter/SyncFromTencent"
+	Greeter_DeploymentList_FullMethodName     = "/helloworld.v1.Greeter/DeploymentList"
 )
 
 // GreeterClient is the client API for Greeter service.
@@ -42,13 +43,14 @@ type GreeterClient interface {
 	UserRegister(ctx context.Context, in *UserRegisterRequest, opts ...grpc.CallOption) (*UserRegisterResponse, error)
 	UserList(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*UserListResponse, error)
 	ClusterList(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*ClusterListResponse, error)
-	NamespaceList(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error)
+	NamespaceList(ctx context.Context, in *NamespaceReq, opts ...grpc.CallOption) (*NamespaceResp, error)
 	GetInstance(ctx context.Context, in *GetInstanceRequest, opts ...grpc.CallOption) (*GetInstanceReply, error)
 	CreateInstance(ctx context.Context, in *CreateInstanceRequest, opts ...grpc.CallOption) (*CreateInstanceReply, error)
 	ListInstances(ctx context.Context, in *ListInstancesRequest, opts ...grpc.CallOption) (*ListInstancesReply, error)
 	DeleteInstanceById(ctx context.Context, in *DeleteInstanceRequest, opts ...grpc.CallOption) (*DeleteInstanceReply, error)
 	UpdateInstance(ctx context.Context, in *UpdateInstanceRequest, opts ...grpc.CallOption) (*UpdateInstanceReply, error)
 	SyncFromTencent(ctx context.Context, in *SyncFromTencentRequest, opts ...grpc.CallOption) (*SyncFromTencentReply, error)
+	DeploymentList(ctx context.Context, in *DeploymentReq, opts ...grpc.CallOption) (*DeploymentResp, error)
 }
 
 type greeterClient struct {
@@ -95,8 +97,8 @@ func (c *greeterClient) ClusterList(ctx context.Context, in *Empty, opts ...grpc
 	return out, nil
 }
 
-func (c *greeterClient) NamespaceList(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error) {
-	out := new(Empty)
+func (c *greeterClient) NamespaceList(ctx context.Context, in *NamespaceReq, opts ...grpc.CallOption) (*NamespaceResp, error) {
+	out := new(NamespaceResp)
 	err := c.cc.Invoke(ctx, Greeter_NamespaceList_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -158,6 +160,15 @@ func (c *greeterClient) SyncFromTencent(ctx context.Context, in *SyncFromTencent
 	return out, nil
 }
 
+func (c *greeterClient) DeploymentList(ctx context.Context, in *DeploymentReq, opts ...grpc.CallOption) (*DeploymentResp, error) {
+	out := new(DeploymentResp)
+	err := c.cc.Invoke(ctx, Greeter_DeploymentList_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // GreeterServer is the server API for Greeter service.
 // All implementations must embed UnimplementedGreeterServer
 // for forward compatibility
@@ -168,13 +179,14 @@ type GreeterServer interface {
 	UserRegister(context.Context, *UserRegisterRequest) (*UserRegisterResponse, error)
 	UserList(context.Context, *Empty) (*UserListResponse, error)
 	ClusterList(context.Context, *Empty) (*ClusterListResponse, error)
-	NamespaceList(context.Context, *Empty) (*Empty, error)
+	NamespaceList(context.Context, *NamespaceReq) (*NamespaceResp, error)
 	GetInstance(context.Context, *GetInstanceRequest) (*GetInstanceReply, error)
 	CreateInstance(context.Context, *CreateInstanceRequest) (*CreateInstanceReply, error)
 	ListInstances(context.Context, *ListInstancesRequest) (*ListInstancesReply, error)
 	DeleteInstanceById(context.Context, *DeleteInstanceRequest) (*DeleteInstanceReply, error)
 	UpdateInstance(context.Context, *UpdateInstanceRequest) (*UpdateInstanceReply, error)
 	SyncFromTencent(context.Context, *SyncFromTencentRequest) (*SyncFromTencentReply, error)
+	DeploymentList(context.Context, *DeploymentReq) (*DeploymentResp, error)
 	mustEmbedUnimplementedGreeterServer()
 }
 
@@ -194,7 +206,7 @@ func (UnimplementedGreeterServer) UserList(context.Context, *Empty) (*UserListRe
 func (UnimplementedGreeterServer) ClusterList(context.Context, *Empty) (*ClusterListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ClusterList not implemented")
 }
-func (UnimplementedGreeterServer) NamespaceList(context.Context, *Empty) (*Empty, error) {
+func (UnimplementedGreeterServer) NamespaceList(context.Context, *NamespaceReq) (*NamespaceResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method NamespaceList not implemented")
 }
 func (UnimplementedGreeterServer) GetInstance(context.Context, *GetInstanceRequest) (*GetInstanceReply, error) {
@@ -214,6 +226,9 @@ func (UnimplementedGreeterServer) UpdateInstance(context.Context, *UpdateInstanc
 }
 func (UnimplementedGreeterServer) SyncFromTencent(context.Context, *SyncFromTencentRequest) (*SyncFromTencentReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SyncFromTencent not implemented")
+}
+func (UnimplementedGreeterServer) DeploymentList(context.Context, *DeploymentReq) (*DeploymentResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeploymentList not implemented")
 }
 func (UnimplementedGreeterServer) mustEmbedUnimplementedGreeterServer() {}
 
@@ -301,7 +316,7 @@ func _Greeter_ClusterList_Handler(srv interface{}, ctx context.Context, dec func
 }
 
 func _Greeter_NamespaceList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Empty)
+	in := new(NamespaceReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -313,7 +328,7 @@ func _Greeter_NamespaceList_Handler(srv interface{}, ctx context.Context, dec fu
 		FullMethod: Greeter_NamespaceList_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GreeterServer).NamespaceList(ctx, req.(*Empty))
+		return srv.(GreeterServer).NamespaceList(ctx, req.(*NamespaceReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -426,6 +441,24 @@ func _Greeter_SyncFromTencent_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Greeter_DeploymentList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeploymentReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GreeterServer).DeploymentList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Greeter_DeploymentList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GreeterServer).DeploymentList(ctx, req.(*DeploymentReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Greeter_ServiceDesc is the grpc.ServiceDesc for Greeter service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -476,6 +509,10 @@ var Greeter_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SyncFromTencent",
 			Handler:    _Greeter_SyncFromTencent_Handler,
+		},
+		{
+			MethodName: "DeploymentList",
+			Handler:    _Greeter_DeploymentList_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

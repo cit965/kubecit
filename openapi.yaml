@@ -127,6 +127,30 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/helloworld.v1.UpdateInstanceReply'
+    /deployments/{cluster}/{namespace}:
+        get:
+            tags:
+                - Greeter
+            operationId: Greeter_DeploymentList
+            parameters:
+                - name: cluster
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: int32
+                - name: namespace
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/helloworld.v1.DeploymentResp'
     /helloworld/{name}:
         get:
             tags:
@@ -146,18 +170,25 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/helloworld.v1.HelloReply'
-    /namespaces:
+    /namespaces/{cluster}:
         get:
             tags:
                 - Greeter
             operationId: Greeter_NamespaceList
+            parameters:
+                - name: cluster
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: int32
             responses:
                 "200":
                     description: OK
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/helloworld.v1.Empty'
+                                $ref: '#/components/schemas/helloworld.v1.NamespaceResp'
     /user:
         get:
             tags:
@@ -221,9 +252,13 @@ components:
             properties:
                 Message:
                     type: string
-        helloworld.v1.Empty:
+        helloworld.v1.DeploymentResp:
             type: object
-            properties: {}
+            properties:
+                deployments:
+                    type: array
+                    items:
+                        type: string
         helloworld.v1.GetInstanceReply:
             type: object
             properties:
@@ -302,6 +337,13 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/helloworld.v1.Host'
+        helloworld.v1.NamespaceResp:
+            type: object
+            properties:
+                namespaces:
+                    type: array
+                    items:
+                        type: string
         helloworld.v1.SyncFromTencentReply:
             type: object
             properties:

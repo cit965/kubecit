@@ -40,9 +40,9 @@ service Greeter {
     };
   }
 
-  rpc NamespaceList (Empty) returns (Empty) {
+  rpc NamespaceList (NamespaceReq) returns (NamespaceResp) {
     option (google.api.http) = {
-      get: "/namespaces"
+      get: "/namespaces/{cluster}"
     };
   }
 
@@ -79,6 +79,12 @@ service Greeter {
       body: "*",
     };
   };
+  rpc DeploymentList (DeploymentReq) returns (DeploymentResp) {
+    option (google.api.http) = {
+      get: "/deployments/{cluster}/{namespace}"
+    };
+  }
+
 }
 
 
@@ -119,10 +125,15 @@ message HelloRequest {
   string name = 1;
 }
 
+message NamespaceResp {
+  repeated string namespaces =1;
+}
+
 // The response message containing the greetings
 message HelloReply {
   string message = 1;
 }
+
 
 message Host {
   string UUID = 1;
@@ -197,4 +208,19 @@ message DeleteInstanceRequest {
 
 message DeleteInstanceReply {
   string Message = 1;
+}
+
+message NamespaceReq{
+  int32 cluster = 1;
+}
+
+
+message DeploymentReq{
+  int32 cluster = 1;
+  string namespace = 2;
+}
+
+
+message DeploymentResp {
+  repeated string deployments =1;
 }
