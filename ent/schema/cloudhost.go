@@ -13,26 +13,18 @@ type CloudHost struct {
 // Fields of the CloudHost.
 func (CloudHost) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("uuid").NotEmpty().Unique(),
-		field.String("state").NotEmpty().Default("RUNNING"),
-		field.String("ipv6AddressPrivate"),
-		field.String("ipv6AddressPublic"),
-		field.String("ipv4AddressPrivate"),
-		field.String("ipv4AddressPublic"),
-		field.Int("memory"),
-		field.Int("cpu"),
-		field.Time("createdTime"),
-		field.Time("expiredTime"),
+		field.String("instanceId").NotEmpty().Unique(),
+		field.String("vpcId").NotEmpty(),
+		field.String("SubnetId"),
 		field.String("instanceName"),
-		field.String("imageName"),
-		field.String("osType"),
-		field.String("manufacturer"),
-		field.String("zone"),
-		field.String("securityGroups"),
-		field.String("billType"),
-		field.String("chargeType"),
-		field.Bool("isActive").Default(true),
+		field.String("instanceState"),
+		field.Int64("cpu"),
+		field.Int64("memory"),
+		field.String("createdTime"),
 		field.String("instanceType"),
+		field.Int64("eniLimit"),
+		field.Int64("enilpLimit"),
+		field.Int64("instanceEniCount"),
 	}
 }
 

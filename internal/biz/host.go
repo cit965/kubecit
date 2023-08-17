@@ -7,34 +7,23 @@ import (
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
-	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
+	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	"kubecit/ent"
-
-	"reflect"
-	"time"
 )
 
 type CloudHost struct {
-	UUID               string
-	State              string
-	IPV6AddressPrivate []string
-	IPV4AddressPrivate []string
-	IPV6AddressPublic  []string
-	IPV4AddressPublic  []string
-	Memory             int
-	CPU                int
-	CreatedTime        time.Time
-	ExpiredTime        time.Time
-	InstanceName       string
-	ImageName          string
-	OSType             string
-	Manufacturer       string
-	Zone               string
-	SecurityGroups     []string
-	BillType           string
-	ChargeType         string
-	IsActive           bool
-	InstanceType       string
+	VpcId            string
+	SubnetId         string
+	InstanceId       string
+	InstanceName     string
+	InstanceState    string
+	CPU              int64
+	Memory           int64
+	CreatedTime      string
+	InstanceType     string
+	EniLimit         int64
+	EnilpLimit       int64
+	InstanceEniCount int64
 }
 
 type CloudHostRepo interface {
@@ -92,88 +81,53 @@ func (c *CloudHostUsecase) Delete(ctx context.Context, id string) (*CloudHost, e
 func (c *CloudHostUsecase) Update(ctx context.Context, id string, host *CloudHost) (*CloudHost, error) {
 	h, err := c.repo.Update(ctx, id, host)
 	if err != nil {
+		fmt.Println(err)
 		return nil, err
 	}
 	return h, nil
 }
 
 // TODO: implement an interface to adapter multi cloud manufacturer
-func (c *CloudHostUsecase) Syncer(ctx context.Context, accessKey string, secretKey string, region string) (bool, int64, error) {
+func (c *CloudHostUsecase) Syncer(ctx context.Context, accessKey string, secretKey string, region string, vpcId string) (bool, int64, error) {
 	credential := common.NewCredential(accessKey, secretKey)
 	cpf := profile.NewClientProfile()
-	cpf.HttpProfile.Endpoint = "cvm.tencentcloudapi.com"
-	client, _ := cvm.NewClient(credential, region, cpf)
+	cpf.HttpProfile.Endpoint = "vpc.tencentcloudapi.com"
+	client, _ := vpc.NewClient(credential, region, cpf)
 
-	request := cvm.NewDescribeInstancesRequest()
-	response, err := client.DescribeInstances(request)
+	request := vpc.NewDescribeVpcInstancesRequest()
+	request.Filters = []*vpc.Filter{
+		&vpc.Filter{
+			Name:   common.StringPtr("vpc-id"),
+			Values: common.StringPtrs([]string{vpcId}),
+		},
+	}
+	response, err := client.DescribeVpcInstances(request)
 	if _, ok := err.(*errors.TencentCloudSDKError); ok {
 		fmt.Printf("An API error has returned: %s", err)
 		return false, 0, err
 	}
-	if err != nil {
-		return false, 0, err
-	}
+
 	var count int64
 	for _, instance := range response.Response.InstanceSet {
 		var cloudHost CloudHost
-		cloudHost.UUID = *instance.Uuid
-		cloudHost.State = *instance.InstanceState
-		if instance.PublicIpAddresses != nil {
-			var iPV4AddressPublic []string
-			for _, v := range instance.PublicIpAddresses {
-				iPV4AddressPublic = append(iPV4AddressPublic, *v)
-			}
-			cloudHost.IPV4AddressPublic = iPV4AddressPublic
-		}
-		if instance.IPv6Addresses != nil {
-			var iPV6AddressPublic []string
-			for _, v := range instance.IPv6Addresses {
-				iPV6AddressPublic = append(iPV6AddressPublic, *v)
-			}
-			cloudHost.IPV6AddressPublic = iPV6AddressPublic
-		}
-		var IPV4AddressPrivate []string
-		for _, v := range instance.PrivateIpAddresses {
-			IPV4AddressPrivate = append(IPV4AddressPrivate, *v)
-		}
-		cloudHost.IPV4AddressPrivate = IPV4AddressPrivate
-		cloudHost.Memory = int(*instance.Memory)
-		cloudHost.CPU = int(*instance.CPU)
-		createdTime, _ := time.Parse("2006-01-02T15:04:05Z", *instance.CreatedTime)
-		cloudHost.CreatedTime = createdTime.Local()
-		if instance.ExpiredTime != nil {
-			expiredTime, _ := time.Parse("2006-01-02T15:04:05Z", *instance.ExpiredTime)
-			cloudHost.ExpiredTime = expiredTime.Local()
-		}
+		cloudHost.VpcId = *instance.VpcId
+		cloudHost.SubnetId = *instance.SubnetId
+		cloudHost.InstanceId = *instance.InstanceId
 		cloudHost.InstanceName = *instance.InstanceName
-		cloudHost.OSType = *instance.OsName
-		cloudHost.Zone = *instance.Placement.Zone
-		var securityGroups []string
-		for _, v := range instance.SecurityGroupIds {
-			securityGroups = append(securityGroups, *v)
-		}
-		cloudHost.SecurityGroups = securityGroups
-		cloudHost.ChargeType = *instance.InstanceChargeType
+		cloudHost.InstanceState = *instance.InstanceState
+		cloudHost.CPU = int64(*instance.CPU)
+		cloudHost.Memory = int64(*instance.Memory)
+		cloudHost.CreatedTime = *instance.CreatedTime
 		cloudHost.InstanceType = *instance.InstanceType
-		cloudHost.Manufacturer = "TencentCloud"
-		if instance.RenewFlag != nil {
-			cloudHost.BillType = *instance.RenewFlag
-		}
+		cloudHost.EniLimit = int64(*instance.EniLimit)
+		cloudHost.EnilpLimit = int64(*instance.EniIpLimit)
+		cloudHost.InstanceEniCount = int64(*instance.InstanceEniCount)
 
-		host, err := c.Get(ctx, cloudHost.UUID)
+		_, err := c.Get(ctx, cloudHost.InstanceId)
 		if err != nil && ent.IsNotFound(err) {
 			_, err := c.Create(ctx, &cloudHost)
 			if err != nil {
 				fmt.Println("create host error: ", cloudHost)
-				continue
-			}
-			count++
-		}
-
-		if host != nil && reflect.DeepEqual(host, cloudHost) {
-			_, err := c.Update(ctx, cloudHost.UUID, &cloudHost)
-			if err != nil {
-				fmt.Println("update host error: ", cloudHost)
 				continue
 			}
 			count++

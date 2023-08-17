@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 	"kubecit/ent/cloudhost"
-	"time"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -20,71 +19,21 @@ type CloudHostCreate struct {
 	hooks    []Hook
 }
 
-// SetUUID sets the "uuid" field.
-func (chc *CloudHostCreate) SetUUID(s string) *CloudHostCreate {
-	chc.mutation.SetUUID(s)
+// SetInstanceId sets the "instanceId" field.
+func (chc *CloudHostCreate) SetInstanceId(s string) *CloudHostCreate {
+	chc.mutation.SetInstanceId(s)
 	return chc
 }
 
-// SetState sets the "state" field.
-func (chc *CloudHostCreate) SetState(s string) *CloudHostCreate {
-	chc.mutation.SetState(s)
+// SetVpcId sets the "vpcId" field.
+func (chc *CloudHostCreate) SetVpcId(s string) *CloudHostCreate {
+	chc.mutation.SetVpcId(s)
 	return chc
 }
 
-// SetNillableState sets the "state" field if the given value is not nil.
-func (chc *CloudHostCreate) SetNillableState(s *string) *CloudHostCreate {
-	if s != nil {
-		chc.SetState(*s)
-	}
-	return chc
-}
-
-// SetIpv6AddressPrivate sets the "ipv6AddressPrivate" field.
-func (chc *CloudHostCreate) SetIpv6AddressPrivate(s string) *CloudHostCreate {
-	chc.mutation.SetIpv6AddressPrivate(s)
-	return chc
-}
-
-// SetIpv6AddressPublic sets the "ipv6AddressPublic" field.
-func (chc *CloudHostCreate) SetIpv6AddressPublic(s string) *CloudHostCreate {
-	chc.mutation.SetIpv6AddressPublic(s)
-	return chc
-}
-
-// SetIpv4AddressPrivate sets the "ipv4AddressPrivate" field.
-func (chc *CloudHostCreate) SetIpv4AddressPrivate(s string) *CloudHostCreate {
-	chc.mutation.SetIpv4AddressPrivate(s)
-	return chc
-}
-
-// SetIpv4AddressPublic sets the "ipv4AddressPublic" field.
-func (chc *CloudHostCreate) SetIpv4AddressPublic(s string) *CloudHostCreate {
-	chc.mutation.SetIpv4AddressPublic(s)
-	return chc
-}
-
-// SetMemory sets the "memory" field.
-func (chc *CloudHostCreate) SetMemory(i int) *CloudHostCreate {
-	chc.mutation.SetMemory(i)
-	return chc
-}
-
-// SetCPU sets the "cpu" field.
-func (chc *CloudHostCreate) SetCPU(i int) *CloudHostCreate {
-	chc.mutation.SetCPU(i)
-	return chc
-}
-
-// SetCreatedTime sets the "createdTime" field.
-func (chc *CloudHostCreate) SetCreatedTime(t time.Time) *CloudHostCreate {
-	chc.mutation.SetCreatedTime(t)
-	return chc
-}
-
-// SetExpiredTime sets the "expiredTime" field.
-func (chc *CloudHostCreate) SetExpiredTime(t time.Time) *CloudHostCreate {
-	chc.mutation.SetExpiredTime(t)
+// SetSubnetId sets the "SubnetId" field.
+func (chc *CloudHostCreate) SetSubnetId(s string) *CloudHostCreate {
+	chc.mutation.SetSubnetId(s)
 	return chc
 }
 
@@ -94,65 +43,51 @@ func (chc *CloudHostCreate) SetInstanceName(s string) *CloudHostCreate {
 	return chc
 }
 
-// SetImageName sets the "imageName" field.
-func (chc *CloudHostCreate) SetImageName(s string) *CloudHostCreate {
-	chc.mutation.SetImageName(s)
+// SetInstanceState sets the "instanceState" field.
+func (chc *CloudHostCreate) SetInstanceState(s string) *CloudHostCreate {
+	chc.mutation.SetInstanceState(s)
 	return chc
 }
 
-// SetOsType sets the "osType" field.
-func (chc *CloudHostCreate) SetOsType(s string) *CloudHostCreate {
-	chc.mutation.SetOsType(s)
+// SetCPU sets the "cpu" field.
+func (chc *CloudHostCreate) SetCPU(i int64) *CloudHostCreate {
+	chc.mutation.SetCPU(i)
 	return chc
 }
 
-// SetManufacturer sets the "manufacturer" field.
-func (chc *CloudHostCreate) SetManufacturer(s string) *CloudHostCreate {
-	chc.mutation.SetManufacturer(s)
+// SetMemory sets the "memory" field.
+func (chc *CloudHostCreate) SetMemory(i int64) *CloudHostCreate {
+	chc.mutation.SetMemory(i)
 	return chc
 }
 
-// SetZone sets the "zone" field.
-func (chc *CloudHostCreate) SetZone(s string) *CloudHostCreate {
-	chc.mutation.SetZone(s)
-	return chc
-}
-
-// SetSecurityGroups sets the "securityGroups" field.
-func (chc *CloudHostCreate) SetSecurityGroups(s string) *CloudHostCreate {
-	chc.mutation.SetSecurityGroups(s)
-	return chc
-}
-
-// SetBillType sets the "billType" field.
-func (chc *CloudHostCreate) SetBillType(s string) *CloudHostCreate {
-	chc.mutation.SetBillType(s)
-	return chc
-}
-
-// SetChargeType sets the "chargeType" field.
-func (chc *CloudHostCreate) SetChargeType(s string) *CloudHostCreate {
-	chc.mutation.SetChargeType(s)
-	return chc
-}
-
-// SetIsActive sets the "isActive" field.
-func (chc *CloudHostCreate) SetIsActive(b bool) *CloudHostCreate {
-	chc.mutation.SetIsActive(b)
-	return chc
-}
-
-// SetNillableIsActive sets the "isActive" field if the given value is not nil.
-func (chc *CloudHostCreate) SetNillableIsActive(b *bool) *CloudHostCreate {
-	if b != nil {
-		chc.SetIsActive(*b)
-	}
+// SetCreatedTime sets the "createdTime" field.
+func (chc *CloudHostCreate) SetCreatedTime(s string) *CloudHostCreate {
+	chc.mutation.SetCreatedTime(s)
 	return chc
 }
 
 // SetInstanceType sets the "instanceType" field.
 func (chc *CloudHostCreate) SetInstanceType(s string) *CloudHostCreate {
 	chc.mutation.SetInstanceType(s)
+	return chc
+}
+
+// SetEniLimit sets the "eniLimit" field.
+func (chc *CloudHostCreate) SetEniLimit(i int64) *CloudHostCreate {
+	chc.mutation.SetEniLimit(i)
+	return chc
+}
+
+// SetEnilpLimit sets the "enilpLimit" field.
+func (chc *CloudHostCreate) SetEnilpLimit(i int64) *CloudHostCreate {
+	chc.mutation.SetEnilpLimit(i)
+	return chc
+}
+
+// SetInstanceEniCount sets the "instanceEniCount" field.
+func (chc *CloudHostCreate) SetInstanceEniCount(i int64) *CloudHostCreate {
+	chc.mutation.SetInstanceEniCount(i)
 	return chc
 }
 
@@ -163,7 +98,6 @@ func (chc *CloudHostCreate) Mutation() *CloudHostMutation {
 
 // Save creates the CloudHost in the database.
 func (chc *CloudHostCreate) Save(ctx context.Context) (*CloudHost, error) {
-	chc.defaults()
 	return withHooks(ctx, chc.sqlSave, chc.mutation, chc.hooks)
 }
 
@@ -189,89 +123,53 @@ func (chc *CloudHostCreate) ExecX(ctx context.Context) {
 	}
 }
 
-// defaults sets the default values of the builder before save.
-func (chc *CloudHostCreate) defaults() {
-	if _, ok := chc.mutation.State(); !ok {
-		v := cloudhost.DefaultState
-		chc.mutation.SetState(v)
-	}
-	if _, ok := chc.mutation.IsActive(); !ok {
-		v := cloudhost.DefaultIsActive
-		chc.mutation.SetIsActive(v)
-	}
-}
-
 // check runs all checks and user-defined validators on the builder.
 func (chc *CloudHostCreate) check() error {
-	if _, ok := chc.mutation.UUID(); !ok {
-		return &ValidationError{Name: "uuid", err: errors.New(`ent: missing required field "CloudHost.uuid"`)}
+	if _, ok := chc.mutation.InstanceId(); !ok {
+		return &ValidationError{Name: "instanceId", err: errors.New(`ent: missing required field "CloudHost.instanceId"`)}
 	}
-	if v, ok := chc.mutation.UUID(); ok {
-		if err := cloudhost.UUIDValidator(v); err != nil {
-			return &ValidationError{Name: "uuid", err: fmt.Errorf(`ent: validator failed for field "CloudHost.uuid": %w`, err)}
+	if v, ok := chc.mutation.InstanceId(); ok {
+		if err := cloudhost.InstanceIdValidator(v); err != nil {
+			return &ValidationError{Name: "instanceId", err: fmt.Errorf(`ent: validator failed for field "CloudHost.instanceId": %w`, err)}
 		}
 	}
-	if _, ok := chc.mutation.State(); !ok {
-		return &ValidationError{Name: "state", err: errors.New(`ent: missing required field "CloudHost.state"`)}
+	if _, ok := chc.mutation.VpcId(); !ok {
+		return &ValidationError{Name: "vpcId", err: errors.New(`ent: missing required field "CloudHost.vpcId"`)}
 	}
-	if v, ok := chc.mutation.State(); ok {
-		if err := cloudhost.StateValidator(v); err != nil {
-			return &ValidationError{Name: "state", err: fmt.Errorf(`ent: validator failed for field "CloudHost.state": %w`, err)}
+	if v, ok := chc.mutation.VpcId(); ok {
+		if err := cloudhost.VpcIdValidator(v); err != nil {
+			return &ValidationError{Name: "vpcId", err: fmt.Errorf(`ent: validator failed for field "CloudHost.vpcId": %w`, err)}
 		}
 	}
-	if _, ok := chc.mutation.Ipv6AddressPrivate(); !ok {
-		return &ValidationError{Name: "ipv6AddressPrivate", err: errors.New(`ent: missing required field "CloudHost.ipv6AddressPrivate"`)}
-	}
-	if _, ok := chc.mutation.Ipv6AddressPublic(); !ok {
-		return &ValidationError{Name: "ipv6AddressPublic", err: errors.New(`ent: missing required field "CloudHost.ipv6AddressPublic"`)}
-	}
-	if _, ok := chc.mutation.Ipv4AddressPrivate(); !ok {
-		return &ValidationError{Name: "ipv4AddressPrivate", err: errors.New(`ent: missing required field "CloudHost.ipv4AddressPrivate"`)}
-	}
-	if _, ok := chc.mutation.Ipv4AddressPublic(); !ok {
-		return &ValidationError{Name: "ipv4AddressPublic", err: errors.New(`ent: missing required field "CloudHost.ipv4AddressPublic"`)}
-	}
-	if _, ok := chc.mutation.Memory(); !ok {
-		return &ValidationError{Name: "memory", err: errors.New(`ent: missing required field "CloudHost.memory"`)}
-	}
-	if _, ok := chc.mutation.CPU(); !ok {
-		return &ValidationError{Name: "cpu", err: errors.New(`ent: missing required field "CloudHost.cpu"`)}
-	}
-	if _, ok := chc.mutation.CreatedTime(); !ok {
-		return &ValidationError{Name: "createdTime", err: errors.New(`ent: missing required field "CloudHost.createdTime"`)}
-	}
-	if _, ok := chc.mutation.ExpiredTime(); !ok {
-		return &ValidationError{Name: "expiredTime", err: errors.New(`ent: missing required field "CloudHost.expiredTime"`)}
+	if _, ok := chc.mutation.SubnetId(); !ok {
+		return &ValidationError{Name: "SubnetId", err: errors.New(`ent: missing required field "CloudHost.SubnetId"`)}
 	}
 	if _, ok := chc.mutation.InstanceName(); !ok {
 		return &ValidationError{Name: "instanceName", err: errors.New(`ent: missing required field "CloudHost.instanceName"`)}
 	}
-	if _, ok := chc.mutation.ImageName(); !ok {
-		return &ValidationError{Name: "imageName", err: errors.New(`ent: missing required field "CloudHost.imageName"`)}
+	if _, ok := chc.mutation.InstanceState(); !ok {
+		return &ValidationError{Name: "instanceState", err: errors.New(`ent: missing required field "CloudHost.instanceState"`)}
 	}
-	if _, ok := chc.mutation.OsType(); !ok {
-		return &ValidationError{Name: "osType", err: errors.New(`ent: missing required field "CloudHost.osType"`)}
+	if _, ok := chc.mutation.CPU(); !ok {
+		return &ValidationError{Name: "cpu", err: errors.New(`ent: missing required field "CloudHost.cpu"`)}
 	}
-	if _, ok := chc.mutation.Manufacturer(); !ok {
-		return &ValidationError{Name: "manufacturer", err: errors.New(`ent: missing required field "CloudHost.manufacturer"`)}
+	if _, ok := chc.mutation.Memory(); !ok {
+		return &ValidationError{Name: "memory", err: errors.New(`ent: missing required field "CloudHost.memory"`)}
 	}
-	if _, ok := chc.mutation.Zone(); !ok {
-		return &ValidationError{Name: "zone", err: errors.New(`ent: missing required field "CloudHost.zone"`)}
-	}
-	if _, ok := chc.mutation.SecurityGroups(); !ok {
-		return &ValidationError{Name: "securityGroups", err: errors.New(`ent: missing required field "CloudHost.securityGroups"`)}
-	}
-	if _, ok := chc.mutation.BillType(); !ok {
-		return &ValidationError{Name: "billType", err: errors.New(`ent: missing required field "CloudHost.billType"`)}
-	}
-	if _, ok := chc.mutation.ChargeType(); !ok {
-		return &ValidationError{Name: "chargeType", err: errors.New(`ent: missing required field "CloudHost.chargeType"`)}
-	}
-	if _, ok := chc.mutation.IsActive(); !ok {
-		return &ValidationError{Name: "isActive", err: errors.New(`ent: missing required field "CloudHost.isActive"`)}
+	if _, ok := chc.mutation.CreatedTime(); !ok {
+		return &ValidationError{Name: "createdTime", err: errors.New(`ent: missing required field "CloudHost.createdTime"`)}
 	}
 	if _, ok := chc.mutation.InstanceType(); !ok {
 		return &ValidationError{Name: "instanceType", err: errors.New(`ent: missing required field "CloudHost.instanceType"`)}
+	}
+	if _, ok := chc.mutation.EniLimit(); !ok {
+		return &ValidationError{Name: "eniLimit", err: errors.New(`ent: missing required field "CloudHost.eniLimit"`)}
+	}
+	if _, ok := chc.mutation.EnilpLimit(); !ok {
+		return &ValidationError{Name: "enilpLimit", err: errors.New(`ent: missing required field "CloudHost.enilpLimit"`)}
+	}
+	if _, ok := chc.mutation.InstanceEniCount(); !ok {
+		return &ValidationError{Name: "instanceEniCount", err: errors.New(`ent: missing required field "CloudHost.instanceEniCount"`)}
 	}
 	return nil
 }
@@ -299,85 +197,53 @@ func (chc *CloudHostCreate) createSpec() (*CloudHost, *sqlgraph.CreateSpec) {
 		_node = &CloudHost{config: chc.config}
 		_spec = sqlgraph.NewCreateSpec(cloudhost.Table, sqlgraph.NewFieldSpec(cloudhost.FieldID, field.TypeInt))
 	)
-	if value, ok := chc.mutation.UUID(); ok {
-		_spec.SetField(cloudhost.FieldUUID, field.TypeString, value)
-		_node.UUID = value
+	if value, ok := chc.mutation.InstanceId(); ok {
+		_spec.SetField(cloudhost.FieldInstanceId, field.TypeString, value)
+		_node.InstanceId = value
 	}
-	if value, ok := chc.mutation.State(); ok {
-		_spec.SetField(cloudhost.FieldState, field.TypeString, value)
-		_node.State = value
+	if value, ok := chc.mutation.VpcId(); ok {
+		_spec.SetField(cloudhost.FieldVpcId, field.TypeString, value)
+		_node.VpcId = value
 	}
-	if value, ok := chc.mutation.Ipv6AddressPrivate(); ok {
-		_spec.SetField(cloudhost.FieldIpv6AddressPrivate, field.TypeString, value)
-		_node.Ipv6AddressPrivate = value
-	}
-	if value, ok := chc.mutation.Ipv6AddressPublic(); ok {
-		_spec.SetField(cloudhost.FieldIpv6AddressPublic, field.TypeString, value)
-		_node.Ipv6AddressPublic = value
-	}
-	if value, ok := chc.mutation.Ipv4AddressPrivate(); ok {
-		_spec.SetField(cloudhost.FieldIpv4AddressPrivate, field.TypeString, value)
-		_node.Ipv4AddressPrivate = value
-	}
-	if value, ok := chc.mutation.Ipv4AddressPublic(); ok {
-		_spec.SetField(cloudhost.FieldIpv4AddressPublic, field.TypeString, value)
-		_node.Ipv4AddressPublic = value
-	}
-	if value, ok := chc.mutation.Memory(); ok {
-		_spec.SetField(cloudhost.FieldMemory, field.TypeInt, value)
-		_node.Memory = value
-	}
-	if value, ok := chc.mutation.CPU(); ok {
-		_spec.SetField(cloudhost.FieldCPU, field.TypeInt, value)
-		_node.CPU = value
-	}
-	if value, ok := chc.mutation.CreatedTime(); ok {
-		_spec.SetField(cloudhost.FieldCreatedTime, field.TypeTime, value)
-		_node.CreatedTime = value
-	}
-	if value, ok := chc.mutation.ExpiredTime(); ok {
-		_spec.SetField(cloudhost.FieldExpiredTime, field.TypeTime, value)
-		_node.ExpiredTime = value
+	if value, ok := chc.mutation.SubnetId(); ok {
+		_spec.SetField(cloudhost.FieldSubnetId, field.TypeString, value)
+		_node.SubnetId = value
 	}
 	if value, ok := chc.mutation.InstanceName(); ok {
 		_spec.SetField(cloudhost.FieldInstanceName, field.TypeString, value)
 		_node.InstanceName = value
 	}
-	if value, ok := chc.mutation.ImageName(); ok {
-		_spec.SetField(cloudhost.FieldImageName, field.TypeString, value)
-		_node.ImageName = value
+	if value, ok := chc.mutation.InstanceState(); ok {
+		_spec.SetField(cloudhost.FieldInstanceState, field.TypeString, value)
+		_node.InstanceState = value
 	}
-	if value, ok := chc.mutation.OsType(); ok {
-		_spec.SetField(cloudhost.FieldOsType, field.TypeString, value)
-		_node.OsType = value
+	if value, ok := chc.mutation.CPU(); ok {
+		_spec.SetField(cloudhost.FieldCPU, field.TypeInt64, value)
+		_node.CPU = value
 	}
-	if value, ok := chc.mutation.Manufacturer(); ok {
-		_spec.SetField(cloudhost.FieldManufacturer, field.TypeString, value)
-		_node.Manufacturer = value
+	if value, ok := chc.mutation.Memory(); ok {
+		_spec.SetField(cloudhost.FieldMemory, field.TypeInt64, value)
+		_node.Memory = value
 	}
-	if value, ok := chc.mutation.Zone(); ok {
-		_spec.SetField(cloudhost.FieldZone, field.TypeString, value)
-		_node.Zone = value
-	}
-	if value, ok := chc.mutation.SecurityGroups(); ok {
-		_spec.SetField(cloudhost.FieldSecurityGroups, field.TypeString, value)
-		_node.SecurityGroups = value
-	}
-	if value, ok := chc.mutation.BillType(); ok {
-		_spec.SetField(cloudhost.FieldBillType, field.TypeString, value)
-		_node.BillType = value
-	}
-	if value, ok := chc.mutation.ChargeType(); ok {
-		_spec.SetField(cloudhost.FieldChargeType, field.TypeString, value)
-		_node.ChargeType = value
-	}
-	if value, ok := chc.mutation.IsActive(); ok {
-		_spec.SetField(cloudhost.FieldIsActive, field.TypeBool, value)
-		_node.IsActive = value
+	if value, ok := chc.mutation.CreatedTime(); ok {
+		_spec.SetField(cloudhost.FieldCreatedTime, field.TypeString, value)
+		_node.CreatedTime = value
 	}
 	if value, ok := chc.mutation.InstanceType(); ok {
 		_spec.SetField(cloudhost.FieldInstanceType, field.TypeString, value)
 		_node.InstanceType = value
+	}
+	if value, ok := chc.mutation.EniLimit(); ok {
+		_spec.SetField(cloudhost.FieldEniLimit, field.TypeInt64, value)
+		_node.EniLimit = value
+	}
+	if value, ok := chc.mutation.EnilpLimit(); ok {
+		_spec.SetField(cloudhost.FieldEnilpLimit, field.TypeInt64, value)
+		_node.EnilpLimit = value
+	}
+	if value, ok := chc.mutation.InstanceEniCount(); ok {
+		_spec.SetField(cloudhost.FieldInstanceEniCount, field.TypeInt64, value)
+		_node.InstanceEniCount = value
 	}
 	return _node, _spec
 }
@@ -396,7 +262,6 @@ func (chcb *CloudHostCreateBulk) Save(ctx context.Context) ([]*CloudHost, error)
 	for i := range chcb.builders {
 		func(i int, root context.Context) {
 			builder := chcb.builders[i]
-			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*CloudHostMutation)
 				if !ok {

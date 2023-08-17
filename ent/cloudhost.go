@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"kubecit/ent/cloudhost"
 	"strings"
-	"time"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
@@ -17,47 +16,31 @@ type CloudHost struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
-	// UUID holds the value of the "uuid" field.
-	UUID string `json:"uuid,omitempty"`
-	// State holds the value of the "state" field.
-	State string `json:"state,omitempty"`
-	// Ipv6AddressPrivate holds the value of the "ipv6AddressPrivate" field.
-	Ipv6AddressPrivate string `json:"ipv6AddressPrivate,omitempty"`
-	// Ipv6AddressPublic holds the value of the "ipv6AddressPublic" field.
-	Ipv6AddressPublic string `json:"ipv6AddressPublic,omitempty"`
-	// Ipv4AddressPrivate holds the value of the "ipv4AddressPrivate" field.
-	Ipv4AddressPrivate string `json:"ipv4AddressPrivate,omitempty"`
-	// Ipv4AddressPublic holds the value of the "ipv4AddressPublic" field.
-	Ipv4AddressPublic string `json:"ipv4AddressPublic,omitempty"`
-	// Memory holds the value of the "memory" field.
-	Memory int `json:"memory,omitempty"`
-	// CPU holds the value of the "cpu" field.
-	CPU int `json:"cpu,omitempty"`
-	// CreatedTime holds the value of the "createdTime" field.
-	CreatedTime time.Time `json:"createdTime,omitempty"`
-	// ExpiredTime holds the value of the "expiredTime" field.
-	ExpiredTime time.Time `json:"expiredTime,omitempty"`
+	// InstanceId holds the value of the "instanceId" field.
+	InstanceId string `json:"instanceId,omitempty"`
+	// VpcId holds the value of the "vpcId" field.
+	VpcId string `json:"vpcId,omitempty"`
+	// SubnetId holds the value of the "SubnetId" field.
+	SubnetId string `json:"SubnetId,omitempty"`
 	// InstanceName holds the value of the "instanceName" field.
 	InstanceName string `json:"instanceName,omitempty"`
-	// ImageName holds the value of the "imageName" field.
-	ImageName string `json:"imageName,omitempty"`
-	// OsType holds the value of the "osType" field.
-	OsType string `json:"osType,omitempty"`
-	// Manufacturer holds the value of the "manufacturer" field.
-	Manufacturer string `json:"manufacturer,omitempty"`
-	// Zone holds the value of the "zone" field.
-	Zone string `json:"zone,omitempty"`
-	// SecurityGroups holds the value of the "securityGroups" field.
-	SecurityGroups string `json:"securityGroups,omitempty"`
-	// BillType holds the value of the "billType" field.
-	BillType string `json:"billType,omitempty"`
-	// ChargeType holds the value of the "chargeType" field.
-	ChargeType string `json:"chargeType,omitempty"`
-	// IsActive holds the value of the "isActive" field.
-	IsActive bool `json:"isActive,omitempty"`
+	// InstanceState holds the value of the "instanceState" field.
+	InstanceState string `json:"instanceState,omitempty"`
+	// CPU holds the value of the "cpu" field.
+	CPU int64 `json:"cpu,omitempty"`
+	// Memory holds the value of the "memory" field.
+	Memory int64 `json:"memory,omitempty"`
+	// CreatedTime holds the value of the "createdTime" field.
+	CreatedTime string `json:"createdTime,omitempty"`
 	// InstanceType holds the value of the "instanceType" field.
 	InstanceType string `json:"instanceType,omitempty"`
-	selectValues sql.SelectValues
+	// EniLimit holds the value of the "eniLimit" field.
+	EniLimit int64 `json:"eniLimit,omitempty"`
+	// EnilpLimit holds the value of the "enilpLimit" field.
+	EnilpLimit int64 `json:"enilpLimit,omitempty"`
+	// InstanceEniCount holds the value of the "instanceEniCount" field.
+	InstanceEniCount int64 `json:"instanceEniCount,omitempty"`
+	selectValues     sql.SelectValues
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -65,14 +48,10 @@ func (*CloudHost) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case cloudhost.FieldIsActive:
-			values[i] = new(sql.NullBool)
-		case cloudhost.FieldID, cloudhost.FieldMemory, cloudhost.FieldCPU:
+		case cloudhost.FieldID, cloudhost.FieldCPU, cloudhost.FieldMemory, cloudhost.FieldEniLimit, cloudhost.FieldEnilpLimit, cloudhost.FieldInstanceEniCount:
 			values[i] = new(sql.NullInt64)
-		case cloudhost.FieldUUID, cloudhost.FieldState, cloudhost.FieldIpv6AddressPrivate, cloudhost.FieldIpv6AddressPublic, cloudhost.FieldIpv4AddressPrivate, cloudhost.FieldIpv4AddressPublic, cloudhost.FieldInstanceName, cloudhost.FieldImageName, cloudhost.FieldOsType, cloudhost.FieldManufacturer, cloudhost.FieldZone, cloudhost.FieldSecurityGroups, cloudhost.FieldBillType, cloudhost.FieldChargeType, cloudhost.FieldInstanceType:
+		case cloudhost.FieldInstanceId, cloudhost.FieldVpcId, cloudhost.FieldSubnetId, cloudhost.FieldInstanceName, cloudhost.FieldInstanceState, cloudhost.FieldCreatedTime, cloudhost.FieldInstanceType:
 			values[i] = new(sql.NullString)
-		case cloudhost.FieldCreatedTime, cloudhost.FieldExpiredTime:
-			values[i] = new(sql.NullTime)
 		default:
 			values[i] = new(sql.UnknownType)
 		}
@@ -94,65 +73,23 @@ func (ch *CloudHost) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
 			ch.ID = int(value.Int64)
-		case cloudhost.FieldUUID:
+		case cloudhost.FieldInstanceId:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field uuid", values[i])
+				return fmt.Errorf("unexpected type %T for field instanceId", values[i])
 			} else if value.Valid {
-				ch.UUID = value.String
+				ch.InstanceId = value.String
 			}
-		case cloudhost.FieldState:
+		case cloudhost.FieldVpcId:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field state", values[i])
+				return fmt.Errorf("unexpected type %T for field vpcId", values[i])
 			} else if value.Valid {
-				ch.State = value.String
+				ch.VpcId = value.String
 			}
-		case cloudhost.FieldIpv6AddressPrivate:
+		case cloudhost.FieldSubnetId:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field ipv6AddressPrivate", values[i])
+				return fmt.Errorf("unexpected type %T for field SubnetId", values[i])
 			} else if value.Valid {
-				ch.Ipv6AddressPrivate = value.String
-			}
-		case cloudhost.FieldIpv6AddressPublic:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field ipv6AddressPublic", values[i])
-			} else if value.Valid {
-				ch.Ipv6AddressPublic = value.String
-			}
-		case cloudhost.FieldIpv4AddressPrivate:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field ipv4AddressPrivate", values[i])
-			} else if value.Valid {
-				ch.Ipv4AddressPrivate = value.String
-			}
-		case cloudhost.FieldIpv4AddressPublic:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field ipv4AddressPublic", values[i])
-			} else if value.Valid {
-				ch.Ipv4AddressPublic = value.String
-			}
-		case cloudhost.FieldMemory:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field memory", values[i])
-			} else if value.Valid {
-				ch.Memory = int(value.Int64)
-			}
-		case cloudhost.FieldCPU:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field cpu", values[i])
-			} else if value.Valid {
-				ch.CPU = int(value.Int64)
-			}
-		case cloudhost.FieldCreatedTime:
-			if value, ok := values[i].(*sql.NullTime); !ok {
-				return fmt.Errorf("unexpected type %T for field createdTime", values[i])
-			} else if value.Valid {
-				ch.CreatedTime = value.Time
-			}
-		case cloudhost.FieldExpiredTime:
-			if value, ok := values[i].(*sql.NullTime); !ok {
-				return fmt.Errorf("unexpected type %T for field expiredTime", values[i])
-			} else if value.Valid {
-				ch.ExpiredTime = value.Time
+				ch.SubnetId = value.String
 			}
 		case cloudhost.FieldInstanceName:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -160,59 +97,53 @@ func (ch *CloudHost) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				ch.InstanceName = value.String
 			}
-		case cloudhost.FieldImageName:
+		case cloudhost.FieldInstanceState:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field imageName", values[i])
+				return fmt.Errorf("unexpected type %T for field instanceState", values[i])
 			} else if value.Valid {
-				ch.ImageName = value.String
+				ch.InstanceState = value.String
 			}
-		case cloudhost.FieldOsType:
+		case cloudhost.FieldCPU:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field cpu", values[i])
+			} else if value.Valid {
+				ch.CPU = value.Int64
+			}
+		case cloudhost.FieldMemory:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field memory", values[i])
+			} else if value.Valid {
+				ch.Memory = value.Int64
+			}
+		case cloudhost.FieldCreatedTime:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field osType", values[i])
+				return fmt.Errorf("unexpected type %T for field createdTime", values[i])
 			} else if value.Valid {
-				ch.OsType = value.String
-			}
-		case cloudhost.FieldManufacturer:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field manufacturer", values[i])
-			} else if value.Valid {
-				ch.Manufacturer = value.String
-			}
-		case cloudhost.FieldZone:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field zone", values[i])
-			} else if value.Valid {
-				ch.Zone = value.String
-			}
-		case cloudhost.FieldSecurityGroups:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field securityGroups", values[i])
-			} else if value.Valid {
-				ch.SecurityGroups = value.String
-			}
-		case cloudhost.FieldBillType:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field billType", values[i])
-			} else if value.Valid {
-				ch.BillType = value.String
-			}
-		case cloudhost.FieldChargeType:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field chargeType", values[i])
-			} else if value.Valid {
-				ch.ChargeType = value.String
-			}
-		case cloudhost.FieldIsActive:
-			if value, ok := values[i].(*sql.NullBool); !ok {
-				return fmt.Errorf("unexpected type %T for field isActive", values[i])
-			} else if value.Valid {
-				ch.IsActive = value.Bool
+				ch.CreatedTime = value.String
 			}
 		case cloudhost.FieldInstanceType:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field instanceType", values[i])
 			} else if value.Valid {
 				ch.InstanceType = value.String
+			}
+		case cloudhost.FieldEniLimit:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field eniLimit", values[i])
+			} else if value.Valid {
+				ch.EniLimit = value.Int64
+			}
+		case cloudhost.FieldEnilpLimit:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field enilpLimit", values[i])
+			} else if value.Valid {
+				ch.EnilpLimit = value.Int64
+			}
+		case cloudhost.FieldInstanceEniCount:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field instanceEniCount", values[i])
+			} else if value.Valid {
+				ch.InstanceEniCount = value.Int64
 			}
 		default:
 			ch.selectValues.Set(columns[i], values[i])
@@ -250,65 +181,41 @@ func (ch *CloudHost) String() string {
 	var builder strings.Builder
 	builder.WriteString("CloudHost(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", ch.ID))
-	builder.WriteString("uuid=")
-	builder.WriteString(ch.UUID)
+	builder.WriteString("instanceId=")
+	builder.WriteString(ch.InstanceId)
 	builder.WriteString(", ")
-	builder.WriteString("state=")
-	builder.WriteString(ch.State)
+	builder.WriteString("vpcId=")
+	builder.WriteString(ch.VpcId)
 	builder.WriteString(", ")
-	builder.WriteString("ipv6AddressPrivate=")
-	builder.WriteString(ch.Ipv6AddressPrivate)
-	builder.WriteString(", ")
-	builder.WriteString("ipv6AddressPublic=")
-	builder.WriteString(ch.Ipv6AddressPublic)
-	builder.WriteString(", ")
-	builder.WriteString("ipv4AddressPrivate=")
-	builder.WriteString(ch.Ipv4AddressPrivate)
-	builder.WriteString(", ")
-	builder.WriteString("ipv4AddressPublic=")
-	builder.WriteString(ch.Ipv4AddressPublic)
-	builder.WriteString(", ")
-	builder.WriteString("memory=")
-	builder.WriteString(fmt.Sprintf("%v", ch.Memory))
-	builder.WriteString(", ")
-	builder.WriteString("cpu=")
-	builder.WriteString(fmt.Sprintf("%v", ch.CPU))
-	builder.WriteString(", ")
-	builder.WriteString("createdTime=")
-	builder.WriteString(ch.CreatedTime.Format(time.ANSIC))
-	builder.WriteString(", ")
-	builder.WriteString("expiredTime=")
-	builder.WriteString(ch.ExpiredTime.Format(time.ANSIC))
+	builder.WriteString("SubnetId=")
+	builder.WriteString(ch.SubnetId)
 	builder.WriteString(", ")
 	builder.WriteString("instanceName=")
 	builder.WriteString(ch.InstanceName)
 	builder.WriteString(", ")
-	builder.WriteString("imageName=")
-	builder.WriteString(ch.ImageName)
+	builder.WriteString("instanceState=")
+	builder.WriteString(ch.InstanceState)
 	builder.WriteString(", ")
-	builder.WriteString("osType=")
-	builder.WriteString(ch.OsType)
+	builder.WriteString("cpu=")
+	builder.WriteString(fmt.Sprintf("%v", ch.CPU))
 	builder.WriteString(", ")
-	builder.WriteString("manufacturer=")
-	builder.WriteString(ch.Manufacturer)
+	builder.WriteString("memory=")
+	builder.WriteString(fmt.Sprintf("%v", ch.Memory))
 	builder.WriteString(", ")
-	builder.WriteString("zone=")
-	builder.WriteString(ch.Zone)
-	builder.WriteString(", ")
-	builder.WriteString("securityGroups=")
-	builder.WriteString(ch.SecurityGroups)
-	builder.WriteString(", ")
-	builder.WriteString("billType=")
-	builder.WriteString(ch.BillType)
-	builder.WriteString(", ")
-	builder.WriteString("chargeType=")
-	builder.WriteString(ch.ChargeType)
-	builder.WriteString(", ")
-	builder.WriteString("isActive=")
-	builder.WriteString(fmt.Sprintf("%v", ch.IsActive))
+	builder.WriteString("createdTime=")
+	builder.WriteString(ch.CreatedTime)
 	builder.WriteString(", ")
 	builder.WriteString("instanceType=")
 	builder.WriteString(ch.InstanceType)
+	builder.WriteString(", ")
+	builder.WriteString("eniLimit=")
+	builder.WriteString(fmt.Sprintf("%v", ch.EniLimit))
+	builder.WriteString(", ")
+	builder.WriteString("enilpLimit=")
+	builder.WriteString(fmt.Sprintf("%v", ch.EnilpLimit))
+	builder.WriteString(", ")
+	builder.WriteString("instanceEniCount=")
+	builder.WriteString(fmt.Sprintf("%v", ch.InstanceEniCount))
 	builder.WriteByte(')')
 	return builder.String()
 }

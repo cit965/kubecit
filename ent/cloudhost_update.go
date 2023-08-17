@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"kubecit/ent/cloudhost"
 	"kubecit/ent/predicate"
-	"time"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -28,85 +27,21 @@ func (chu *CloudHostUpdate) Where(ps ...predicate.CloudHost) *CloudHostUpdate {
 	return chu
 }
 
-// SetUUID sets the "uuid" field.
-func (chu *CloudHostUpdate) SetUUID(s string) *CloudHostUpdate {
-	chu.mutation.SetUUID(s)
+// SetInstanceId sets the "instanceId" field.
+func (chu *CloudHostUpdate) SetInstanceId(s string) *CloudHostUpdate {
+	chu.mutation.SetInstanceId(s)
 	return chu
 }
 
-// SetState sets the "state" field.
-func (chu *CloudHostUpdate) SetState(s string) *CloudHostUpdate {
-	chu.mutation.SetState(s)
+// SetVpcId sets the "vpcId" field.
+func (chu *CloudHostUpdate) SetVpcId(s string) *CloudHostUpdate {
+	chu.mutation.SetVpcId(s)
 	return chu
 }
 
-// SetNillableState sets the "state" field if the given value is not nil.
-func (chu *CloudHostUpdate) SetNillableState(s *string) *CloudHostUpdate {
-	if s != nil {
-		chu.SetState(*s)
-	}
-	return chu
-}
-
-// SetIpv6AddressPrivate sets the "ipv6AddressPrivate" field.
-func (chu *CloudHostUpdate) SetIpv6AddressPrivate(s string) *CloudHostUpdate {
-	chu.mutation.SetIpv6AddressPrivate(s)
-	return chu
-}
-
-// SetIpv6AddressPublic sets the "ipv6AddressPublic" field.
-func (chu *CloudHostUpdate) SetIpv6AddressPublic(s string) *CloudHostUpdate {
-	chu.mutation.SetIpv6AddressPublic(s)
-	return chu
-}
-
-// SetIpv4AddressPrivate sets the "ipv4AddressPrivate" field.
-func (chu *CloudHostUpdate) SetIpv4AddressPrivate(s string) *CloudHostUpdate {
-	chu.mutation.SetIpv4AddressPrivate(s)
-	return chu
-}
-
-// SetIpv4AddressPublic sets the "ipv4AddressPublic" field.
-func (chu *CloudHostUpdate) SetIpv4AddressPublic(s string) *CloudHostUpdate {
-	chu.mutation.SetIpv4AddressPublic(s)
-	return chu
-}
-
-// SetMemory sets the "memory" field.
-func (chu *CloudHostUpdate) SetMemory(i int) *CloudHostUpdate {
-	chu.mutation.ResetMemory()
-	chu.mutation.SetMemory(i)
-	return chu
-}
-
-// AddMemory adds i to the "memory" field.
-func (chu *CloudHostUpdate) AddMemory(i int) *CloudHostUpdate {
-	chu.mutation.AddMemory(i)
-	return chu
-}
-
-// SetCPU sets the "cpu" field.
-func (chu *CloudHostUpdate) SetCPU(i int) *CloudHostUpdate {
-	chu.mutation.ResetCPU()
-	chu.mutation.SetCPU(i)
-	return chu
-}
-
-// AddCPU adds i to the "cpu" field.
-func (chu *CloudHostUpdate) AddCPU(i int) *CloudHostUpdate {
-	chu.mutation.AddCPU(i)
-	return chu
-}
-
-// SetCreatedTime sets the "createdTime" field.
-func (chu *CloudHostUpdate) SetCreatedTime(t time.Time) *CloudHostUpdate {
-	chu.mutation.SetCreatedTime(t)
-	return chu
-}
-
-// SetExpiredTime sets the "expiredTime" field.
-func (chu *CloudHostUpdate) SetExpiredTime(t time.Time) *CloudHostUpdate {
-	chu.mutation.SetExpiredTime(t)
+// SetSubnetId sets the "SubnetId" field.
+func (chu *CloudHostUpdate) SetSubnetId(s string) *CloudHostUpdate {
+	chu.mutation.SetSubnetId(s)
 	return chu
 }
 
@@ -116,65 +51,86 @@ func (chu *CloudHostUpdate) SetInstanceName(s string) *CloudHostUpdate {
 	return chu
 }
 
-// SetImageName sets the "imageName" field.
-func (chu *CloudHostUpdate) SetImageName(s string) *CloudHostUpdate {
-	chu.mutation.SetImageName(s)
+// SetInstanceState sets the "instanceState" field.
+func (chu *CloudHostUpdate) SetInstanceState(s string) *CloudHostUpdate {
+	chu.mutation.SetInstanceState(s)
 	return chu
 }
 
-// SetOsType sets the "osType" field.
-func (chu *CloudHostUpdate) SetOsType(s string) *CloudHostUpdate {
-	chu.mutation.SetOsType(s)
+// SetCPU sets the "cpu" field.
+func (chu *CloudHostUpdate) SetCPU(i int64) *CloudHostUpdate {
+	chu.mutation.ResetCPU()
+	chu.mutation.SetCPU(i)
 	return chu
 }
 
-// SetManufacturer sets the "manufacturer" field.
-func (chu *CloudHostUpdate) SetManufacturer(s string) *CloudHostUpdate {
-	chu.mutation.SetManufacturer(s)
+// AddCPU adds i to the "cpu" field.
+func (chu *CloudHostUpdate) AddCPU(i int64) *CloudHostUpdate {
+	chu.mutation.AddCPU(i)
 	return chu
 }
 
-// SetZone sets the "zone" field.
-func (chu *CloudHostUpdate) SetZone(s string) *CloudHostUpdate {
-	chu.mutation.SetZone(s)
+// SetMemory sets the "memory" field.
+func (chu *CloudHostUpdate) SetMemory(i int64) *CloudHostUpdate {
+	chu.mutation.ResetMemory()
+	chu.mutation.SetMemory(i)
 	return chu
 }
 
-// SetSecurityGroups sets the "securityGroups" field.
-func (chu *CloudHostUpdate) SetSecurityGroups(s string) *CloudHostUpdate {
-	chu.mutation.SetSecurityGroups(s)
+// AddMemory adds i to the "memory" field.
+func (chu *CloudHostUpdate) AddMemory(i int64) *CloudHostUpdate {
+	chu.mutation.AddMemory(i)
 	return chu
 }
 
-// SetBillType sets the "billType" field.
-func (chu *CloudHostUpdate) SetBillType(s string) *CloudHostUpdate {
-	chu.mutation.SetBillType(s)
-	return chu
-}
-
-// SetChargeType sets the "chargeType" field.
-func (chu *CloudHostUpdate) SetChargeType(s string) *CloudHostUpdate {
-	chu.mutation.SetChargeType(s)
-	return chu
-}
-
-// SetIsActive sets the "isActive" field.
-func (chu *CloudHostUpdate) SetIsActive(b bool) *CloudHostUpdate {
-	chu.mutation.SetIsActive(b)
-	return chu
-}
-
-// SetNillableIsActive sets the "isActive" field if the given value is not nil.
-func (chu *CloudHostUpdate) SetNillableIsActive(b *bool) *CloudHostUpdate {
-	if b != nil {
-		chu.SetIsActive(*b)
-	}
+// SetCreatedTime sets the "createdTime" field.
+func (chu *CloudHostUpdate) SetCreatedTime(s string) *CloudHostUpdate {
+	chu.mutation.SetCreatedTime(s)
 	return chu
 }
 
 // SetInstanceType sets the "instanceType" field.
 func (chu *CloudHostUpdate) SetInstanceType(s string) *CloudHostUpdate {
 	chu.mutation.SetInstanceType(s)
+	return chu
+}
+
+// SetEniLimit sets the "eniLimit" field.
+func (chu *CloudHostUpdate) SetEniLimit(i int64) *CloudHostUpdate {
+	chu.mutation.ResetEniLimit()
+	chu.mutation.SetEniLimit(i)
+	return chu
+}
+
+// AddEniLimit adds i to the "eniLimit" field.
+func (chu *CloudHostUpdate) AddEniLimit(i int64) *CloudHostUpdate {
+	chu.mutation.AddEniLimit(i)
+	return chu
+}
+
+// SetEnilpLimit sets the "enilpLimit" field.
+func (chu *CloudHostUpdate) SetEnilpLimit(i int64) *CloudHostUpdate {
+	chu.mutation.ResetEnilpLimit()
+	chu.mutation.SetEnilpLimit(i)
+	return chu
+}
+
+// AddEnilpLimit adds i to the "enilpLimit" field.
+func (chu *CloudHostUpdate) AddEnilpLimit(i int64) *CloudHostUpdate {
+	chu.mutation.AddEnilpLimit(i)
+	return chu
+}
+
+// SetInstanceEniCount sets the "instanceEniCount" field.
+func (chu *CloudHostUpdate) SetInstanceEniCount(i int64) *CloudHostUpdate {
+	chu.mutation.ResetInstanceEniCount()
+	chu.mutation.SetInstanceEniCount(i)
+	return chu
+}
+
+// AddInstanceEniCount adds i to the "instanceEniCount" field.
+func (chu *CloudHostUpdate) AddInstanceEniCount(i int64) *CloudHostUpdate {
+	chu.mutation.AddInstanceEniCount(i)
 	return chu
 }
 
@@ -212,14 +168,14 @@ func (chu *CloudHostUpdate) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (chu *CloudHostUpdate) check() error {
-	if v, ok := chu.mutation.UUID(); ok {
-		if err := cloudhost.UUIDValidator(v); err != nil {
-			return &ValidationError{Name: "uuid", err: fmt.Errorf(`ent: validator failed for field "CloudHost.uuid": %w`, err)}
+	if v, ok := chu.mutation.InstanceId(); ok {
+		if err := cloudhost.InstanceIdValidator(v); err != nil {
+			return &ValidationError{Name: "instanceId", err: fmt.Errorf(`ent: validator failed for field "CloudHost.instanceId": %w`, err)}
 		}
 	}
-	if v, ok := chu.mutation.State(); ok {
-		if err := cloudhost.StateValidator(v); err != nil {
-			return &ValidationError{Name: "state", err: fmt.Errorf(`ent: validator failed for field "CloudHost.state": %w`, err)}
+	if v, ok := chu.mutation.VpcId(); ok {
+		if err := cloudhost.VpcIdValidator(v); err != nil {
+			return &ValidationError{Name: "vpcId", err: fmt.Errorf(`ent: validator failed for field "CloudHost.vpcId": %w`, err)}
 		}
 	}
 	return nil
@@ -237,71 +193,56 @@ func (chu *CloudHostUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			}
 		}
 	}
-	if value, ok := chu.mutation.UUID(); ok {
-		_spec.SetField(cloudhost.FieldUUID, field.TypeString, value)
+	if value, ok := chu.mutation.InstanceId(); ok {
+		_spec.SetField(cloudhost.FieldInstanceId, field.TypeString, value)
 	}
-	if value, ok := chu.mutation.State(); ok {
-		_spec.SetField(cloudhost.FieldState, field.TypeString, value)
+	if value, ok := chu.mutation.VpcId(); ok {
+		_spec.SetField(cloudhost.FieldVpcId, field.TypeString, value)
 	}
-	if value, ok := chu.mutation.Ipv6AddressPrivate(); ok {
-		_spec.SetField(cloudhost.FieldIpv6AddressPrivate, field.TypeString, value)
-	}
-	if value, ok := chu.mutation.Ipv6AddressPublic(); ok {
-		_spec.SetField(cloudhost.FieldIpv6AddressPublic, field.TypeString, value)
-	}
-	if value, ok := chu.mutation.Ipv4AddressPrivate(); ok {
-		_spec.SetField(cloudhost.FieldIpv4AddressPrivate, field.TypeString, value)
-	}
-	if value, ok := chu.mutation.Ipv4AddressPublic(); ok {
-		_spec.SetField(cloudhost.FieldIpv4AddressPublic, field.TypeString, value)
-	}
-	if value, ok := chu.mutation.Memory(); ok {
-		_spec.SetField(cloudhost.FieldMemory, field.TypeInt, value)
-	}
-	if value, ok := chu.mutation.AddedMemory(); ok {
-		_spec.AddField(cloudhost.FieldMemory, field.TypeInt, value)
-	}
-	if value, ok := chu.mutation.CPU(); ok {
-		_spec.SetField(cloudhost.FieldCPU, field.TypeInt, value)
-	}
-	if value, ok := chu.mutation.AddedCPU(); ok {
-		_spec.AddField(cloudhost.FieldCPU, field.TypeInt, value)
-	}
-	if value, ok := chu.mutation.CreatedTime(); ok {
-		_spec.SetField(cloudhost.FieldCreatedTime, field.TypeTime, value)
-	}
-	if value, ok := chu.mutation.ExpiredTime(); ok {
-		_spec.SetField(cloudhost.FieldExpiredTime, field.TypeTime, value)
+	if value, ok := chu.mutation.SubnetId(); ok {
+		_spec.SetField(cloudhost.FieldSubnetId, field.TypeString, value)
 	}
 	if value, ok := chu.mutation.InstanceName(); ok {
 		_spec.SetField(cloudhost.FieldInstanceName, field.TypeString, value)
 	}
-	if value, ok := chu.mutation.ImageName(); ok {
-		_spec.SetField(cloudhost.FieldImageName, field.TypeString, value)
+	if value, ok := chu.mutation.InstanceState(); ok {
+		_spec.SetField(cloudhost.FieldInstanceState, field.TypeString, value)
 	}
-	if value, ok := chu.mutation.OsType(); ok {
-		_spec.SetField(cloudhost.FieldOsType, field.TypeString, value)
+	if value, ok := chu.mutation.CPU(); ok {
+		_spec.SetField(cloudhost.FieldCPU, field.TypeInt64, value)
 	}
-	if value, ok := chu.mutation.Manufacturer(); ok {
-		_spec.SetField(cloudhost.FieldManufacturer, field.TypeString, value)
+	if value, ok := chu.mutation.AddedCPU(); ok {
+		_spec.AddField(cloudhost.FieldCPU, field.TypeInt64, value)
 	}
-	if value, ok := chu.mutation.Zone(); ok {
-		_spec.SetField(cloudhost.FieldZone, field.TypeString, value)
+	if value, ok := chu.mutation.Memory(); ok {
+		_spec.SetField(cloudhost.FieldMemory, field.TypeInt64, value)
 	}
-	if value, ok := chu.mutation.SecurityGroups(); ok {
-		_spec.SetField(cloudhost.FieldSecurityGroups, field.TypeString, value)
+	if value, ok := chu.mutation.AddedMemory(); ok {
+		_spec.AddField(cloudhost.FieldMemory, field.TypeInt64, value)
 	}
-	if value, ok := chu.mutation.BillType(); ok {
-		_spec.SetField(cloudhost.FieldBillType, field.TypeString, value)
-	}
-	if value, ok := chu.mutation.ChargeType(); ok {
-		_spec.SetField(cloudhost.FieldChargeType, field.TypeString, value)
-	}
-	if value, ok := chu.mutation.IsActive(); ok {
-		_spec.SetField(cloudhost.FieldIsActive, field.TypeBool, value)
+	if value, ok := chu.mutation.CreatedTime(); ok {
+		_spec.SetField(cloudhost.FieldCreatedTime, field.TypeString, value)
 	}
 	if value, ok := chu.mutation.InstanceType(); ok {
 		_spec.SetField(cloudhost.FieldInstanceType, field.TypeString, value)
+	}
+	if value, ok := chu.mutation.EniLimit(); ok {
+		_spec.SetField(cloudhost.FieldEniLimit, field.TypeInt64, value)
+	}
+	if value, ok := chu.mutation.AddedEniLimit(); ok {
+		_spec.AddField(cloudhost.FieldEniLimit, field.TypeInt64, value)
+	}
+	if value, ok := chu.mutation.EnilpLimit(); ok {
+		_spec.SetField(cloudhost.FieldEnilpLimit, field.TypeInt64, value)
+	}
+	if value, ok := chu.mutation.AddedEnilpLimit(); ok {
+		_spec.AddField(cloudhost.FieldEnilpLimit, field.TypeInt64, value)
+	}
+	if value, ok := chu.mutation.InstanceEniCount(); ok {
+		_spec.SetField(cloudhost.FieldInstanceEniCount, field.TypeInt64, value)
+	}
+	if value, ok := chu.mutation.AddedInstanceEniCount(); ok {
+		_spec.AddField(cloudhost.FieldInstanceEniCount, field.TypeInt64, value)
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, chu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -323,85 +264,21 @@ type CloudHostUpdateOne struct {
 	mutation *CloudHostMutation
 }
 
-// SetUUID sets the "uuid" field.
-func (chuo *CloudHostUpdateOne) SetUUID(s string) *CloudHostUpdateOne {
-	chuo.mutation.SetUUID(s)
+// SetInstanceId sets the "instanceId" field.
+func (chuo *CloudHostUpdateOne) SetInstanceId(s string) *CloudHostUpdateOne {
+	chuo.mutation.SetInstanceId(s)
 	return chuo
 }
 
-// SetState sets the "state" field.
-func (chuo *CloudHostUpdateOne) SetState(s string) *CloudHostUpdateOne {
-	chuo.mutation.SetState(s)
+// SetVpcId sets the "vpcId" field.
+func (chuo *CloudHostUpdateOne) SetVpcId(s string) *CloudHostUpdateOne {
+	chuo.mutation.SetVpcId(s)
 	return chuo
 }
 
-// SetNillableState sets the "state" field if the given value is not nil.
-func (chuo *CloudHostUpdateOne) SetNillableState(s *string) *CloudHostUpdateOne {
-	if s != nil {
-		chuo.SetState(*s)
-	}
-	return chuo
-}
-
-// SetIpv6AddressPrivate sets the "ipv6AddressPrivate" field.
-func (chuo *CloudHostUpdateOne) SetIpv6AddressPrivate(s string) *CloudHostUpdateOne {
-	chuo.mutation.SetIpv6AddressPrivate(s)
-	return chuo
-}
-
-// SetIpv6AddressPublic sets the "ipv6AddressPublic" field.
-func (chuo *CloudHostUpdateOne) SetIpv6AddressPublic(s string) *CloudHostUpdateOne {
-	chuo.mutation.SetIpv6AddressPublic(s)
-	return chuo
-}
-
-// SetIpv4AddressPrivate sets the "ipv4AddressPrivate" field.
-func (chuo *CloudHostUpdateOne) SetIpv4AddressPrivate(s string) *CloudHostUpdateOne {
-	chuo.mutation.SetIpv4AddressPrivate(s)
-	return chuo
-}
-
-// SetIpv4AddressPublic sets the "ipv4AddressPublic" field.
-func (chuo *CloudHostUpdateOne) SetIpv4AddressPublic(s string) *CloudHostUpdateOne {
-	chuo.mutation.SetIpv4AddressPublic(s)
-	return chuo
-}
-
-// SetMemory sets the "memory" field.
-func (chuo *CloudHostUpdateOne) SetMemory(i int) *CloudHostUpdateOne {
-	chuo.mutation.ResetMemory()
-	chuo.mutation.SetMemory(i)
-	return chuo
-}
-
-// AddMemory adds i to the "memory" field.
-func (chuo *CloudHostUpdateOne) AddMemory(i int) *CloudHostUpdateOne {
-	chuo.mutation.AddMemory(i)
-	return chuo
-}
-
-// SetCPU sets the "cpu" field.
-func (chuo *CloudHostUpdateOne) SetCPU(i int) *CloudHostUpdateOne {
-	chuo.mutation.ResetCPU()
-	chuo.mutation.SetCPU(i)
-	return chuo
-}
-
-// AddCPU adds i to the "cpu" field.
-func (chuo *CloudHostUpdateOne) AddCPU(i int) *CloudHostUpdateOne {
-	chuo.mutation.AddCPU(i)
-	return chuo
-}
-
-// SetCreatedTime sets the "createdTime" field.
-func (chuo *CloudHostUpdateOne) SetCreatedTime(t time.Time) *CloudHostUpdateOne {
-	chuo.mutation.SetCreatedTime(t)
-	return chuo
-}
-
-// SetExpiredTime sets the "expiredTime" field.
-func (chuo *CloudHostUpdateOne) SetExpiredTime(t time.Time) *CloudHostUpdateOne {
-	chuo.mutation.SetExpiredTime(t)
+// SetSubnetId sets the "SubnetId" field.
+func (chuo *CloudHostUpdateOne) SetSubnetId(s string) *CloudHostUpdateOne {
+	chuo.mutation.SetSubnetId(s)
 	return chuo
 }
 
@@ -411,65 +288,86 @@ func (chuo *CloudHostUpdateOne) SetInstanceName(s string) *CloudHostUpdateOne {
 	return chuo
 }
 
-// SetImageName sets the "imageName" field.
-func (chuo *CloudHostUpdateOne) SetImageName(s string) *CloudHostUpdateOne {
-	chuo.mutation.SetImageName(s)
+// SetInstanceState sets the "instanceState" field.
+func (chuo *CloudHostUpdateOne) SetInstanceState(s string) *CloudHostUpdateOne {
+	chuo.mutation.SetInstanceState(s)
 	return chuo
 }
 
-// SetOsType sets the "osType" field.
-func (chuo *CloudHostUpdateOne) SetOsType(s string) *CloudHostUpdateOne {
-	chuo.mutation.SetOsType(s)
+// SetCPU sets the "cpu" field.
+func (chuo *CloudHostUpdateOne) SetCPU(i int64) *CloudHostUpdateOne {
+	chuo.mutation.ResetCPU()
+	chuo.mutation.SetCPU(i)
 	return chuo
 }
 
-// SetManufacturer sets the "manufacturer" field.
-func (chuo *CloudHostUpdateOne) SetManufacturer(s string) *CloudHostUpdateOne {
-	chuo.mutation.SetManufacturer(s)
+// AddCPU adds i to the "cpu" field.
+func (chuo *CloudHostUpdateOne) AddCPU(i int64) *CloudHostUpdateOne {
+	chuo.mutation.AddCPU(i)
 	return chuo
 }
 
-// SetZone sets the "zone" field.
-func (chuo *CloudHostUpdateOne) SetZone(s string) *CloudHostUpdateOne {
-	chuo.mutation.SetZone(s)
+// SetMemory sets the "memory" field.
+func (chuo *CloudHostUpdateOne) SetMemory(i int64) *CloudHostUpdateOne {
+	chuo.mutation.ResetMemory()
+	chuo.mutation.SetMemory(i)
 	return chuo
 }
 
-// SetSecurityGroups sets the "securityGroups" field.
-func (chuo *CloudHostUpdateOne) SetSecurityGroups(s string) *CloudHostUpdateOne {
-	chuo.mutation.SetSecurityGroups(s)
+// AddMemory adds i to the "memory" field.
+func (chuo *CloudHostUpdateOne) AddMemory(i int64) *CloudHostUpdateOne {
+	chuo.mutation.AddMemory(i)
 	return chuo
 }
 
-// SetBillType sets the "billType" field.
-func (chuo *CloudHostUpdateOne) SetBillType(s string) *CloudHostUpdateOne {
-	chuo.mutation.SetBillType(s)
-	return chuo
-}
-
-// SetChargeType sets the "chargeType" field.
-func (chuo *CloudHostUpdateOne) SetChargeType(s string) *CloudHostUpdateOne {
-	chuo.mutation.SetChargeType(s)
-	return chuo
-}
-
-// SetIsActive sets the "isActive" field.
-func (chuo *CloudHostUpdateOne) SetIsActive(b bool) *CloudHostUpdateOne {
-	chuo.mutation.SetIsActive(b)
-	return chuo
-}
-
-// SetNillableIsActive sets the "isActive" field if the given value is not nil.
-func (chuo *CloudHostUpdateOne) SetNillableIsActive(b *bool) *CloudHostUpdateOne {
-	if b != nil {
-		chuo.SetIsActive(*b)
-	}
+// SetCreatedTime sets the "createdTime" field.
+func (chuo *CloudHostUpdateOne) SetCreatedTime(s string) *CloudHostUpdateOne {
+	chuo.mutation.SetCreatedTime(s)
 	return chuo
 }
 
 // SetInstanceType sets the "instanceType" field.
 func (chuo *CloudHostUpdateOne) SetInstanceType(s string) *CloudHostUpdateOne {
 	chuo.mutation.SetInstanceType(s)
+	return chuo
+}
+
+// SetEniLimit sets the "eniLimit" field.
+func (chuo *CloudHostUpdateOne) SetEniLimit(i int64) *CloudHostUpdateOne {
+	chuo.mutation.ResetEniLimit()
+	chuo.mutation.SetEniLimit(i)
+	return chuo
+}
+
+// AddEniLimit adds i to the "eniLimit" field.
+func (chuo *CloudHostUpdateOne) AddEniLimit(i int64) *CloudHostUpdateOne {
+	chuo.mutation.AddEniLimit(i)
+	return chuo
+}
+
+// SetEnilpLimit sets the "enilpLimit" field.
+func (chuo *CloudHostUpdateOne) SetEnilpLimit(i int64) *CloudHostUpdateOne {
+	chuo.mutation.ResetEnilpLimit()
+	chuo.mutation.SetEnilpLimit(i)
+	return chuo
+}
+
+// AddEnilpLimit adds i to the "enilpLimit" field.
+func (chuo *CloudHostUpdateOne) AddEnilpLimit(i int64) *CloudHostUpdateOne {
+	chuo.mutation.AddEnilpLimit(i)
+	return chuo
+}
+
+// SetInstanceEniCount sets the "instanceEniCount" field.
+func (chuo *CloudHostUpdateOne) SetInstanceEniCount(i int64) *CloudHostUpdateOne {
+	chuo.mutation.ResetInstanceEniCount()
+	chuo.mutation.SetInstanceEniCount(i)
+	return chuo
+}
+
+// AddInstanceEniCount adds i to the "instanceEniCount" field.
+func (chuo *CloudHostUpdateOne) AddInstanceEniCount(i int64) *CloudHostUpdateOne {
+	chuo.mutation.AddInstanceEniCount(i)
 	return chuo
 }
 
@@ -520,14 +418,14 @@ func (chuo *CloudHostUpdateOne) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (chuo *CloudHostUpdateOne) check() error {
-	if v, ok := chuo.mutation.UUID(); ok {
-		if err := cloudhost.UUIDValidator(v); err != nil {
-			return &ValidationError{Name: "uuid", err: fmt.Errorf(`ent: validator failed for field "CloudHost.uuid": %w`, err)}
+	if v, ok := chuo.mutation.InstanceId(); ok {
+		if err := cloudhost.InstanceIdValidator(v); err != nil {
+			return &ValidationError{Name: "instanceId", err: fmt.Errorf(`ent: validator failed for field "CloudHost.instanceId": %w`, err)}
 		}
 	}
-	if v, ok := chuo.mutation.State(); ok {
-		if err := cloudhost.StateValidator(v); err != nil {
-			return &ValidationError{Name: "state", err: fmt.Errorf(`ent: validator failed for field "CloudHost.state": %w`, err)}
+	if v, ok := chuo.mutation.VpcId(); ok {
+		if err := cloudhost.VpcIdValidator(v); err != nil {
+			return &ValidationError{Name: "vpcId", err: fmt.Errorf(`ent: validator failed for field "CloudHost.vpcId": %w`, err)}
 		}
 	}
 	return nil
@@ -562,71 +460,56 @@ func (chuo *CloudHostUpdateOne) sqlSave(ctx context.Context) (_node *CloudHost, 
 			}
 		}
 	}
-	if value, ok := chuo.mutation.UUID(); ok {
-		_spec.SetField(cloudhost.FieldUUID, field.TypeString, value)
+	if value, ok := chuo.mutation.InstanceId(); ok {
+		_spec.SetField(cloudhost.FieldInstanceId, field.TypeString, value)
 	}
-	if value, ok := chuo.mutation.State(); ok {
-		_spec.SetField(cloudhost.FieldState, field.TypeString, value)
+	if value, ok := chuo.mutation.VpcId(); ok {
+		_spec.SetField(cloudhost.FieldVpcId, field.TypeString, value)
 	}
-	if value, ok := chuo.mutation.Ipv6AddressPrivate(); ok {
-		_spec.SetField(cloudhost.FieldIpv6AddressPrivate, field.TypeString, value)
-	}
-	if value, ok := chuo.mutation.Ipv6AddressPublic(); ok {
-		_spec.SetField(cloudhost.FieldIpv6AddressPublic, field.TypeString, value)
-	}
-	if value, ok := chuo.mutation.Ipv4AddressPrivate(); ok {
-		_spec.SetField(cloudhost.FieldIpv4AddressPrivate, field.TypeString, value)
-	}
-	if value, ok := chuo.mutation.Ipv4AddressPublic(); ok {
-		_spec.SetField(cloudhost.FieldIpv4AddressPublic, field.TypeString, value)
-	}
-	if value, ok := chuo.mutation.Memory(); ok {
-		_spec.SetField(cloudhost.FieldMemory, field.TypeInt, value)
-	}
-	if value, ok := chuo.mutation.AddedMemory(); ok {
-		_spec.AddField(cloudhost.FieldMemory, field.TypeInt, value)
-	}
-	if value, ok := chuo.mutation.CPU(); ok {
-		_spec.SetField(cloudhost.FieldCPU, field.TypeInt, value)
-	}
-	if value, ok := chuo.mutation.AddedCPU(); ok {
-		_spec.AddField(cloudhost.FieldCPU, field.TypeInt, value)
-	}
-	if value, ok := chuo.mutation.CreatedTime(); ok {
-		_spec.SetField(cloudhost.FieldCreatedTime, field.TypeTime, value)
-	}
-	if value, ok := chuo.mutation.ExpiredTime(); ok {
-		_spec.SetField(cloudhost.FieldExpiredTime, field.TypeTime, value)
+	if value, ok := chuo.mutation.SubnetId(); ok {
+		_spec.SetField(cloudhost.FieldSubnetId, field.TypeString, value)
 	}
 	if value, ok := chuo.mutation.InstanceName(); ok {
 		_spec.SetField(cloudhost.FieldInstanceName, field.TypeString, value)
 	}
-	if value, ok := chuo.mutation.ImageName(); ok {
-		_spec.SetField(cloudhost.FieldImageName, field.TypeString, value)
+	if value, ok := chuo.mutation.InstanceState(); ok {
+		_spec.SetField(cloudhost.FieldInstanceState, field.TypeString, value)
 	}
-	if value, ok := chuo.mutation.OsType(); ok {
-		_spec.SetField(cloudhost.FieldOsType, field.TypeString, value)
+	if value, ok := chuo.mutation.CPU(); ok {
+		_spec.SetField(cloudhost.FieldCPU, field.TypeInt64, value)
 	}
-	if value, ok := chuo.mutation.Manufacturer(); ok {
-		_spec.SetField(cloudhost.FieldManufacturer, field.TypeString, value)
+	if value, ok := chuo.mutation.AddedCPU(); ok {
+		_spec.AddField(cloudhost.FieldCPU, field.TypeInt64, value)
 	}
-	if value, ok := chuo.mutation.Zone(); ok {
-		_spec.SetField(cloudhost.FieldZone, field.TypeString, value)
+	if value, ok := chuo.mutation.Memory(); ok {
+		_spec.SetField(cloudhost.FieldMemory, field.TypeInt64, value)
 	}
-	if value, ok := chuo.mutation.SecurityGroups(); ok {
-		_spec.SetField(cloudhost.FieldSecurityGroups, field.TypeString, value)
+	if value, ok := chuo.mutation.AddedMemory(); ok {
+		_spec.AddField(cloudhost.FieldMemory, field.TypeInt64, value)
 	}
-	if value, ok := chuo.mutation.BillType(); ok {
-		_spec.SetField(cloudhost.FieldBillType, field.TypeString, value)
-	}
-	if value, ok := chuo.mutation.ChargeType(); ok {
-		_spec.SetField(cloudhost.FieldChargeType, field.TypeString, value)
-	}
-	if value, ok := chuo.mutation.IsActive(); ok {
-		_spec.SetField(cloudhost.FieldIsActive, field.TypeBool, value)
+	if value, ok := chuo.mutation.CreatedTime(); ok {
+		_spec.SetField(cloudhost.FieldCreatedTime, field.TypeString, value)
 	}
 	if value, ok := chuo.mutation.InstanceType(); ok {
 		_spec.SetField(cloudhost.FieldInstanceType, field.TypeString, value)
+	}
+	if value, ok := chuo.mutation.EniLimit(); ok {
+		_spec.SetField(cloudhost.FieldEniLimit, field.TypeInt64, value)
+	}
+	if value, ok := chuo.mutation.AddedEniLimit(); ok {
+		_spec.AddField(cloudhost.FieldEniLimit, field.TypeInt64, value)
+	}
+	if value, ok := chuo.mutation.EnilpLimit(); ok {
+		_spec.SetField(cloudhost.FieldEnilpLimit, field.TypeInt64, value)
+	}
+	if value, ok := chuo.mutation.AddedEnilpLimit(); ok {
+		_spec.AddField(cloudhost.FieldEnilpLimit, field.TypeInt64, value)
+	}
+	if value, ok := chuo.mutation.InstanceEniCount(); ok {
+		_spec.SetField(cloudhost.FieldInstanceEniCount, field.TypeInt64, value)
+	}
+	if value, ok := chuo.mutation.AddedInstanceEniCount(); ok {
+		_spec.AddField(cloudhost.FieldInstanceEniCount, field.TypeInt64, value)
 	}
 	_node = &CloudHost{config: chuo.config}
 	_spec.Assign = _node.assignValues

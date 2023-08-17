@@ -3,7 +3,6 @@ syntax = "proto3";
 package helloworld.v1;
 
 import "google/api/annotations.proto";
-import "google/protobuf/timestamp.proto";
 
 option go_package = "kubecit/api/helloworld/v1;v1";
 option java_multiple_files = true;
@@ -48,7 +47,7 @@ service Greeter {
 
   rpc GetInstance(GetInstanceRequest) returns (GetInstanceReply) {
     option (google.api.http) = {
-      get: "/cmdb/getInstance/{UUID}",
+      get: "/cmdb/getInstance/{InstanceId}",
     };
   };
   rpc CreateInstance(CreateInstanceRequest) returns (CreateInstanceReply) {
@@ -64,12 +63,12 @@ service Greeter {
   };
   rpc DeleteInstanceById(DeleteInstanceRequest) returns (DeleteInstanceReply){
     option (google.api.http) = {
-      delete: "/cmdb/deleteInstance/{UUID}",
+      delete: "/cmdb/deleteInstance/{InstanceId}",
     };
   };
   rpc UpdateInstance(UpdateInstanceRequest) returns (UpdateInstanceReply){
     option (google.api.http) = {
-      put: "/cmdb/updateInstance/{UUID}",
+      put: "/cmdb/updateInstance/{InstanceId}",
       body: "*",
     };
   };
@@ -136,32 +135,25 @@ message HelloReply {
 
 
 message Host {
-  string UUID = 1;
-  string State = 2;
-  repeated string IPV6AddressPublic = 3;
-  repeated string IPV6AddressPrivate = 4;
-  repeated string IPV4AddressPublic = 5;
-  repeated string IPV4AddressPrivate = 6;
+  string VpcId = 1;
+  string SubnetId = 2;
+  string InstanceId = 3;
+  string InstanceName = 4;
+  string InstanceState = 5;
+  int64 CPU = 6;
   int64 Memory = 7;
-  int64 CPU = 8;
-  google.protobuf.Timestamp CreatedTime = 9;
-  google.protobuf.Timestamp ExpitedTime = 10;
-  string InstanceName = 11;
-  string ImageName = 12;
-  string OSType = 13;
-  string Manufacturer = 14;
-  string Zone = 15;
-  repeated string SecurityGroups = 16;
-  string BillType = 17;
-  string ChargeType = 18;
-  bool IsActive = 19;
-  string InstanceType = 20;
-
+  string CreatedTime = 8;
+  string InstanceType = 9;
+  int64 EniLimit = 10;
+  int64 EnilpLimit = 11;
+  int64 InstanceEniCount = 12;
 }
+
 message SyncFromTencentRequest{
   string accessKey = 1;
   string secretKey = 2;
   string region = 3;
+  string vpcId = 4;
 }
 
 message SyncFromTencentReply {
@@ -170,7 +162,7 @@ message SyncFromTencentReply {
 }
 
 message GetInstanceRequest {
-  string UUID = 1;
+  string InstanceId = 1;
 }
 
 message GetInstanceReply {
@@ -193,7 +185,7 @@ message ListInstancesReply {
 }
 
 message UpdateInstanceRequest {
-  string UUID = 1;
+  string InstanceId = 1;
   Host Instance = 2;
 }
 
@@ -203,7 +195,7 @@ message UpdateInstanceReply {
 }
 
 message DeleteInstanceRequest {
-  string UUID = 1;
+  string InstanceId = 1;
 }
 
 message DeleteInstanceReply {

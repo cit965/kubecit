@@ -39,4 +39,3 @@ bin/
 
 
 cmd/kubecit/test.db
-Makefile

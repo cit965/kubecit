@@ -3,12 +3,9 @@ package service
 import (
 	"context"
 	"fmt"
-	"google.golang.org/protobuf/types/known/timestamppb"
-	"kubecit/internal/data"
-	"time"
-
 	v1 "kubecit/api/helloworld/v1"
 	"kubecit/internal/biz"
+	"kubecit/internal/data"
 )
 
 // GreeterService is a greeter service.
@@ -98,19 +95,16 @@ func (s *GreeterService) DeploymentList(ctx context.Context, in *v1.DeploymentRe
 }
 
 func (s *GreeterService) GetInstance(ctx context.Context, in *v1.GetInstanceRequest) (*v1.GetInstanceReply, error) {
-	cloudHost, err := s.cloudHostCase.Get(ctx, in.UUID)
+	cloudHost, err := s.cloudHostCase.Get(ctx, in.InstanceId)
 	if err != nil {
 		fmt.Println(err)
 		return nil, err
 	}
-	fmt.Printf("%#v", cloudHost)
 	host := &v1.Host{}
 	err = data.ConvertType(cloudHost, host)
 	if err != nil {
 		return nil, err
 	}
-	host.CreatedTime = timestamppb.New(cloudHost.CreatedTime)
-	host.ExpitedTime = timestamppb.New(cloudHost.ExpiredTime)
 	res := &v1.GetInstanceReply{
 		Instance: host,
 	}
@@ -119,26 +113,18 @@ func (s *GreeterService) GetInstance(ctx context.Context, in *v1.GetInstanceRequ
 
 func (s *GreeterService) CreateInstance(ctx context.Context, in *v1.CreateInstanceRequest) (*v1.CreateInstanceReply, error) {
 	host := &biz.CloudHost{
-		UUID:               in.Instance.UUID,
-		State:              in.Instance.State,
-		IPV6AddressPrivate: in.Instance.IPV6AddressPrivate,
-		IPV4AddressPrivate: in.Instance.IPV4AddressPrivate,
-		IPV6AddressPublic:  in.Instance.IPV6AddressPublic,
-		IPV4AddressPublic:  in.Instance.IPV4AddressPublic,
-		Memory:             int(in.Instance.Memory),
-		CPU:                int(in.Instance.CPU),
-		CreatedTime:        time.Now(),
-		ExpiredTime:        time.Time{},
-		InstanceName:       in.Instance.InstanceName,
-		ImageName:          in.Instance.ImageName,
-		OSType:             in.Instance.OSType,
-		Manufacturer:       in.Instance.Manufacturer,
-		Zone:               in.Instance.Zone,
-		SecurityGroups:     in.Instance.SecurityGroups,
-		BillType:           in.Instance.BillType,
-		ChargeType:         in.Instance.ChargeType,
-		IsActive:           in.Instance.IsActive,
-		InstanceType:       in.Instance.InstanceType,
+		VpcId:            in.Instance.VpcId,
+		SubnetId:         in.Instance.SubnetId,
+		InstanceId:       in.Instance.InstanceId,
+		InstanceName:     in.Instance.InstanceName,
+		InstanceState:    in.Instance.InstanceState,
+		CPU:              in.Instance.CPU,
+		Memory:           in.Instance.Memory,
+		CreatedTime:      in.Instance.CreatedTime,
+		InstanceType:     in.Instance.InstanceType,
+		EniLimit:         in.Instance.EniLimit,
+		EnilpLimit:       in.Instance.EnilpLimit,
+		InstanceEniCount: in.Instance.InstanceEniCount,
 	}
 
 	_, err := s.cloudHostCase.Create(ctx, host)
@@ -159,9 +145,10 @@ func (s *GreeterService) ListInstances(ctx context.Context, in *v1.ListInstances
 	res := &v1.ListInstancesReply{Total: int64(len(cloudHosts))}
 	for _, v := range cloudHosts {
 		instance := &v1.Host{}
-		data.ConvertType(v, instance)
-		instance.CreatedTime = timestamppb.New(v.CreatedTime)
-		instance.ExpitedTime = timestamppb.New(v.ExpiredTime)
+		err := data.ConvertType(v, instance)
+		if err != nil {
+			return nil, err
+		}
 		res.Instances = append(res.Instances, instance)
 	}
 	return res, nil
@@ -169,12 +156,12 @@ func (s *GreeterService) ListInstances(ctx context.Context, in *v1.ListInstances
 
 // TODO
 func (s *GreeterService) DeleteInstanceById(ctx context.Context, in *v1.DeleteInstanceRequest) (*v1.DeleteInstanceReply, error) {
-	cloudHost, err := s.cloudHostCase.Delete(ctx, in.UUID)
+	cloudHost, err := s.cloudHostCase.Delete(ctx, in.InstanceId)
 	if err != nil {
 		return nil, err
 	}
 	res := &v1.DeleteInstanceReply{
-		Message: fmt.Sprintf("host %v delete success.", cloudHost.UUID),
+		Message: fmt.Sprintf("host %v delete success.", cloudHost.InstanceId),
 	}
 	return res, nil
 }
@@ -187,7 +174,7 @@ func (s *GreeterService) UpdateInstance(ctx context.Context, in *v1.UpdateInstan
 		return nil, err
 	}
 	res := &v1.UpdateInstanceReply{}
-	instance, err := s.cloudHostCase.Update(ctx, in.UUID, &host)
+	instance, err := s.cloudHostCase.Update(ctx, in.InstanceId, &host)
 	if err != nil {
 		return nil, err
 	}
@@ -203,7 +190,7 @@ func (s *GreeterService) UpdateInstance(ctx context.Context, in *v1.UpdateInstan
 }
 
 func (s *GreeterService) SyncFromTencent(ctx context.Context, in *v1.SyncFromTencentRequest) (*v1.SyncFromTencentReply, error) {
-	ok, total, err := s.cloudHostCase.Syncer(ctx, in.AccessKey, in.SecretKey, in.Region)
+	ok, total, err := s.cloudHostCase.Syncer(ctx, in.AccessKey, in.SecretKey, in.Region, in.VpcId)
 	if !ok || err != nil {
 		return nil, err
 	}

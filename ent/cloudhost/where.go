@@ -4,7 +4,6 @@ package cloudhost
 
 import (
 	"kubecit/ent/predicate"
-	"time"
 
 	"entgo.io/ent/dialect/sql"
 )
@@ -54,54 +53,19 @@ func IDLTE(id int) predicate.CloudHost {
 	return predicate.CloudHost(sql.FieldLTE(FieldID, id))
 }
 
-// UUID applies equality check predicate on the "uuid" field. It's identical to UUIDEQ.
-func UUID(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldEQ(FieldUUID, v))
+// InstanceId applies equality check predicate on the "instanceId" field. It's identical to InstanceIdEQ.
+func InstanceId(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldEQ(FieldInstanceId, v))
 }
 
-// State applies equality check predicate on the "state" field. It's identical to StateEQ.
-func State(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldEQ(FieldState, v))
+// VpcId applies equality check predicate on the "vpcId" field. It's identical to VpcIdEQ.
+func VpcId(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldEQ(FieldVpcId, v))
 }
 
-// Ipv6AddressPrivate applies equality check predicate on the "ipv6AddressPrivate" field. It's identical to Ipv6AddressPrivateEQ.
-func Ipv6AddressPrivate(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldEQ(FieldIpv6AddressPrivate, v))
-}
-
-// Ipv6AddressPublic applies equality check predicate on the "ipv6AddressPublic" field. It's identical to Ipv6AddressPublicEQ.
-func Ipv6AddressPublic(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldEQ(FieldIpv6AddressPublic, v))
-}
-
-// Ipv4AddressPrivate applies equality check predicate on the "ipv4AddressPrivate" field. It's identical to Ipv4AddressPrivateEQ.
-func Ipv4AddressPrivate(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldEQ(FieldIpv4AddressPrivate, v))
-}
-
-// Ipv4AddressPublic applies equality check predicate on the "ipv4AddressPublic" field. It's identical to Ipv4AddressPublicEQ.
-func Ipv4AddressPublic(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldEQ(FieldIpv4AddressPublic, v))
-}
-
-// Memory applies equality check predicate on the "memory" field. It's identical to MemoryEQ.
-func Memory(v int) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldEQ(FieldMemory, v))
-}
-
-// CPU applies equality check predicate on the "cpu" field. It's identical to CPUEQ.
-func CPU(v int) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldEQ(FieldCPU, v))
-}
-
-// CreatedTime applies equality check predicate on the "createdTime" field. It's identical to CreatedTimeEQ.
-func CreatedTime(v time.Time) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldEQ(FieldCreatedTime, v))
-}
-
-// ExpiredTime applies equality check predicate on the "expiredTime" field. It's identical to ExpiredTimeEQ.
-func ExpiredTime(v time.Time) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldEQ(FieldExpiredTime, v))
+// SubnetId applies equality check predicate on the "SubnetId" field. It's identical to SubnetIdEQ.
+func SubnetId(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldEQ(FieldSubnetId, v))
 }
 
 // InstanceName applies equality check predicate on the "instanceName" field. It's identical to InstanceNameEQ.
@@ -109,44 +73,24 @@ func InstanceName(v string) predicate.CloudHost {
 	return predicate.CloudHost(sql.FieldEQ(FieldInstanceName, v))
 }
 
-// ImageName applies equality check predicate on the "imageName" field. It's identical to ImageNameEQ.
-func ImageName(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldEQ(FieldImageName, v))
+// InstanceState applies equality check predicate on the "instanceState" field. It's identical to InstanceStateEQ.
+func InstanceState(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldEQ(FieldInstanceState, v))
 }
 
-// OsType applies equality check predicate on the "osType" field. It's identical to OsTypeEQ.
-func OsType(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldEQ(FieldOsType, v))
+// CPU applies equality check predicate on the "cpu" field. It's identical to CPUEQ.
+func CPU(v int64) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldEQ(FieldCPU, v))
 }
 
-// Manufacturer applies equality check predicate on the "manufacturer" field. It's identical to ManufacturerEQ.
-func Manufacturer(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldEQ(FieldManufacturer, v))
+// Memory applies equality check predicate on the "memory" field. It's identical to MemoryEQ.
+func Memory(v int64) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldEQ(FieldMemory, v))
 }
 
-// Zone applies equality check predicate on the "zone" field. It's identical to ZoneEQ.
-func Zone(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldEQ(FieldZone, v))
-}
-
-// SecurityGroups applies equality check predicate on the "securityGroups" field. It's identical to SecurityGroupsEQ.
-func SecurityGroups(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldEQ(FieldSecurityGroups, v))
-}
-
-// BillType applies equality check predicate on the "billType" field. It's identical to BillTypeEQ.
-func BillType(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldEQ(FieldBillType, v))
-}
-
-// ChargeType applies equality check predicate on the "chargeType" field. It's identical to ChargeTypeEQ.
-func ChargeType(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldEQ(FieldChargeType, v))
-}
-
-// IsActive applies equality check predicate on the "isActive" field. It's identical to IsActiveEQ.
-func IsActive(v bool) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldEQ(FieldIsActive, v))
+// CreatedTime applies equality check predicate on the "createdTime" field. It's identical to CreatedTimeEQ.
+func CreatedTime(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldEQ(FieldCreatedTime, v))
 }
 
 // InstanceType applies equality check predicate on the "instanceType" field. It's identical to InstanceTypeEQ.
@@ -154,554 +98,214 @@ func InstanceType(v string) predicate.CloudHost {
 	return predicate.CloudHost(sql.FieldEQ(FieldInstanceType, v))
 }
 
-// UUIDEQ applies the EQ predicate on the "uuid" field.
-func UUIDEQ(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldEQ(FieldUUID, v))
+// EniLimit applies equality check predicate on the "eniLimit" field. It's identical to EniLimitEQ.
+func EniLimit(v int64) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldEQ(FieldEniLimit, v))
 }
 
-// UUIDNEQ applies the NEQ predicate on the "uuid" field.
-func UUIDNEQ(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldNEQ(FieldUUID, v))
+// EnilpLimit applies equality check predicate on the "enilpLimit" field. It's identical to EnilpLimitEQ.
+func EnilpLimit(v int64) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldEQ(FieldEnilpLimit, v))
 }
 
-// UUIDIn applies the In predicate on the "uuid" field.
-func UUIDIn(vs ...string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldIn(FieldUUID, vs...))
+// InstanceEniCount applies equality check predicate on the "instanceEniCount" field. It's identical to InstanceEniCountEQ.
+func InstanceEniCount(v int64) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldEQ(FieldInstanceEniCount, v))
 }
 
-// UUIDNotIn applies the NotIn predicate on the "uuid" field.
-func UUIDNotIn(vs ...string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldNotIn(FieldUUID, vs...))
+// InstanceIdEQ applies the EQ predicate on the "instanceId" field.
+func InstanceIdEQ(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldEQ(FieldInstanceId, v))
 }
 
-// UUIDGT applies the GT predicate on the "uuid" field.
-func UUIDGT(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldGT(FieldUUID, v))
+// InstanceIdNEQ applies the NEQ predicate on the "instanceId" field.
+func InstanceIdNEQ(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldNEQ(FieldInstanceId, v))
 }
 
-// UUIDGTE applies the GTE predicate on the "uuid" field.
-func UUIDGTE(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldGTE(FieldUUID, v))
+// InstanceIdIn applies the In predicate on the "instanceId" field.
+func InstanceIdIn(vs ...string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldIn(FieldInstanceId, vs...))
 }
 
-// UUIDLT applies the LT predicate on the "uuid" field.
-func UUIDLT(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldLT(FieldUUID, v))
+// InstanceIdNotIn applies the NotIn predicate on the "instanceId" field.
+func InstanceIdNotIn(vs ...string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldNotIn(FieldInstanceId, vs...))
 }
 
-// UUIDLTE applies the LTE predicate on the "uuid" field.
-func UUIDLTE(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldLTE(FieldUUID, v))
+// InstanceIdGT applies the GT predicate on the "instanceId" field.
+func InstanceIdGT(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldGT(FieldInstanceId, v))
 }
 
-// UUIDContains applies the Contains predicate on the "uuid" field.
-func UUIDContains(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldContains(FieldUUID, v))
+// InstanceIdGTE applies the GTE predicate on the "instanceId" field.
+func InstanceIdGTE(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldGTE(FieldInstanceId, v))
 }
 
-// UUIDHasPrefix applies the HasPrefix predicate on the "uuid" field.
-func UUIDHasPrefix(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldHasPrefix(FieldUUID, v))
+// InstanceIdLT applies the LT predicate on the "instanceId" field.
+func InstanceIdLT(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldLT(FieldInstanceId, v))
 }
 
-// UUIDHasSuffix applies the HasSuffix predicate on the "uuid" field.
-func UUIDHasSuffix(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldHasSuffix(FieldUUID, v))
+// InstanceIdLTE applies the LTE predicate on the "instanceId" field.
+func InstanceIdLTE(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldLTE(FieldInstanceId, v))
 }
 
-// UUIDEqualFold applies the EqualFold predicate on the "uuid" field.
-func UUIDEqualFold(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldEqualFold(FieldUUID, v))
+// InstanceIdContains applies the Contains predicate on the "instanceId" field.
+func InstanceIdContains(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldContains(FieldInstanceId, v))
 }
 
-// UUIDContainsFold applies the ContainsFold predicate on the "uuid" field.
-func UUIDContainsFold(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldContainsFold(FieldUUID, v))
+// InstanceIdHasPrefix applies the HasPrefix predicate on the "instanceId" field.
+func InstanceIdHasPrefix(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldHasPrefix(FieldInstanceId, v))
 }
 
-// StateEQ applies the EQ predicate on the "state" field.
-func StateEQ(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldEQ(FieldState, v))
+// InstanceIdHasSuffix applies the HasSuffix predicate on the "instanceId" field.
+func InstanceIdHasSuffix(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldHasSuffix(FieldInstanceId, v))
 }
 
-// StateNEQ applies the NEQ predicate on the "state" field.
-func StateNEQ(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldNEQ(FieldState, v))
+// InstanceIdEqualFold applies the EqualFold predicate on the "instanceId" field.
+func InstanceIdEqualFold(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldEqualFold(FieldInstanceId, v))
 }
 
-// StateIn applies the In predicate on the "state" field.
-func StateIn(vs ...string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldIn(FieldState, vs...))
+// InstanceIdContainsFold applies the ContainsFold predicate on the "instanceId" field.
+func InstanceIdContainsFold(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldContainsFold(FieldInstanceId, v))
 }
 
-// StateNotIn applies the NotIn predicate on the "state" field.
-func StateNotIn(vs ...string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldNotIn(FieldState, vs...))
+// VpcIdEQ applies the EQ predicate on the "vpcId" field.
+func VpcIdEQ(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldEQ(FieldVpcId, v))
 }
 
-// StateGT applies the GT predicate on the "state" field.
-func StateGT(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldGT(FieldState, v))
+// VpcIdNEQ applies the NEQ predicate on the "vpcId" field.
+func VpcIdNEQ(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldNEQ(FieldVpcId, v))
 }
 
-// StateGTE applies the GTE predicate on the "state" field.
-func StateGTE(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldGTE(FieldState, v))
+// VpcIdIn applies the In predicate on the "vpcId" field.
+func VpcIdIn(vs ...string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldIn(FieldVpcId, vs...))
 }
 
-// StateLT applies the LT predicate on the "state" field.
-func StateLT(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldLT(FieldState, v))
+// VpcIdNotIn applies the NotIn predicate on the "vpcId" field.
+func VpcIdNotIn(vs ...string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldNotIn(FieldVpcId, vs...))
 }
 
-// StateLTE applies the LTE predicate on the "state" field.
-func StateLTE(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldLTE(FieldState, v))
+// VpcIdGT applies the GT predicate on the "vpcId" field.
+func VpcIdGT(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldGT(FieldVpcId, v))
 }
 
-// StateContains applies the Contains predicate on the "state" field.
-func StateContains(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldContains(FieldState, v))
+// VpcIdGTE applies the GTE predicate on the "vpcId" field.
+func VpcIdGTE(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldGTE(FieldVpcId, v))
 }
 
-// StateHasPrefix applies the HasPrefix predicate on the "state" field.
-func StateHasPrefix(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldHasPrefix(FieldState, v))
+// VpcIdLT applies the LT predicate on the "vpcId" field.
+func VpcIdLT(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldLT(FieldVpcId, v))
 }
 
-// StateHasSuffix applies the HasSuffix predicate on the "state" field.
-func StateHasSuffix(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldHasSuffix(FieldState, v))
+// VpcIdLTE applies the LTE predicate on the "vpcId" field.
+func VpcIdLTE(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldLTE(FieldVpcId, v))
 }
 
-// StateEqualFold applies the EqualFold predicate on the "state" field.
-func StateEqualFold(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldEqualFold(FieldState, v))
+// VpcIdContains applies the Contains predicate on the "vpcId" field.
+func VpcIdContains(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldContains(FieldVpcId, v))
 }
 
-// StateContainsFold applies the ContainsFold predicate on the "state" field.
-func StateContainsFold(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldContainsFold(FieldState, v))
+// VpcIdHasPrefix applies the HasPrefix predicate on the "vpcId" field.
+func VpcIdHasPrefix(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldHasPrefix(FieldVpcId, v))
 }
 
-// Ipv6AddressPrivateEQ applies the EQ predicate on the "ipv6AddressPrivate" field.
-func Ipv6AddressPrivateEQ(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldEQ(FieldIpv6AddressPrivate, v))
+// VpcIdHasSuffix applies the HasSuffix predicate on the "vpcId" field.
+func VpcIdHasSuffix(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldHasSuffix(FieldVpcId, v))
 }
 
-// Ipv6AddressPrivateNEQ applies the NEQ predicate on the "ipv6AddressPrivate" field.
-func Ipv6AddressPrivateNEQ(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldNEQ(FieldIpv6AddressPrivate, v))
+// VpcIdEqualFold applies the EqualFold predicate on the "vpcId" field.
+func VpcIdEqualFold(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldEqualFold(FieldVpcId, v))
 }
 
-// Ipv6AddressPrivateIn applies the In predicate on the "ipv6AddressPrivate" field.
-func Ipv6AddressPrivateIn(vs ...string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldIn(FieldIpv6AddressPrivate, vs...))
+// VpcIdContainsFold applies the ContainsFold predicate on the "vpcId" field.
+func VpcIdContainsFold(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldContainsFold(FieldVpcId, v))
 }
 
-// Ipv6AddressPrivateNotIn applies the NotIn predicate on the "ipv6AddressPrivate" field.
-func Ipv6AddressPrivateNotIn(vs ...string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldNotIn(FieldIpv6AddressPrivate, vs...))
+// SubnetIdEQ applies the EQ predicate on the "SubnetId" field.
+func SubnetIdEQ(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldEQ(FieldSubnetId, v))
 }
 
-// Ipv6AddressPrivateGT applies the GT predicate on the "ipv6AddressPrivate" field.
-func Ipv6AddressPrivateGT(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldGT(FieldIpv6AddressPrivate, v))
+// SubnetIdNEQ applies the NEQ predicate on the "SubnetId" field.
+func SubnetIdNEQ(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldNEQ(FieldSubnetId, v))
 }
 
-// Ipv6AddressPrivateGTE applies the GTE predicate on the "ipv6AddressPrivate" field.
-func Ipv6AddressPrivateGTE(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldGTE(FieldIpv6AddressPrivate, v))
+// SubnetIdIn applies the In predicate on the "SubnetId" field.
+func SubnetIdIn(vs ...string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldIn(FieldSubnetId, vs...))
 }
 
-// Ipv6AddressPrivateLT applies the LT predicate on the "ipv6AddressPrivate" field.
-func Ipv6AddressPrivateLT(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldLT(FieldIpv6AddressPrivate, v))
+// SubnetIdNotIn applies the NotIn predicate on the "SubnetId" field.
+func SubnetIdNotIn(vs ...string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldNotIn(FieldSubnetId, vs...))
 }
 
-// Ipv6AddressPrivateLTE applies the LTE predicate on the "ipv6AddressPrivate" field.
-func Ipv6AddressPrivateLTE(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldLTE(FieldIpv6AddressPrivate, v))
+// SubnetIdGT applies the GT predicate on the "SubnetId" field.
+func SubnetIdGT(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldGT(FieldSubnetId, v))
 }
 
-// Ipv6AddressPrivateContains applies the Contains predicate on the "ipv6AddressPrivate" field.
-func Ipv6AddressPrivateContains(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldContains(FieldIpv6AddressPrivate, v))
+// SubnetIdGTE applies the GTE predicate on the "SubnetId" field.
+func SubnetIdGTE(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldGTE(FieldSubnetId, v))
 }
 
-// Ipv6AddressPrivateHasPrefix applies the HasPrefix predicate on the "ipv6AddressPrivate" field.
-func Ipv6AddressPrivateHasPrefix(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldHasPrefix(FieldIpv6AddressPrivate, v))
+// SubnetIdLT applies the LT predicate on the "SubnetId" field.
+func SubnetIdLT(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldLT(FieldSubnetId, v))
 }
 
-// Ipv6AddressPrivateHasSuffix applies the HasSuffix predicate on the "ipv6AddressPrivate" field.
-func Ipv6AddressPrivateHasSuffix(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldHasSuffix(FieldIpv6AddressPrivate, v))
+// SubnetIdLTE applies the LTE predicate on the "SubnetId" field.
+func SubnetIdLTE(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldLTE(FieldSubnetId, v))
 }
 
-// Ipv6AddressPrivateEqualFold applies the EqualFold predicate on the "ipv6AddressPrivate" field.
-func Ipv6AddressPrivateEqualFold(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldEqualFold(FieldIpv6AddressPrivate, v))
+// SubnetIdContains applies the Contains predicate on the "SubnetId" field.
+func SubnetIdContains(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldContains(FieldSubnetId, v))
 }
 
-// Ipv6AddressPrivateContainsFold applies the ContainsFold predicate on the "ipv6AddressPrivate" field.
-func Ipv6AddressPrivateContainsFold(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldContainsFold(FieldIpv6AddressPrivate, v))
+// SubnetIdHasPrefix applies the HasPrefix predicate on the "SubnetId" field.
+func SubnetIdHasPrefix(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldHasPrefix(FieldSubnetId, v))
 }
 
-// Ipv6AddressPublicEQ applies the EQ predicate on the "ipv6AddressPublic" field.
-func Ipv6AddressPublicEQ(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldEQ(FieldIpv6AddressPublic, v))
+// SubnetIdHasSuffix applies the HasSuffix predicate on the "SubnetId" field.
+func SubnetIdHasSuffix(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldHasSuffix(FieldSubnetId, v))
 }
 
-// Ipv6AddressPublicNEQ applies the NEQ predicate on the "ipv6AddressPublic" field.
-func Ipv6AddressPublicNEQ(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldNEQ(FieldIpv6AddressPublic, v))
+// SubnetIdEqualFold applies the EqualFold predicate on the "SubnetId" field.
+func SubnetIdEqualFold(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldEqualFold(FieldSubnetId, v))
 }
 
-// Ipv6AddressPublicIn applies the In predicate on the "ipv6AddressPublic" field.
-func Ipv6AddressPublicIn(vs ...string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldIn(FieldIpv6AddressPublic, vs...))
-}
-
-// Ipv6AddressPublicNotIn applies the NotIn predicate on the "ipv6AddressPublic" field.
-func Ipv6AddressPublicNotIn(vs ...string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldNotIn(FieldIpv6AddressPublic, vs...))
-}
-
-// Ipv6AddressPublicGT applies the GT predicate on the "ipv6AddressPublic" field.
-func Ipv6AddressPublicGT(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldGT(FieldIpv6AddressPublic, v))
-}
-
-// Ipv6AddressPublicGTE applies the GTE predicate on the "ipv6AddressPublic" field.
-func Ipv6AddressPublicGTE(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldGTE(FieldIpv6AddressPublic, v))
-}
-
-// Ipv6AddressPublicLT applies the LT predicate on the "ipv6AddressPublic" field.
-func Ipv6AddressPublicLT(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldLT(FieldIpv6AddressPublic, v))
-}
-
-// Ipv6AddressPublicLTE applies the LTE predicate on the "ipv6AddressPublic" field.
-func Ipv6AddressPublicLTE(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldLTE(FieldIpv6AddressPublic, v))
-}
-
-// Ipv6AddressPublicContains applies the Contains predicate on the "ipv6AddressPublic" field.
-func Ipv6AddressPublicContains(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldContains(FieldIpv6AddressPublic, v))
-}
-
-// Ipv6AddressPublicHasPrefix applies the HasPrefix predicate on the "ipv6AddressPublic" field.
-func Ipv6AddressPublicHasPrefix(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldHasPrefix(FieldIpv6AddressPublic, v))
-}
-
-// Ipv6AddressPublicHasSuffix applies the HasSuffix predicate on the "ipv6AddressPublic" field.
-func Ipv6AddressPublicHasSuffix(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldHasSuffix(FieldIpv6AddressPublic, v))
-}
-
-// Ipv6AddressPublicEqualFold applies the EqualFold predicate on the "ipv6AddressPublic" field.
-func Ipv6AddressPublicEqualFold(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldEqualFold(FieldIpv6AddressPublic, v))
-}
-
-// Ipv6AddressPublicContainsFold applies the ContainsFold predicate on the "ipv6AddressPublic" field.
-func Ipv6AddressPublicContainsFold(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldContainsFold(FieldIpv6AddressPublic, v))
-}
-
-// Ipv4AddressPrivateEQ applies the EQ predicate on the "ipv4AddressPrivate" field.
-func Ipv4AddressPrivateEQ(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldEQ(FieldIpv4AddressPrivate, v))
-}
-
-// Ipv4AddressPrivateNEQ applies the NEQ predicate on the "ipv4AddressPrivate" field.
-func Ipv4AddressPrivateNEQ(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldNEQ(FieldIpv4AddressPrivate, v))
-}
-
-// Ipv4AddressPrivateIn applies the In predicate on the "ipv4AddressPrivate" field.
-func Ipv4AddressPrivateIn(vs ...string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldIn(FieldIpv4AddressPrivate, vs...))
-}
-
-// Ipv4AddressPrivateNotIn applies the NotIn predicate on the "ipv4AddressPrivate" field.
-func Ipv4AddressPrivateNotIn(vs ...string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldNotIn(FieldIpv4AddressPrivate, vs...))
-}
-
-// Ipv4AddressPrivateGT applies the GT predicate on the "ipv4AddressPrivate" field.
-func Ipv4AddressPrivateGT(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldGT(FieldIpv4AddressPrivate, v))
-}
-
-// Ipv4AddressPrivateGTE applies the GTE predicate on the "ipv4AddressPrivate" field.
-func Ipv4AddressPrivateGTE(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldGTE(FieldIpv4AddressPrivate, v))
-}
-
-// Ipv4AddressPrivateLT applies the LT predicate on the "ipv4AddressPrivate" field.
-func Ipv4AddressPrivateLT(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldLT(FieldIpv4AddressPrivate, v))
-}
-
-// Ipv4AddressPrivateLTE applies the LTE predicate on the "ipv4AddressPrivate" field.
-func Ipv4AddressPrivateLTE(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldLTE(FieldIpv4AddressPrivate, v))
-}
-
-// Ipv4AddressPrivateContains applies the Contains predicate on the "ipv4AddressPrivate" field.
-func Ipv4AddressPrivateContains(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldContains(FieldIpv4AddressPrivate, v))
-}
-
-// Ipv4AddressPrivateHasPrefix applies the HasPrefix predicate on the "ipv4AddressPrivate" field.
-func Ipv4AddressPrivateHasPrefix(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldHasPrefix(FieldIpv4AddressPrivate, v))
-}
-
-// Ipv4AddressPrivateHasSuffix applies the HasSuffix predicate on the "ipv4AddressPrivate" field.
-func Ipv4AddressPrivateHasSuffix(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldHasSuffix(FieldIpv4AddressPrivate, v))
-}
-
-// Ipv4AddressPrivateEqualFold applies the EqualFold predicate on the "ipv4AddressPrivate" field.
-func Ipv4AddressPrivateEqualFold(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldEqualFold(FieldIpv4AddressPrivate, v))
-}
-
-// Ipv4AddressPrivateContainsFold applies the ContainsFold predicate on the "ipv4AddressPrivate" field.
-func Ipv4AddressPrivateContainsFold(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldContainsFold(FieldIpv4AddressPrivate, v))
-}
-
-// Ipv4AddressPublicEQ applies the EQ predicate on the "ipv4AddressPublic" field.
-func Ipv4AddressPublicEQ(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldEQ(FieldIpv4AddressPublic, v))
-}
-
-// Ipv4AddressPublicNEQ applies the NEQ predicate on the "ipv4AddressPublic" field.
-func Ipv4AddressPublicNEQ(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldNEQ(FieldIpv4AddressPublic, v))
-}
-
-// Ipv4AddressPublicIn applies the In predicate on the "ipv4AddressPublic" field.
-func Ipv4AddressPublicIn(vs ...string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldIn(FieldIpv4AddressPublic, vs...))
-}
-
-// Ipv4AddressPublicNotIn applies the NotIn predicate on the "ipv4AddressPublic" field.
-func Ipv4AddressPublicNotIn(vs ...string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldNotIn(FieldIpv4AddressPublic, vs...))
-}
-
-// Ipv4AddressPublicGT applies the GT predicate on the "ipv4AddressPublic" field.
-func Ipv4AddressPublicGT(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldGT(FieldIpv4AddressPublic, v))
-}
-
-// Ipv4AddressPublicGTE applies the GTE predicate on the "ipv4AddressPublic" field.
-func Ipv4AddressPublicGTE(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldGTE(FieldIpv4AddressPublic, v))
-}
-
-// Ipv4AddressPublicLT applies the LT predicate on the "ipv4AddressPublic" field.
-func Ipv4AddressPublicLT(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldLT(FieldIpv4AddressPublic, v))
-}
-
-// Ipv4AddressPublicLTE applies the LTE predicate on the "ipv4AddressPublic" field.
-func Ipv4AddressPublicLTE(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldLTE(FieldIpv4AddressPublic, v))
-}
-
-// Ipv4AddressPublicContains applies the Contains predicate on the "ipv4AddressPublic" field.
-func Ipv4AddressPublicContains(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldContains(FieldIpv4AddressPublic, v))
-}
-
-// Ipv4AddressPublicHasPrefix applies the HasPrefix predicate on the "ipv4AddressPublic" field.
-func Ipv4AddressPublicHasPrefix(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldHasPrefix(FieldIpv4AddressPublic, v))
-}
-
-// Ipv4AddressPublicHasSuffix applies the HasSuffix predicate on the "ipv4AddressPublic" field.
-func Ipv4AddressPublicHasSuffix(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldHasSuffix(FieldIpv4AddressPublic, v))
-}
-
-// Ipv4AddressPublicEqualFold applies the EqualFold predicate on the "ipv4AddressPublic" field.
-func Ipv4AddressPublicEqualFold(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldEqualFold(FieldIpv4AddressPublic, v))
-}
-
-// Ipv4AddressPublicContainsFold applies the ContainsFold predicate on the "ipv4AddressPublic" field.
-func Ipv4AddressPublicContainsFold(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldContainsFold(FieldIpv4AddressPublic, v))
-}
-
-// MemoryEQ applies the EQ predicate on the "memory" field.
-func MemoryEQ(v int) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldEQ(FieldMemory, v))
-}
-
-// MemoryNEQ applies the NEQ predicate on the "memory" field.
-func MemoryNEQ(v int) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldNEQ(FieldMemory, v))
-}
-
-// MemoryIn applies the In predicate on the "memory" field.
-func MemoryIn(vs ...int) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldIn(FieldMemory, vs...))
-}
-
-// MemoryNotIn applies the NotIn predicate on the "memory" field.
-func MemoryNotIn(vs ...int) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldNotIn(FieldMemory, vs...))
-}
-
-// MemoryGT applies the GT predicate on the "memory" field.
-func MemoryGT(v int) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldGT(FieldMemory, v))
-}
-
-// MemoryGTE applies the GTE predicate on the "memory" field.
-func MemoryGTE(v int) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldGTE(FieldMemory, v))
-}
-
-// MemoryLT applies the LT predicate on the "memory" field.
-func MemoryLT(v int) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldLT(FieldMemory, v))
-}
-
-// MemoryLTE applies the LTE predicate on the "memory" field.
-func MemoryLTE(v int) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldLTE(FieldMemory, v))
-}
-
-// CPUEQ applies the EQ predicate on the "cpu" field.
-func CPUEQ(v int) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldEQ(FieldCPU, v))
-}
-
-// CPUNEQ applies the NEQ predicate on the "cpu" field.
-func CPUNEQ(v int) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldNEQ(FieldCPU, v))
-}
-
-// CPUIn applies the In predicate on the "cpu" field.
-func CPUIn(vs ...int) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldIn(FieldCPU, vs...))
-}
-
-// CPUNotIn applies the NotIn predicate on the "cpu" field.
-func CPUNotIn(vs ...int) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldNotIn(FieldCPU, vs...))
-}
-
-// CPUGT applies the GT predicate on the "cpu" field.
-func CPUGT(v int) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldGT(FieldCPU, v))
-}
-
-// CPUGTE applies the GTE predicate on the "cpu" field.
-func CPUGTE(v int) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldGTE(FieldCPU, v))
-}
-
-// CPULT applies the LT predicate on the "cpu" field.
-func CPULT(v int) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldLT(FieldCPU, v))
-}
-
-// CPULTE applies the LTE predicate on the "cpu" field.
-func CPULTE(v int) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldLTE(FieldCPU, v))
-}
-
-// CreatedTimeEQ applies the EQ predicate on the "createdTime" field.
-func CreatedTimeEQ(v time.Time) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldEQ(FieldCreatedTime, v))
-}
-
-// CreatedTimeNEQ applies the NEQ predicate on the "createdTime" field.
-func CreatedTimeNEQ(v time.Time) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldNEQ(FieldCreatedTime, v))
-}
-
-// CreatedTimeIn applies the In predicate on the "createdTime" field.
-func CreatedTimeIn(vs ...time.Time) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldIn(FieldCreatedTime, vs...))
-}
-
-// CreatedTimeNotIn applies the NotIn predicate on the "createdTime" field.
-func CreatedTimeNotIn(vs ...time.Time) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldNotIn(FieldCreatedTime, vs...))
-}
-
-// CreatedTimeGT applies the GT predicate on the "createdTime" field.
-func CreatedTimeGT(v time.Time) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldGT(FieldCreatedTime, v))
-}
-
-// CreatedTimeGTE applies the GTE predicate on the "createdTime" field.
-func CreatedTimeGTE(v time.Time) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldGTE(FieldCreatedTime, v))
-}
-
-// CreatedTimeLT applies the LT predicate on the "createdTime" field.
-func CreatedTimeLT(v time.Time) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldLT(FieldCreatedTime, v))
-}
-
-// CreatedTimeLTE applies the LTE predicate on the "createdTime" field.
-func CreatedTimeLTE(v time.Time) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldLTE(FieldCreatedTime, v))
-}
-
-// ExpiredTimeEQ applies the EQ predicate on the "expiredTime" field.
-func ExpiredTimeEQ(v time.Time) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldEQ(FieldExpiredTime, v))
-}
-
-// ExpiredTimeNEQ applies the NEQ predicate on the "expiredTime" field.
-func ExpiredTimeNEQ(v time.Time) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldNEQ(FieldExpiredTime, v))
-}
-
-// ExpiredTimeIn applies the In predicate on the "expiredTime" field.
-func ExpiredTimeIn(vs ...time.Time) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldIn(FieldExpiredTime, vs...))
-}
-
-// ExpiredTimeNotIn applies the NotIn predicate on the "expiredTime" field.
-func ExpiredTimeNotIn(vs ...time.Time) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldNotIn(FieldExpiredTime, vs...))
-}
-
-// ExpiredTimeGT applies the GT predicate on the "expiredTime" field.
-func ExpiredTimeGT(v time.Time) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldGT(FieldExpiredTime, v))
-}
-
-// ExpiredTimeGTE applies the GTE predicate on the "expiredTime" field.
-func ExpiredTimeGTE(v time.Time) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldGTE(FieldExpiredTime, v))
-}
-
-// ExpiredTimeLT applies the LT predicate on the "expiredTime" field.
-func ExpiredTimeLT(v time.Time) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldLT(FieldExpiredTime, v))
-}
-
-// ExpiredTimeLTE applies the LTE predicate on the "expiredTime" field.
-func ExpiredTimeLTE(v time.Time) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldLTE(FieldExpiredTime, v))
+// SubnetIdContainsFold applies the ContainsFold predicate on the "SubnetId" field.
+func SubnetIdContainsFold(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldContainsFold(FieldSubnetId, v))
 }
 
 // InstanceNameEQ applies the EQ predicate on the "instanceName" field.
@@ -769,469 +373,214 @@ func InstanceNameContainsFold(v string) predicate.CloudHost {
 	return predicate.CloudHost(sql.FieldContainsFold(FieldInstanceName, v))
 }
 
-// ImageNameEQ applies the EQ predicate on the "imageName" field.
-func ImageNameEQ(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldEQ(FieldImageName, v))
+// InstanceStateEQ applies the EQ predicate on the "instanceState" field.
+func InstanceStateEQ(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldEQ(FieldInstanceState, v))
 }
 
-// ImageNameNEQ applies the NEQ predicate on the "imageName" field.
-func ImageNameNEQ(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldNEQ(FieldImageName, v))
+// InstanceStateNEQ applies the NEQ predicate on the "instanceState" field.
+func InstanceStateNEQ(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldNEQ(FieldInstanceState, v))
 }
 
-// ImageNameIn applies the In predicate on the "imageName" field.
-func ImageNameIn(vs ...string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldIn(FieldImageName, vs...))
+// InstanceStateIn applies the In predicate on the "instanceState" field.
+func InstanceStateIn(vs ...string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldIn(FieldInstanceState, vs...))
 }
 
-// ImageNameNotIn applies the NotIn predicate on the "imageName" field.
-func ImageNameNotIn(vs ...string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldNotIn(FieldImageName, vs...))
+// InstanceStateNotIn applies the NotIn predicate on the "instanceState" field.
+func InstanceStateNotIn(vs ...string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldNotIn(FieldInstanceState, vs...))
 }
 
-// ImageNameGT applies the GT predicate on the "imageName" field.
-func ImageNameGT(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldGT(FieldImageName, v))
+// InstanceStateGT applies the GT predicate on the "instanceState" field.
+func InstanceStateGT(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldGT(FieldInstanceState, v))
 }
 
-// ImageNameGTE applies the GTE predicate on the "imageName" field.
-func ImageNameGTE(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldGTE(FieldImageName, v))
+// InstanceStateGTE applies the GTE predicate on the "instanceState" field.
+func InstanceStateGTE(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldGTE(FieldInstanceState, v))
 }
 
-// ImageNameLT applies the LT predicate on the "imageName" field.
-func ImageNameLT(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldLT(FieldImageName, v))
+// InstanceStateLT applies the LT predicate on the "instanceState" field.
+func InstanceStateLT(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldLT(FieldInstanceState, v))
 }
 
-// ImageNameLTE applies the LTE predicate on the "imageName" field.
-func ImageNameLTE(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldLTE(FieldImageName, v))
+// InstanceStateLTE applies the LTE predicate on the "instanceState" field.
+func InstanceStateLTE(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldLTE(FieldInstanceState, v))
 }
 
-// ImageNameContains applies the Contains predicate on the "imageName" field.
-func ImageNameContains(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldContains(FieldImageName, v))
+// InstanceStateContains applies the Contains predicate on the "instanceState" field.
+func InstanceStateContains(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldContains(FieldInstanceState, v))
 }
 
-// ImageNameHasPrefix applies the HasPrefix predicate on the "imageName" field.
-func ImageNameHasPrefix(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldHasPrefix(FieldImageName, v))
+// InstanceStateHasPrefix applies the HasPrefix predicate on the "instanceState" field.
+func InstanceStateHasPrefix(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldHasPrefix(FieldInstanceState, v))
 }
 
-// ImageNameHasSuffix applies the HasSuffix predicate on the "imageName" field.
-func ImageNameHasSuffix(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldHasSuffix(FieldImageName, v))
+// InstanceStateHasSuffix applies the HasSuffix predicate on the "instanceState" field.
+func InstanceStateHasSuffix(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldHasSuffix(FieldInstanceState, v))
 }
 
-// ImageNameEqualFold applies the EqualFold predicate on the "imageName" field.
-func ImageNameEqualFold(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldEqualFold(FieldImageName, v))
+// InstanceStateEqualFold applies the EqualFold predicate on the "instanceState" field.
+func InstanceStateEqualFold(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldEqualFold(FieldInstanceState, v))
 }
 
-// ImageNameContainsFold applies the ContainsFold predicate on the "imageName" field.
-func ImageNameContainsFold(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldContainsFold(FieldImageName, v))
+// InstanceStateContainsFold applies the ContainsFold predicate on the "instanceState" field.
+func InstanceStateContainsFold(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldContainsFold(FieldInstanceState, v))
 }
 
-// OsTypeEQ applies the EQ predicate on the "osType" field.
-func OsTypeEQ(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldEQ(FieldOsType, v))
+// CPUEQ applies the EQ predicate on the "cpu" field.
+func CPUEQ(v int64) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldEQ(FieldCPU, v))
 }
 
-// OsTypeNEQ applies the NEQ predicate on the "osType" field.
-func OsTypeNEQ(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldNEQ(FieldOsType, v))
+// CPUNEQ applies the NEQ predicate on the "cpu" field.
+func CPUNEQ(v int64) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldNEQ(FieldCPU, v))
 }
 
-// OsTypeIn applies the In predicate on the "osType" field.
-func OsTypeIn(vs ...string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldIn(FieldOsType, vs...))
+// CPUIn applies the In predicate on the "cpu" field.
+func CPUIn(vs ...int64) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldIn(FieldCPU, vs...))
 }
 
-// OsTypeNotIn applies the NotIn predicate on the "osType" field.
-func OsTypeNotIn(vs ...string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldNotIn(FieldOsType, vs...))
+// CPUNotIn applies the NotIn predicate on the "cpu" field.
+func CPUNotIn(vs ...int64) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldNotIn(FieldCPU, vs...))
 }
 
-// OsTypeGT applies the GT predicate on the "osType" field.
-func OsTypeGT(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldGT(FieldOsType, v))
+// CPUGT applies the GT predicate on the "cpu" field.
+func CPUGT(v int64) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldGT(FieldCPU, v))
 }
 
-// OsTypeGTE applies the GTE predicate on the "osType" field.
-func OsTypeGTE(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldGTE(FieldOsType, v))
+// CPUGTE applies the GTE predicate on the "cpu" field.
+func CPUGTE(v int64) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldGTE(FieldCPU, v))
 }
 
-// OsTypeLT applies the LT predicate on the "osType" field.
-func OsTypeLT(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldLT(FieldOsType, v))
+// CPULT applies the LT predicate on the "cpu" field.
+func CPULT(v int64) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldLT(FieldCPU, v))
 }
 
-// OsTypeLTE applies the LTE predicate on the "osType" field.
-func OsTypeLTE(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldLTE(FieldOsType, v))
+// CPULTE applies the LTE predicate on the "cpu" field.
+func CPULTE(v int64) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldLTE(FieldCPU, v))
 }
 
-// OsTypeContains applies the Contains predicate on the "osType" field.
-func OsTypeContains(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldContains(FieldOsType, v))
+// MemoryEQ applies the EQ predicate on the "memory" field.
+func MemoryEQ(v int64) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldEQ(FieldMemory, v))
 }
 
-// OsTypeHasPrefix applies the HasPrefix predicate on the "osType" field.
-func OsTypeHasPrefix(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldHasPrefix(FieldOsType, v))
+// MemoryNEQ applies the NEQ predicate on the "memory" field.
+func MemoryNEQ(v int64) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldNEQ(FieldMemory, v))
 }
 
-// OsTypeHasSuffix applies the HasSuffix predicate on the "osType" field.
-func OsTypeHasSuffix(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldHasSuffix(FieldOsType, v))
+// MemoryIn applies the In predicate on the "memory" field.
+func MemoryIn(vs ...int64) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldIn(FieldMemory, vs...))
 }
 
-// OsTypeEqualFold applies the EqualFold predicate on the "osType" field.
-func OsTypeEqualFold(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldEqualFold(FieldOsType, v))
+// MemoryNotIn applies the NotIn predicate on the "memory" field.
+func MemoryNotIn(vs ...int64) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldNotIn(FieldMemory, vs...))
 }
 
-// OsTypeContainsFold applies the ContainsFold predicate on the "osType" field.
-func OsTypeContainsFold(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldContainsFold(FieldOsType, v))
+// MemoryGT applies the GT predicate on the "memory" field.
+func MemoryGT(v int64) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldGT(FieldMemory, v))
 }
 
-// ManufacturerEQ applies the EQ predicate on the "manufacturer" field.
-func ManufacturerEQ(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldEQ(FieldManufacturer, v))
+// MemoryGTE applies the GTE predicate on the "memory" field.
+func MemoryGTE(v int64) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldGTE(FieldMemory, v))
 }
 
-// ManufacturerNEQ applies the NEQ predicate on the "manufacturer" field.
-func ManufacturerNEQ(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldNEQ(FieldManufacturer, v))
+// MemoryLT applies the LT predicate on the "memory" field.
+func MemoryLT(v int64) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldLT(FieldMemory, v))
 }
 
-// ManufacturerIn applies the In predicate on the "manufacturer" field.
-func ManufacturerIn(vs ...string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldIn(FieldManufacturer, vs...))
+// MemoryLTE applies the LTE predicate on the "memory" field.
+func MemoryLTE(v int64) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldLTE(FieldMemory, v))
 }
 
-// ManufacturerNotIn applies the NotIn predicate on the "manufacturer" field.
-func ManufacturerNotIn(vs ...string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldNotIn(FieldManufacturer, vs...))
+// CreatedTimeEQ applies the EQ predicate on the "createdTime" field.
+func CreatedTimeEQ(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldEQ(FieldCreatedTime, v))
 }
 
-// ManufacturerGT applies the GT predicate on the "manufacturer" field.
-func ManufacturerGT(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldGT(FieldManufacturer, v))
+// CreatedTimeNEQ applies the NEQ predicate on the "createdTime" field.
+func CreatedTimeNEQ(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldNEQ(FieldCreatedTime, v))
 }
 
-// ManufacturerGTE applies the GTE predicate on the "manufacturer" field.
-func ManufacturerGTE(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldGTE(FieldManufacturer, v))
+// CreatedTimeIn applies the In predicate on the "createdTime" field.
+func CreatedTimeIn(vs ...string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldIn(FieldCreatedTime, vs...))
 }
 
-// ManufacturerLT applies the LT predicate on the "manufacturer" field.
-func ManufacturerLT(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldLT(FieldManufacturer, v))
+// CreatedTimeNotIn applies the NotIn predicate on the "createdTime" field.
+func CreatedTimeNotIn(vs ...string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldNotIn(FieldCreatedTime, vs...))
 }
 
-// ManufacturerLTE applies the LTE predicate on the "manufacturer" field.
-func ManufacturerLTE(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldLTE(FieldManufacturer, v))
+// CreatedTimeGT applies the GT predicate on the "createdTime" field.
+func CreatedTimeGT(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldGT(FieldCreatedTime, v))
 }
 
-// ManufacturerContains applies the Contains predicate on the "manufacturer" field.
-func ManufacturerContains(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldContains(FieldManufacturer, v))
+// CreatedTimeGTE applies the GTE predicate on the "createdTime" field.
+func CreatedTimeGTE(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldGTE(FieldCreatedTime, v))
 }
 
-// ManufacturerHasPrefix applies the HasPrefix predicate on the "manufacturer" field.
-func ManufacturerHasPrefix(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldHasPrefix(FieldManufacturer, v))
+// CreatedTimeLT applies the LT predicate on the "createdTime" field.
+func CreatedTimeLT(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldLT(FieldCreatedTime, v))
 }
 
-// ManufacturerHasSuffix applies the HasSuffix predicate on the "manufacturer" field.
-func ManufacturerHasSuffix(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldHasSuffix(FieldManufacturer, v))
+// CreatedTimeLTE applies the LTE predicate on the "createdTime" field.
+func CreatedTimeLTE(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldLTE(FieldCreatedTime, v))
 }
 
-// ManufacturerEqualFold applies the EqualFold predicate on the "manufacturer" field.
-func ManufacturerEqualFold(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldEqualFold(FieldManufacturer, v))
+// CreatedTimeContains applies the Contains predicate on the "createdTime" field.
+func CreatedTimeContains(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldContains(FieldCreatedTime, v))
 }
 
-// ManufacturerContainsFold applies the ContainsFold predicate on the "manufacturer" field.
-func ManufacturerContainsFold(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldContainsFold(FieldManufacturer, v))
+// CreatedTimeHasPrefix applies the HasPrefix predicate on the "createdTime" field.
+func CreatedTimeHasPrefix(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldHasPrefix(FieldCreatedTime, v))
 }
 
-// ZoneEQ applies the EQ predicate on the "zone" field.
-func ZoneEQ(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldEQ(FieldZone, v))
+// CreatedTimeHasSuffix applies the HasSuffix predicate on the "createdTime" field.
+func CreatedTimeHasSuffix(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldHasSuffix(FieldCreatedTime, v))
 }
 
-// ZoneNEQ applies the NEQ predicate on the "zone" field.
-func ZoneNEQ(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldNEQ(FieldZone, v))
+// CreatedTimeEqualFold applies the EqualFold predicate on the "createdTime" field.
+func CreatedTimeEqualFold(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldEqualFold(FieldCreatedTime, v))
 }
 
-// ZoneIn applies the In predicate on the "zone" field.
-func ZoneIn(vs ...string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldIn(FieldZone, vs...))
-}
-
-// ZoneNotIn applies the NotIn predicate on the "zone" field.
-func ZoneNotIn(vs ...string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldNotIn(FieldZone, vs...))
-}
-
-// ZoneGT applies the GT predicate on the "zone" field.
-func ZoneGT(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldGT(FieldZone, v))
-}
-
-// ZoneGTE applies the GTE predicate on the "zone" field.
-func ZoneGTE(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldGTE(FieldZone, v))
-}
-
-// ZoneLT applies the LT predicate on the "zone" field.
-func ZoneLT(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldLT(FieldZone, v))
-}
-
-// ZoneLTE applies the LTE predicate on the "zone" field.
-func ZoneLTE(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldLTE(FieldZone, v))
-}
-
-// ZoneContains applies the Contains predicate on the "zone" field.
-func ZoneContains(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldContains(FieldZone, v))
-}
-
-// ZoneHasPrefix applies the HasPrefix predicate on the "zone" field.
-func ZoneHasPrefix(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldHasPrefix(FieldZone, v))
-}
-
-// ZoneHasSuffix applies the HasSuffix predicate on the "zone" field.
-func ZoneHasSuffix(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldHasSuffix(FieldZone, v))
-}
-
-// ZoneEqualFold applies the EqualFold predicate on the "zone" field.
-func ZoneEqualFold(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldEqualFold(FieldZone, v))
-}
-
-// ZoneContainsFold applies the ContainsFold predicate on the "zone" field.
-func ZoneContainsFold(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldContainsFold(FieldZone, v))
-}
-
-// SecurityGroupsEQ applies the EQ predicate on the "securityGroups" field.
-func SecurityGroupsEQ(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldEQ(FieldSecurityGroups, v))
-}
-
-// SecurityGroupsNEQ applies the NEQ predicate on the "securityGroups" field.
-func SecurityGroupsNEQ(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldNEQ(FieldSecurityGroups, v))
-}
-
-// SecurityGroupsIn applies the In predicate on the "securityGroups" field.
-func SecurityGroupsIn(vs ...string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldIn(FieldSecurityGroups, vs...))
-}
-
-// SecurityGroupsNotIn applies the NotIn predicate on the "securityGroups" field.
-func SecurityGroupsNotIn(vs ...string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldNotIn(FieldSecurityGroups, vs...))
-}
-
-// SecurityGroupsGT applies the GT predicate on the "securityGroups" field.
-func SecurityGroupsGT(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldGT(FieldSecurityGroups, v))
-}
-
-// SecurityGroupsGTE applies the GTE predicate on the "securityGroups" field.
-func SecurityGroupsGTE(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldGTE(FieldSecurityGroups, v))
-}
-
-// SecurityGroupsLT applies the LT predicate on the "securityGroups" field.
-func SecurityGroupsLT(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldLT(FieldSecurityGroups, v))
-}
-
-// SecurityGroupsLTE applies the LTE predicate on the "securityGroups" field.
-func SecurityGroupsLTE(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldLTE(FieldSecurityGroups, v))
-}
-
-// SecurityGroupsContains applies the Contains predicate on the "securityGroups" field.
-func SecurityGroupsContains(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldContains(FieldSecurityGroups, v))
-}
-
-// SecurityGroupsHasPrefix applies the HasPrefix predicate on the "securityGroups" field.
-func SecurityGroupsHasPrefix(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldHasPrefix(FieldSecurityGroups, v))
-}
-
-// SecurityGroupsHasSuffix applies the HasSuffix predicate on the "securityGroups" field.
-func SecurityGroupsHasSuffix(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldHasSuffix(FieldSecurityGroups, v))
-}
-
-// SecurityGroupsEqualFold applies the EqualFold predicate on the "securityGroups" field.
-func SecurityGroupsEqualFold(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldEqualFold(FieldSecurityGroups, v))
-}
-
-// SecurityGroupsContainsFold applies the ContainsFold predicate on the "securityGroups" field.
-func SecurityGroupsContainsFold(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldContainsFold(FieldSecurityGroups, v))
-}
-
-// BillTypeEQ applies the EQ predicate on the "billType" field.
-func BillTypeEQ(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldEQ(FieldBillType, v))
-}
-
-// BillTypeNEQ applies the NEQ predicate on the "billType" field.
-func BillTypeNEQ(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldNEQ(FieldBillType, v))
-}
-
-// BillTypeIn applies the In predicate on the "billType" field.
-func BillTypeIn(vs ...string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldIn(FieldBillType, vs...))
-}
-
-// BillTypeNotIn applies the NotIn predicate on the "billType" field.
-func BillTypeNotIn(vs ...string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldNotIn(FieldBillType, vs...))
-}
-
-// BillTypeGT applies the GT predicate on the "billType" field.
-func BillTypeGT(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldGT(FieldBillType, v))
-}
-
-// BillTypeGTE applies the GTE predicate on the "billType" field.
-func BillTypeGTE(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldGTE(FieldBillType, v))
-}
-
-// BillTypeLT applies the LT predicate on the "billType" field.
-func BillTypeLT(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldLT(FieldBillType, v))
-}
-
-// BillTypeLTE applies the LTE predicate on the "billType" field.
-func BillTypeLTE(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldLTE(FieldBillType, v))
-}
-
-// BillTypeContains applies the Contains predicate on the "billType" field.
-func BillTypeContains(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldContains(FieldBillType, v))
-}
-
-// BillTypeHasPrefix applies the HasPrefix predicate on the "billType" field.
-func BillTypeHasPrefix(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldHasPrefix(FieldBillType, v))
-}
-
-// BillTypeHasSuffix applies the HasSuffix predicate on the "billType" field.
-func BillTypeHasSuffix(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldHasSuffix(FieldBillType, v))
-}
-
-// BillTypeEqualFold applies the EqualFold predicate on the "billType" field.
-func BillTypeEqualFold(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldEqualFold(FieldBillType, v))
-}
-
-// BillTypeContainsFold applies the ContainsFold predicate on the "billType" field.
-func BillTypeContainsFold(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldContainsFold(FieldBillType, v))
-}
-
-// ChargeTypeEQ applies the EQ predicate on the "chargeType" field.
-func ChargeTypeEQ(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldEQ(FieldChargeType, v))
-}
-
-// ChargeTypeNEQ applies the NEQ predicate on the "chargeType" field.
-func ChargeTypeNEQ(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldNEQ(FieldChargeType, v))
-}
-
-// ChargeTypeIn applies the In predicate on the "chargeType" field.
-func ChargeTypeIn(vs ...string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldIn(FieldChargeType, vs...))
-}
-
-// ChargeTypeNotIn applies the NotIn predicate on the "chargeType" field.
-func ChargeTypeNotIn(vs ...string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldNotIn(FieldChargeType, vs...))
-}
-
-// ChargeTypeGT applies the GT predicate on the "chargeType" field.
-func ChargeTypeGT(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldGT(FieldChargeType, v))
-}
-
-// ChargeTypeGTE applies the GTE predicate on the "chargeType" field.
-func ChargeTypeGTE(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldGTE(FieldChargeType, v))
-}
-
-// ChargeTypeLT applies the LT predicate on the "chargeType" field.
-func ChargeTypeLT(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldLT(FieldChargeType, v))
-}
-
-// ChargeTypeLTE applies the LTE predicate on the "chargeType" field.
-func ChargeTypeLTE(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldLTE(FieldChargeType, v))
-}
-
-// ChargeTypeContains applies the Contains predicate on the "chargeType" field.
-func ChargeTypeContains(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldContains(FieldChargeType, v))
-}
-
-// ChargeTypeHasPrefix applies the HasPrefix predicate on the "chargeType" field.
-func ChargeTypeHasPrefix(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldHasPrefix(FieldChargeType, v))
-}
-
-// ChargeTypeHasSuffix applies the HasSuffix predicate on the "chargeType" field.
-func ChargeTypeHasSuffix(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldHasSuffix(FieldChargeType, v))
-}
-
-// ChargeTypeEqualFold applies the EqualFold predicate on the "chargeType" field.
-func ChargeTypeEqualFold(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldEqualFold(FieldChargeType, v))
-}
-
-// ChargeTypeContainsFold applies the ContainsFold predicate on the "chargeType" field.
-func ChargeTypeContainsFold(v string) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldContainsFold(FieldChargeType, v))
-}
-
-// IsActiveEQ applies the EQ predicate on the "isActive" field.
-func IsActiveEQ(v bool) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldEQ(FieldIsActive, v))
-}
-
-// IsActiveNEQ applies the NEQ predicate on the "isActive" field.
-func IsActiveNEQ(v bool) predicate.CloudHost {
-	return predicate.CloudHost(sql.FieldNEQ(FieldIsActive, v))
+// CreatedTimeContainsFold applies the ContainsFold predicate on the "createdTime" field.
+func CreatedTimeContainsFold(v string) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldContainsFold(FieldCreatedTime, v))
 }
 
 // InstanceTypeEQ applies the EQ predicate on the "instanceType" field.
@@ -1297,6 +646,126 @@ func InstanceTypeEqualFold(v string) predicate.CloudHost {
 // InstanceTypeContainsFold applies the ContainsFold predicate on the "instanceType" field.
 func InstanceTypeContainsFold(v string) predicate.CloudHost {
 	return predicate.CloudHost(sql.FieldContainsFold(FieldInstanceType, v))
+}
+
+// EniLimitEQ applies the EQ predicate on the "eniLimit" field.
+func EniLimitEQ(v int64) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldEQ(FieldEniLimit, v))
+}
+
+// EniLimitNEQ applies the NEQ predicate on the "eniLimit" field.
+func EniLimitNEQ(v int64) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldNEQ(FieldEniLimit, v))
+}
+
+// EniLimitIn applies the In predicate on the "eniLimit" field.
+func EniLimitIn(vs ...int64) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldIn(FieldEniLimit, vs...))
+}
+
+// EniLimitNotIn applies the NotIn predicate on the "eniLimit" field.
+func EniLimitNotIn(vs ...int64) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldNotIn(FieldEniLimit, vs...))
+}
+
+// EniLimitGT applies the GT predicate on the "eniLimit" field.
+func EniLimitGT(v int64) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldGT(FieldEniLimit, v))
+}
+
+// EniLimitGTE applies the GTE predicate on the "eniLimit" field.
+func EniLimitGTE(v int64) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldGTE(FieldEniLimit, v))
+}
+
+// EniLimitLT applies the LT predicate on the "eniLimit" field.
+func EniLimitLT(v int64) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldLT(FieldEniLimit, v))
+}
+
+// EniLimitLTE applies the LTE predicate on the "eniLimit" field.
+func EniLimitLTE(v int64) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldLTE(FieldEniLimit, v))
+}
+
+// EnilpLimitEQ applies the EQ predicate on the "enilpLimit" field.
+func EnilpLimitEQ(v int64) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldEQ(FieldEnilpLimit, v))
+}
+
+// EnilpLimitNEQ applies the NEQ predicate on the "enilpLimit" field.
+func EnilpLimitNEQ(v int64) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldNEQ(FieldEnilpLimit, v))
+}
+
+// EnilpLimitIn applies the In predicate on the "enilpLimit" field.
+func EnilpLimitIn(vs ...int64) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldIn(FieldEnilpLimit, vs...))
+}
+
+// EnilpLimitNotIn applies the NotIn predicate on the "enilpLimit" field.
+func EnilpLimitNotIn(vs ...int64) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldNotIn(FieldEnilpLimit, vs...))
+}
+
+// EnilpLimitGT applies the GT predicate on the "enilpLimit" field.
+func EnilpLimitGT(v int64) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldGT(FieldEnilpLimit, v))
+}
+
+// EnilpLimitGTE applies the GTE predicate on the "enilpLimit" field.
+func EnilpLimitGTE(v int64) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldGTE(FieldEnilpLimit, v))
+}
+
+// EnilpLimitLT applies the LT predicate on the "enilpLimit" field.
+func EnilpLimitLT(v int64) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldLT(FieldEnilpLimit, v))
+}
+
+// EnilpLimitLTE applies the LTE predicate on the "enilpLimit" field.
+func EnilpLimitLTE(v int64) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldLTE(FieldEnilpLimit, v))
+}
+
+// InstanceEniCountEQ applies the EQ predicate on the "instanceEniCount" field.
+func InstanceEniCountEQ(v int64) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldEQ(FieldInstanceEniCount, v))
+}
+
+// InstanceEniCountNEQ applies the NEQ predicate on the "instanceEniCount" field.
+func InstanceEniCountNEQ(v int64) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldNEQ(FieldInstanceEniCount, v))
+}
+
+// InstanceEniCountIn applies the In predicate on the "instanceEniCount" field.
+func InstanceEniCountIn(vs ...int64) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldIn(FieldInstanceEniCount, vs...))
+}
+
+// InstanceEniCountNotIn applies the NotIn predicate on the "instanceEniCount" field.
+func InstanceEniCountNotIn(vs ...int64) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldNotIn(FieldInstanceEniCount, vs...))
+}
+
+// InstanceEniCountGT applies the GT predicate on the "instanceEniCount" field.
+func InstanceEniCountGT(v int64) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldGT(FieldInstanceEniCount, v))
+}
+
+// InstanceEniCountGTE applies the GTE predicate on the "instanceEniCount" field.
+func InstanceEniCountGTE(v int64) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldGTE(FieldInstanceEniCount, v))
+}
+
+// InstanceEniCountLT applies the LT predicate on the "instanceEniCount" field.
+func InstanceEniCountLT(v int64) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldLT(FieldInstanceEniCount, v))
+}
+
+// InstanceEniCountLTE applies the LTE predicate on the "instanceEniCount" field.
+func InstanceEniCountLTE(v int64) predicate.CloudHost {
+	return predicate.CloudHost(sql.FieldLTE(FieldInstanceEniCount, v))
 }
 
 // And groups predicates with the AND operator between them.

@@ -55,13 +55,13 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/helloworld.v1.CreateInstanceReply'
-    /cmdb/deleteInstance/{UUID}:
+    /cmdb/deleteInstance/{InstanceId}:
         delete:
             tags:
                 - Greeter
             operationId: Greeter_DeleteInstanceById
             parameters:
-                - name: UUID
+                - name: InstanceId
                   in: path
                   required: true
                   schema:
@@ -73,13 +73,13 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/helloworld.v1.DeleteInstanceReply'
-    /cmdb/getInstance/{UUID}:
+    /cmdb/getInstance/{InstanceId}:
         get:
             tags:
                 - Greeter
             operationId: Greeter_GetInstance
             parameters:
-                - name: UUID
+                - name: InstanceId
                   in: path
                   required: true
                   schema:
@@ -103,13 +103,13 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/helloworld.v1.ListInstancesReply'
-    /cmdb/updateInstance/{UUID}:
+    /cmdb/updateInstance/{InstanceId}:
         put:
             tags:
                 - Greeter
             operationId: Greeter_UpdateInstance
             parameters:
-                - name: UUID
+                - name: InstanceId
                   in: path
                   required: true
                   schema:
@@ -273,60 +273,35 @@ components:
         helloworld.v1.Host:
             type: object
             properties:
-                UUID:
+                VpcId:
                     type: string
-                State:
+                SubnetId:
                     type: string
-                IPV6AddressPublic:
-                    type: array
-                    items:
-                        type: string
-                IPV6AddressPrivate:
-                    type: array
-                    items:
-                        type: string
-                IPV4AddressPublic:
-                    type: array
-                    items:
-                        type: string
-                IPV4AddressPrivate:
-                    type: array
-                    items:
-                        type: string
-                Memory:
+                InstanceId:
+                    type: string
+                InstanceName:
+                    type: string
+                InstanceState:
+                    type: string
+                CPU:
                     type: integer
                     format: int64
-                CPU:
+                Memory:
                     type: integer
                     format: int64
                 CreatedTime:
                     type: string
-                    format: date-time
-                ExpitedTime:
-                    type: string
-                    format: date-time
-                InstanceName:
-                    type: string
-                ImageName:
-                    type: string
-                OSType:
-                    type: string
-                Manufacturer:
-                    type: string
-                Zone:
-                    type: string
-                SecurityGroups:
-                    type: array
-                    items:
-                        type: string
-                BillType:
-                    type: string
-                ChargeType:
-                    type: string
-                IsActive:
-                    type: boolean
                 InstanceType:
                     type: string
+                EniLimit:
+                    type: integer
+                    format: int64
+                EnilpLimit:
+                    type: integer
+                    format: int64
+                InstanceEniCount:
+                    type: integer
+                    format: int64
         helloworld.v1.ListInstancesReply:
             type: object
             properties:
@@ -361,6 +336,8 @@ components:
                     type: string
                 region:
                     type: string
+                vpcId:
+                    type: string
         helloworld.v1.UpdateInstanceReply:
             type: object
             properties:
@@ -371,7 +348,7 @@ components:
         helloworld.v1.UpdateInstanceRequest:
             type: object
             properties:
-                UUID:
+                InstanceId:
                     type: string
                 Instance:
                     $ref: '#/components/schemas/helloworld.v1.Host'

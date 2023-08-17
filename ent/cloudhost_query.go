@@ -261,12 +261,12 @@ func (chq *CloudHostQuery) Clone() *CloudHostQuery {
 // Example:
 //
 //	var v []struct {
-//		UUID string `json:"uuid,omitempty"`
+//		InstanceId string `json:"instanceId,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.CloudHost.Query().
-//		GroupBy(cloudhost.FieldUUID).
+//		GroupBy(cloudhost.FieldInstanceId).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 func (chq *CloudHostQuery) GroupBy(field string, fields ...string) *CloudHostGroupBy {
@@ -284,11 +284,11 @@ func (chq *CloudHostQuery) GroupBy(field string, fields ...string) *CloudHostGro
 // Example:
 //
 //	var v []struct {
-//		UUID string `json:"uuid,omitempty"`
+//		InstanceId string `json:"instanceId,omitempty"`
 //	}
 //
 //	client.CloudHost.Query().
-//		Select(cloudhost.FieldUUID).
+//		Select(cloudhost.FieldInstanceId).
 //		Scan(ctx, &v)
 func (chq *CloudHostQuery) Select(fields ...string) *CloudHostSelect {
 	chq.ctx.Fields = append(chq.ctx.Fields, fields...)

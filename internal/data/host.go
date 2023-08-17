@@ -7,7 +7,6 @@ import (
 	"kubecit/ent/cloudhost"
 	"kubecit/internal/biz"
 	"reflect"
-	"strings"
 )
 
 type cloudHostRepo struct {
@@ -25,31 +24,24 @@ func NewCloudHostRepo(data *Data, logger log.Logger) biz.CloudHostRepo {
 
 // Get
 func (c *cloudHostRepo) Get(ctx context.Context, id string) (*biz.CloudHost, error) {
-	h, err := c.data.db.CloudHost.Query().Where(cloudhost.UUIDEQ(id)).Only(ctx)
+	h, err := c.data.db.CloudHost.Query().Where(cloudhost.InstanceIdEQ(id)).First(ctx)
 	if err != nil {
 		return nil, err
 	}
 	res := &biz.CloudHost{}
 	err = ConvertType(h, res)
-	res.IPV4AddressPrivate = strings.Split(h.Ipv4AddressPrivate, ",")
-	res.IPV6AddressPublic = strings.Split(h.Ipv6AddressPublic, ",")
-	res.IPV4AddressPublic = strings.Split(h.Ipv4AddressPublic, ",")
-	res.IPV6AddressPrivate = strings.Split(h.Ipv6AddressPrivate, ",")
-	res.SecurityGroups = strings.Split(h.SecurityGroups, ",")
 	return res, err
 }
 
 // Create
 func (c *cloudHostRepo) Create(ctx context.Context, host *biz.CloudHost) (*biz.CloudHost, error) {
-
-	h, err := c.data.db.CloudHost.Create().SetCreatedTime(host.CreatedTime).SetExpiredTime(host.ExpiredTime).
-		SetBillType(host.BillType).SetInstanceType(host.InstanceType).SetUUID(host.UUID).
-		SetChargeType(host.ChargeType).SetCPU(host.CPU).SetMemory(host.Memory).SetImageName(host.ImageName).
-		SetIpv4AddressPrivate(strings.Join(host.IPV4AddressPrivate, ",")).SetIpv4AddressPublic(strings.Join(host.IPV4AddressPublic, ",")).
-		SetIpv6AddressPrivate(strings.Join(host.IPV6AddressPrivate, ",")).SetIpv6AddressPublic(strings.Join(host.IPV6AddressPublic, ",")).
-		SetState(host.State).SetInstanceName(host.InstanceName).SetOsType(host.OSType).
-		SetManufacturer(host.Manufacturer).SetZone(host.Zone).SetSecurityGroups(strings.Join(host.SecurityGroups, ",")).Save(ctx)
+	fmt.Printf("%#v\n", host)
+	h, err := c.data.db.CloudHost.Create().SetVpcId(host.VpcId).SetSubnetId(host.SubnetId).SetInstanceState(host.InstanceState).
+		SetInstanceId(host.InstanceId).SetInstanceName(host.InstanceName).SetCPU(host.CPU).
+		SetMemory(host.Memory).SetCreatedTime(host.CreatedTime).SetInstanceType(host.InstanceType).
+		SetEniLimit(host.EniLimit).SetEnilpLimit(host.EnilpLimit).SetInstanceEniCount(host.InstanceEniCount).Save(ctx)
 	if err != nil {
+		fmt.Println(err)
 		return nil, err
 	}
 
@@ -73,11 +65,6 @@ func (c *cloudHostRepo) List(ctx context.Context) ([]*biz.CloudHost, error) {
 		if err != nil {
 			return nil, err
 		}
-		res.IPV4AddressPrivate = strings.Split(host.Ipv4AddressPrivate, ",")
-		res.IPV6AddressPublic = strings.Split(host.Ipv6AddressPublic, ",")
-		res.IPV4AddressPublic = strings.Split(host.Ipv4AddressPublic, ",")
-		res.IPV6AddressPrivate = strings.Split(host.Ipv6AddressPrivate, ",")
-		res.SecurityGroups = strings.Split(host.SecurityGroups, ",")
 		resList = append(resList, res)
 	}
 	return resList, err
@@ -85,16 +72,17 @@ func (c *cloudHostRepo) List(ctx context.Context) ([]*biz.CloudHost, error) {
 
 // Delete
 func (c *cloudHostRepo) Delete(ctx context.Context, id string) (*biz.CloudHost, error) {
-	rows, err := c.data.db.CloudHost.Update().SetIsActive(false).Where(cloudhost.UUID(id)).Save(ctx)
-	if err != nil || rows != 1 {
-		fmt.Println(err)
-		return nil, err
-	}
-	host, err := c.data.db.CloudHost.Query().Where(cloudhost.UUID(id)).First(ctx)
+	host, err := c.data.db.CloudHost.Query().Where(cloudhost.InstanceIdEQ(id)).First(ctx)
 	if err != nil {
 		fmt.Println(err)
 		return nil, err
 	}
+	rows, err := c.data.db.CloudHost.Delete().Where(cloudhost.InstanceIdEQ(id)).Exec(ctx)
+	if err != nil || rows != 1 {
+		fmt.Println(err)
+		return nil, err
+	}
+
 	res := &biz.CloudHost{}
 	err = ConvertType(host, res)
 	if err != nil {
@@ -104,60 +92,42 @@ func (c *cloudHostRepo) Delete(ctx context.Context, id string) (*biz.CloudHost, 
 }
 
 func (c *cloudHostRepo) Update(ctx context.Context, id string, host *biz.CloudHost) (*biz.CloudHost, error) {
-	query := c.data.db.CloudHost.Update().Where(cloudhost.UUIDEQ(id))
-	if host.IsActive != false {
-		query.SetIsActive(host.IsActive)
+	query := c.data.db.CloudHost.Update().Where(cloudhost.InstanceIdEQ(id))
+	if host.VpcId != "" {
+		query.SetVpcId(host.VpcId)
 	}
-	if host.UUID != "" {
-		query.SetUUID(host.UUID)
+	if host.SubnetId != "" {
+		query.SetSubnetId(host.SubnetId)
 	}
-	if host.CPU != 0 {
-		query.SetCPU(host.CPU)
-	}
-	if host.State != "" {
-		query.SetState(host.State)
-	}
-	if len(host.IPV6AddressPrivate) != 0 {
-		query.SetIpv6AddressPrivate(strings.Join(host.IPV6AddressPrivate, ","))
-	}
-	if len(host.IPV6AddressPublic) != 0 {
-		query.SetIpv6AddressPublic(strings.Join(host.IPV6AddressPublic, ","))
-	}
-	if len(host.IPV4AddressPrivate) != 0 {
-		query.SetIpv4AddressPrivate(strings.Join(host.IPV4AddressPrivate, ","))
-	}
-	if len(host.IPV4AddressPublic) != 0 {
-		query.SetIpv4AddressPublic(strings.Join(host.IPV4AddressPublic, ","))
-	}
-	if len(host.SecurityGroups) != 0 {
-		query.SetSecurityGroups(strings.Join(host.SecurityGroups, ","))
-	}
-	if host.Memory != 0 {
-		query.SetMemory(host.Memory)
-	}
-	if host.InstanceType != "" {
-		query.SetInstanceType(host.InstanceType)
+	if host.InstanceId != "" {
+		query.SetInstanceId(host.InstanceId)
 	}
 	if host.InstanceName != "" {
 		query.SetInstanceName(host.InstanceName)
 	}
-	if host.ChargeType != "" {
-		query.SetChargeType(host.ChargeType)
+	if host.InstanceState != "" {
+		query.SetInstanceState(host.InstanceState)
 	}
-	if host.Zone != "" {
-		query.SetZone(host.Zone)
+	if host.CPU != 0 {
+		query.SetCPU(host.CPU)
 	}
-	if host.BillType != "" {
-		query.SetBillType(host.BillType)
+	if host.Memory != 0 {
+		query.SetMemory(host.Memory)
 	}
-	if host.OSType != "" {
-		query.SetOsType(host.OSType)
+	if host.CreatedTime != "" {
+		query.SetCreatedTime(host.CreatedTime)
 	}
-	if host.Manufacturer != "" {
-		query.SetManufacturer(host.Manufacturer)
+	if host.InstanceType != "" {
+		query.SetInstanceType(host.InstanceType)
 	}
-	if host.ImageName != "" {
-		query.SetImageName(host.ImageName)
+	if host.EniLimit != 0 {
+		query.SetEniLimit(host.EniLimit)
+	}
+	if host.EnilpLimit != 0 {
+		query.SetEnilpLimit(host.EnilpLimit)
+	}
+	if host.InstanceEniCount != 0 {
+		query.SetInstanceEniCount(host.InstanceEniCount)
 	}
 
 	_, err := query.Save(ctx)
@@ -165,7 +135,7 @@ func (c *cloudHostRepo) Update(ctx context.Context, id string, host *biz.CloudHo
 		fmt.Println("update error: ", err)
 		return nil, err
 	}
-	res, err := c.Get(ctx, host.UUID)
+	res, err := c.Get(ctx, id)
 	if err != nil {
 		return nil, err
 	}
