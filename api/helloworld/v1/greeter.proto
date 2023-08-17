@@ -188,10 +188,13 @@ message UpdateInstanceRequest {
 
 message UpdateInstanceReply {
   Host Instance = 1;
+  string Message = 2;
 }
 
 message DeleteInstanceRequest {
   string UUID = 1;
 }
 
-message DeleteInstanceReply {}
+message DeleteInstanceReply {
+  string Message = 1;
+}

@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"fmt"
+	"google.golang.org/protobuf/types/known/timestamppb"
 	"kubecit/internal/data"
 	"time"
 
@@ -91,11 +92,14 @@ func (s *GreeterService) GetInstance(ctx context.Context, in *v1.GetInstanceRequ
 		fmt.Println(err)
 		return nil, err
 	}
+	fmt.Printf("%#v", cloudHost)
 	host := &v1.Host{}
 	err = data.ConvertType(cloudHost, host)
 	if err != nil {
 		return nil, err
 	}
+	host.CreatedTime = timestamppb.New(cloudHost.CreatedTime)
+	host.ExpitedTime = timestamppb.New(cloudHost.ExpiredTime)
 	res := &v1.GetInstanceReply{
 		Instance: host,
 	}
@@ -145,6 +149,8 @@ func (s *GreeterService) ListInstances(ctx context.Context, in *v1.ListInstances
 	for _, v := range cloudHosts {
 		instance := &v1.Host{}
 		data.ConvertType(v, instance)
+		instance.CreatedTime = timestamppb.New(v.CreatedTime)
+		instance.ExpitedTime = timestamppb.New(v.ExpiredTime)
 		res.Instances = append(res.Instances, instance)
 	}
 	return res, nil
@@ -152,12 +158,37 @@ func (s *GreeterService) ListInstances(ctx context.Context, in *v1.ListInstances
 
 // TODO
 func (s *GreeterService) DeleteInstanceById(ctx context.Context, in *v1.DeleteInstanceRequest) (*v1.DeleteInstanceReply, error) {
-	return nil, nil
+	cloudHost, err := s.cloudHostCase.Delete(ctx, in.UUID)
+	if err != nil {
+		return nil, err
+	}
+	res := &v1.DeleteInstanceReply{
+		Message: fmt.Sprintf("host %v delete success.", cloudHost.UUID),
+	}
+	return res, nil
 }
 
 // TODO
 func (s *GreeterService) UpdateInstance(ctx context.Context, in *v1.UpdateInstanceRequest) (*v1.UpdateInstanceReply, error) {
-	return nil, nil
+	var host biz.CloudHost
+	err := data.ConvertType(in.Instance, &host)
+	if err != nil {
+		return nil, err
+	}
+	res := &v1.UpdateInstanceReply{}
+	instance, err := s.cloudHostCase.Update(ctx, in.UUID, &host)
+	if err != nil {
+		return nil, err
+	}
+
+	updatedHost := &v1.Host{}
+	err = data.ConvertType(instance, updatedHost)
+	if err != nil {
+		return nil, err
+	}
+	res.Message = "update instance success"
+	res.Instance = updatedHost
+	return res, nil
 }
 
 func (s *GreeterService) SyncFromTencent(ctx context.Context, in *v1.SyncFromTencentRequest) (*v1.SyncFromTencentReply, error) {

@@ -4,10 +4,8 @@ import (
 	"context"
 	"fmt"
 	"github.com/go-kratos/kratos/v2/log"
-	"kubecit/ent"
 	"kubecit/ent/cloudhost"
 	"kubecit/internal/biz"
-
 	"reflect"
 	"strings"
 )
@@ -27,7 +25,7 @@ func NewCloudHostRepo(data *Data, logger log.Logger) biz.CloudHostRepo {
 
 // Get
 func (c *cloudHostRepo) Get(ctx context.Context, id string) (*biz.CloudHost, error) {
-	h, err := c.data.db.CloudHost.Query().Where(cloudhost.UUID(id)).Only(ctx)
+	h, err := c.data.db.CloudHost.Query().Where(cloudhost.UUIDEQ(id)).Only(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -106,16 +104,73 @@ func (c *cloudHostRepo) Delete(ctx context.Context, id string) (*biz.CloudHost, 
 }
 
 func (c *cloudHostRepo) Update(ctx context.Context, id string, host *biz.CloudHost) (*biz.CloudHost, error) {
-	data := &ent.CloudHost{}
-	err := ConvertType(host, data)
+	query := c.data.db.CloudHost.Update().Where(cloudhost.UUIDEQ(id))
+	if host.IsActive != false {
+		query.SetIsActive(host.IsActive)
+	}
+	if host.UUID != "" {
+		query.SetUUID(host.UUID)
+	}
+	if host.CPU != 0 {
+		query.SetCPU(host.CPU)
+	}
+	if host.State != "" {
+		query.SetState(host.State)
+	}
+	if len(host.IPV6AddressPrivate) != 0 {
+		query.SetIpv6AddressPrivate(strings.Join(host.IPV6AddressPrivate, ","))
+	}
+	if len(host.IPV6AddressPublic) != 0 {
+		query.SetIpv6AddressPublic(strings.Join(host.IPV6AddressPublic, ","))
+	}
+	if len(host.IPV4AddressPrivate) != 0 {
+		query.SetIpv4AddressPrivate(strings.Join(host.IPV4AddressPrivate, ","))
+	}
+	if len(host.IPV4AddressPublic) != 0 {
+		query.SetIpv4AddressPublic(strings.Join(host.IPV4AddressPublic, ","))
+	}
+	if len(host.SecurityGroups) != 0 {
+		query.SetSecurityGroups(strings.Join(host.SecurityGroups, ","))
+	}
+	if host.Memory != 0 {
+		query.SetMemory(host.Memory)
+	}
+	if host.InstanceType != "" {
+		query.SetInstanceType(host.InstanceType)
+	}
+	if host.InstanceName != "" {
+		query.SetInstanceName(host.InstanceName)
+	}
+	if host.ChargeType != "" {
+		query.SetChargeType(host.ChargeType)
+	}
+	if host.Zone != "" {
+		query.SetZone(host.Zone)
+	}
+	if host.BillType != "" {
+		query.SetBillType(host.BillType)
+	}
+	if host.OSType != "" {
+		query.SetOsType(host.OSType)
+	}
+	if host.Manufacturer != "" {
+		query.SetManufacturer(host.Manufacturer)
+	}
+	if host.ImageName != "" {
+		query.SetImageName(host.ImageName)
+	}
+
+	_, err := query.Save(ctx)
+	if err != nil {
+		fmt.Println("update error: ", err)
+		return nil, err
+	}
+	res, err := c.Get(ctx, host.UUID)
 	if err != nil {
 		return nil, err
 	}
-	_, err = c.data.db.CloudHost.UpdateOne(data).Where(cloudhost.UUID(id)).Save(ctx)
-	if err != nil {
-		return nil, err
-	}
-	return host, nil
+
+	return res, nil
 }
 
 // Sync TODO
