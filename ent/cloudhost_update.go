@@ -39,7 +39,7 @@ func (chu *CloudHostUpdate) SetVpcId(s string) *CloudHostUpdate {
 	return chu
 }
 
-// SetSubnetId sets the "SubnetId" field.
+// SetSubnetId sets the "subnetId" field.
 func (chu *CloudHostUpdate) SetSubnetId(s string) *CloudHostUpdate {
 	chu.mutation.SetSubnetId(s)
 	return chu
@@ -276,7 +276,7 @@ func (chuo *CloudHostUpdateOne) SetVpcId(s string) *CloudHostUpdateOne {
 	return chuo
 }
 
-// SetSubnetId sets the "SubnetId" field.
+// SetSubnetId sets the "subnetId" field.
 func (chuo *CloudHostUpdateOne) SetSubnetId(s string) *CloudHostUpdateOne {
 	chuo.mutation.SetSubnetId(s)
 	return chuo

@@ -47,34 +47,34 @@ service Greeter {
 
   rpc GetInstance(GetInstanceRequest) returns (GetInstanceReply) {
     option (google.api.http) = {
-      get: "/cmdb/getInstance/{InstanceId}",
+      get: "/cmdb/instance/{instanceId}",
     };
   };
   rpc CreateInstance(CreateInstanceRequest) returns (CreateInstanceReply) {
     option (google.api.http) = {
-      post: "/cmdb/createInstance",
+      post: "/cmdb/instance",
       body: "*",
     };
   };
   rpc ListInstances(ListInstancesRequest) returns (ListInstancesReply){
     option (google.api.http) = {
-      get: "/cmdb/listInstances",
+      get: "/cmdb/instance",
     };
   };
   rpc DeleteInstanceById(DeleteInstanceRequest) returns (DeleteInstanceReply){
     option (google.api.http) = {
-      delete: "/cmdb/deleteInstance/{InstanceId}",
+      delete: "/cmdb/instance/{instanceId}",
     };
   };
   rpc UpdateInstance(UpdateInstanceRequest) returns (UpdateInstanceReply){
     option (google.api.http) = {
-      put: "/cmdb/updateInstance/{InstanceId}",
+      put: "/cmdb/instance/{instanceId}",
       body: "*",
     };
   };
   rpc SyncFromTencent(SyncFromTencentRequest) returns (SyncFromTencentReply) {
     option (google.api.http) = {
-      post: "/cmdb/SyncFromTencent",
+      post: "/cmdb/sync-from-tencent",
       body: "*",
     };
   };
@@ -162,18 +162,18 @@ message HelloReply {
 }
 
 message Host {
-  string VpcId = 1;
-  string SubnetId = 2;
-  string InstanceId = 3;
-  string InstanceName = 4;
-  string InstanceState = 5;
-  int64 CPU = 6;
-  int64 Memory = 7;
-  string CreatedTime = 8;
-  string InstanceType = 9;
-  int64 EniLimit = 10;
-  int64 EnilpLimit = 11;
-  int64 InstanceEniCount = 12;
+  string vpcId = 1;
+  string subnetId = 2;
+  string instanceId = 3;
+  string instanceName = 4;
+  string instanceState = 5;
+  int64 cpu = 6;
+  int64 memory = 7;
+  string createdTime = 8;
+  string instanceType = 9;
+  int64 eniLimit = 10;
+  int64 enilpLimit = 11;
+  int64 instanceEniCount = 12;
 }
 
 message SyncFromTencentRequest{
@@ -189,44 +189,44 @@ message SyncFromTencentReply {
 }
 
 message GetInstanceRequest {
-  string InstanceId = 1;
+  string instanceId = 1;
 }
 
 message GetInstanceReply {
-  Host Instance = 1;
+  Host instance = 1;
 }
 
 message CreateInstanceRequest {
-  Host Instance = 1;
+  Host instance = 1;
 }
 
 message CreateInstanceReply {
-  Host Instance = 1;
+  Host instance = 1;
 }
 
 message ListInstancesRequest {}
 
 message ListInstancesReply {
   int64 total = 1;
-  repeated Host Instances = 2;
+  repeated Host instances = 2;
 }
 
 message UpdateInstanceRequest {
-  string InstanceId = 1;
-  Host Instance = 2;
+  string instanceId = 1;
+  Host instance = 2;
 }
 
 message UpdateInstanceReply {
-  Host Instance = 1;
-  string Message = 2;
+  Host instance = 1;
+  string message = 2;
 }
 
 message DeleteInstanceRequest {
-  string InstanceId = 1;
+  string instanceId = 1;
 }
 
 message DeleteInstanceReply {
-  string Message = 1;
+  string message = 1;
 }
 
 message NamespaceReq{

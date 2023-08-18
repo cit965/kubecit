@@ -8,12 +8,12 @@
 
 #### api使用方法请参照swagger api文档
 ```azure
-/cmdb/getInstance/{InstanceId}                           GET
-/cmdb/createInstance                                     POST
-/cmdb/listInstances                                      GET
-/cmdb/deleteInstance/{InstanceId}                        DELETE
-/cmdb/updateInstance/{InstanceId}                        PUT
-/cmdb/SyncFromTencent                                    POST
+/cmdb/instance/{instanceId}                              GET
+/cmdb/instance                                           POST
+/cmdb/instance                                           GET
+/cmdb/instance/{instanceId}                              DELETE
+/cmdb/instance/{instanceId}                              PUT
+/cmdb/sync-from-tencent                                  POST
 ```
 
 

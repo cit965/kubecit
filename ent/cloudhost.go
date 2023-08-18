@@ -20,8 +20,8 @@ type CloudHost struct {
 	InstanceId string `json:"instanceId,omitempty"`
 	// VpcId holds the value of the "vpcId" field.
 	VpcId string `json:"vpcId,omitempty"`
-	// SubnetId holds the value of the "SubnetId" field.
-	SubnetId string `json:"SubnetId,omitempty"`
+	// SubnetId holds the value of the "subnetId" field.
+	SubnetId string `json:"subnetId,omitempty"`
 	// InstanceName holds the value of the "instanceName" field.
 	InstanceName string `json:"instanceName,omitempty"`
 	// InstanceState holds the value of the "instanceState" field.
@@ -87,7 +87,7 @@ func (ch *CloudHost) assignValues(columns []string, values []any) error {
 			}
 		case cloudhost.FieldSubnetId:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field SubnetId", values[i])
+				return fmt.Errorf("unexpected type %T for field subnetId", values[i])
 			} else if value.Valid {
 				ch.SubnetId = value.String
 			}
@@ -187,7 +187,7 @@ func (ch *CloudHost) String() string {
 	builder.WriteString("vpcId=")
 	builder.WriteString(ch.VpcId)
 	builder.WriteString(", ")
-	builder.WriteString("SubnetId=")
+	builder.WriteString("subnetId=")
 	builder.WriteString(ch.SubnetId)
 	builder.WriteString(", ")
 	builder.WriteString("instanceName=")

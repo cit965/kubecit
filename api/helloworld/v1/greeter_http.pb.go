@@ -68,12 +68,12 @@ func RegisterGreeterHTTPServer(s *http.Server, srv GreeterHTTPServer) {
 	r.GET("/user", _Greeter_UserList0_HTTP_Handler(srv))
 	r.GET("/clusters", _Greeter_ClusterList0_HTTP_Handler(srv))
 	r.GET("/namespaces/{cluster}", _Greeter_NamespaceList0_HTTP_Handler(srv))
-	r.GET("/cmdb/getInstance/{InstanceId}", _Greeter_GetInstance0_HTTP_Handler(srv))
-	r.POST("/cmdb/createInstance", _Greeter_CreateInstance0_HTTP_Handler(srv))
-	r.GET("/cmdb/listInstances", _Greeter_ListInstances0_HTTP_Handler(srv))
-	r.DELETE("/cmdb/deleteInstance/{InstanceId}", _Greeter_DeleteInstanceById0_HTTP_Handler(srv))
-	r.PUT("/cmdb/updateInstance/{InstanceId}", _Greeter_UpdateInstance0_HTTP_Handler(srv))
-	r.POST("/cmdb/SyncFromTencent", _Greeter_SyncFromTencent0_HTTP_Handler(srv))
+	r.GET("/cmdb/instance/{instanceId}", _Greeter_GetInstance0_HTTP_Handler(srv))
+	r.POST("/cmdb/instance", _Greeter_CreateInstance0_HTTP_Handler(srv))
+	r.GET("/cmdb/instance", _Greeter_ListInstances0_HTTP_Handler(srv))
+	r.DELETE("/cmdb/instance/{instanceId}", _Greeter_DeleteInstanceById0_HTTP_Handler(srv))
+	r.PUT("/cmdb/instance/{instanceId}", _Greeter_UpdateInstance0_HTTP_Handler(srv))
+	r.POST("/cmdb/sync-from-tencent", _Greeter_SyncFromTencent0_HTTP_Handler(srv))
 	r.GET("/deployments/{cluster}/{namespace}", _Greeter_DeploymentList0_HTTP_Handler(srv))
 	r.POST("/cluster", _Greeter_ClusterRegister0_HTTP_Handler(srv))
 	r.DELETE("/cluster/{id}", _Greeter_ClusterDelete0_HTTP_Handler(srv))
@@ -524,7 +524,7 @@ func (c *GreeterHTTPClientImpl) ClusterUpdate(ctx context.Context, in *ClusterBa
 
 func (c *GreeterHTTPClientImpl) CreateInstance(ctx context.Context, in *CreateInstanceRequest, opts ...http.CallOption) (*CreateInstanceReply, error) {
 	var out CreateInstanceReply
-	pattern := "/cmdb/createInstance"
+	pattern := "/cmdb/instance"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationGreeterCreateInstance))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -537,7 +537,7 @@ func (c *GreeterHTTPClientImpl) CreateInstance(ctx context.Context, in *CreateIn
 
 func (c *GreeterHTTPClientImpl) DeleteInstanceById(ctx context.Context, in *DeleteInstanceRequest, opts ...http.CallOption) (*DeleteInstanceReply, error) {
 	var out DeleteInstanceReply
-	pattern := "/cmdb/deleteInstance/{InstanceId}"
+	pattern := "/cmdb/instance/{instanceId}"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationGreeterDeleteInstanceById))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -563,7 +563,7 @@ func (c *GreeterHTTPClientImpl) DeploymentList(ctx context.Context, in *Deployme
 
 func (c *GreeterHTTPClientImpl) GetInstance(ctx context.Context, in *GetInstanceRequest, opts ...http.CallOption) (*GetInstanceReply, error) {
 	var out GetInstanceReply
-	pattern := "/cmdb/getInstance/{InstanceId}"
+	pattern := "/cmdb/instance/{instanceId}"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationGreeterGetInstance))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -576,7 +576,7 @@ func (c *GreeterHTTPClientImpl) GetInstance(ctx context.Context, in *GetInstance
 
 func (c *GreeterHTTPClientImpl) ListInstances(ctx context.Context, in *ListInstancesRequest, opts ...http.CallOption) (*ListInstancesReply, error) {
 	var out ListInstancesReply
-	pattern := "/cmdb/listInstances"
+	pattern := "/cmdb/instance"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationGreeterListInstances))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -615,7 +615,7 @@ func (c *GreeterHTTPClientImpl) SayHello(ctx context.Context, in *HelloRequest, 
 
 func (c *GreeterHTTPClientImpl) SyncFromTencent(ctx context.Context, in *SyncFromTencentRequest, opts ...http.CallOption) (*SyncFromTencentReply, error) {
 	var out SyncFromTencentReply
-	pattern := "/cmdb/SyncFromTencent"
+	pattern := "/cmdb/sync-from-tencent"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationGreeterSyncFromTencent))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -628,7 +628,7 @@ func (c *GreeterHTTPClientImpl) SyncFromTencent(ctx context.Context, in *SyncFro
 
 func (c *GreeterHTTPClientImpl) UpdateInstance(ctx context.Context, in *UpdateInstanceRequest, opts ...http.CallOption) (*UpdateInstanceReply, error) {
 	var out UpdateInstanceReply
-	pattern := "/cmdb/updateInstance/{InstanceId}"
+	pattern := "/cmdb/instance/{instanceId}"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationGreeterUpdateInstance))
 	opts = append(opts, http.PathTemplate(pattern))

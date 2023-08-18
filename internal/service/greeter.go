@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"fmt"
+
 	v1 "kubecit/api/helloworld/v1"
 	"kubecit/internal/biz"
 	"kubecit/internal/data"
@@ -163,7 +164,7 @@ func (s *GreeterService) CreateInstance(ctx context.Context, in *v1.CreateInstan
 		InstanceId:       in.Instance.InstanceId,
 		InstanceName:     in.Instance.InstanceName,
 		InstanceState:    in.Instance.InstanceState,
-		CPU:              in.Instance.CPU,
+		CPU:              in.Instance.Cpu,
 		Memory:           in.Instance.Memory,
 		CreatedTime:      in.Instance.CreatedTime,
 		InstanceType:     in.Instance.InstanceType,

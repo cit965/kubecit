@@ -15,7 +15,7 @@ func (CloudHost) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("instanceId").NotEmpty().Unique(),
 		field.String("vpcId").NotEmpty(),
-		field.String("SubnetId"),
+		field.String("subnetId"),
 		field.String("instanceName"),
 		field.String("instanceState"),
 		field.Int64("cpu"),

@@ -91,7 +91,7 @@ func ByVpcId(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldVpcId, opts...).ToFunc()
 }
 
-// BySubnetId orders the results by the SubnetId field.
+// BySubnetId orders the results by the subnetId field.
 func BySubnetId(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldSubnetId, opts...).ToFunc()
 }

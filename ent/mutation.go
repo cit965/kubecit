@@ -38,7 +38,7 @@ type CloudHostMutation struct {
 	id                  *int
 	instanceId          *string
 	vpcId               *string
-	_SubnetId           *string
+	subnetId            *string
 	instanceName        *string
 	instanceState       *string
 	cpu                 *int64
@@ -229,21 +229,21 @@ func (m *CloudHostMutation) ResetVpcId() {
 	m.vpcId = nil
 }
 
-// SetSubnetId sets the "SubnetId" field.
+// SetSubnetId sets the "subnetId" field.
 func (m *CloudHostMutation) SetSubnetId(s string) {
-	m._SubnetId = &s
+	m.subnetId = &s
 }
 
-// SubnetId returns the value of the "SubnetId" field in the mutation.
+// SubnetId returns the value of the "subnetId" field in the mutation.
 func (m *CloudHostMutation) SubnetId() (r string, exists bool) {
-	v := m._SubnetId
+	v := m.subnetId
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldSubnetId returns the old "SubnetId" field's value of the CloudHost entity.
+// OldSubnetId returns the old "subnetId" field's value of the CloudHost entity.
 // If the CloudHost object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
 func (m *CloudHostMutation) OldSubnetId(ctx context.Context) (v string, err error) {
@@ -260,9 +260,9 @@ func (m *CloudHostMutation) OldSubnetId(ctx context.Context) (v string, err erro
 	return oldValue.SubnetId, nil
 }
 
-// ResetSubnetId resets all changes to the "SubnetId" field.
+// ResetSubnetId resets all changes to the "subnetId" field.
 func (m *CloudHostMutation) ResetSubnetId() {
-	m._SubnetId = nil
+	m.subnetId = nil
 }
 
 // SetInstanceName sets the "instanceName" field.
@@ -730,7 +730,7 @@ func (m *CloudHostMutation) Fields() []string {
 	if m.vpcId != nil {
 		fields = append(fields, cloudhost.FieldVpcId)
 	}
-	if m._SubnetId != nil {
+	if m.subnetId != nil {
 		fields = append(fields, cloudhost.FieldSubnetId)
 	}
 	if m.instanceName != nil {

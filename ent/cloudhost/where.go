@@ -63,7 +63,7 @@ func VpcId(v string) predicate.CloudHost {
 	return predicate.CloudHost(sql.FieldEQ(FieldVpcId, v))
 }
 
-// SubnetId applies equality check predicate on the "SubnetId" field. It's identical to SubnetIdEQ.
+// SubnetId applies equality check predicate on the "subnetId" field. It's identical to SubnetIdEQ.
 func SubnetId(v string) predicate.CloudHost {
 	return predicate.CloudHost(sql.FieldEQ(FieldSubnetId, v))
 }
@@ -243,67 +243,67 @@ func VpcIdContainsFold(v string) predicate.CloudHost {
 	return predicate.CloudHost(sql.FieldContainsFold(FieldVpcId, v))
 }
 
-// SubnetIdEQ applies the EQ predicate on the "SubnetId" field.
+// SubnetIdEQ applies the EQ predicate on the "subnetId" field.
 func SubnetIdEQ(v string) predicate.CloudHost {
 	return predicate.CloudHost(sql.FieldEQ(FieldSubnetId, v))
 }
 
-// SubnetIdNEQ applies the NEQ predicate on the "SubnetId" field.
+// SubnetIdNEQ applies the NEQ predicate on the "subnetId" field.
 func SubnetIdNEQ(v string) predicate.CloudHost {
 	return predicate.CloudHost(sql.FieldNEQ(FieldSubnetId, v))
 }
 
-// SubnetIdIn applies the In predicate on the "SubnetId" field.
+// SubnetIdIn applies the In predicate on the "subnetId" field.
 func SubnetIdIn(vs ...string) predicate.CloudHost {
 	return predicate.CloudHost(sql.FieldIn(FieldSubnetId, vs...))
 }
 
-// SubnetIdNotIn applies the NotIn predicate on the "SubnetId" field.
+// SubnetIdNotIn applies the NotIn predicate on the "subnetId" field.
 func SubnetIdNotIn(vs ...string) predicate.CloudHost {
 	return predicate.CloudHost(sql.FieldNotIn(FieldSubnetId, vs...))
 }
 
-// SubnetIdGT applies the GT predicate on the "SubnetId" field.
+// SubnetIdGT applies the GT predicate on the "subnetId" field.
 func SubnetIdGT(v string) predicate.CloudHost {
 	return predicate.CloudHost(sql.FieldGT(FieldSubnetId, v))
 }
 
-// SubnetIdGTE applies the GTE predicate on the "SubnetId" field.
+// SubnetIdGTE applies the GTE predicate on the "subnetId" field.
 func SubnetIdGTE(v string) predicate.CloudHost {
 	return predicate.CloudHost(sql.FieldGTE(FieldSubnetId, v))
 }
 
-// SubnetIdLT applies the LT predicate on the "SubnetId" field.
+// SubnetIdLT applies the LT predicate on the "subnetId" field.
 func SubnetIdLT(v string) predicate.CloudHost {
 	return predicate.CloudHost(sql.FieldLT(FieldSubnetId, v))
 }
 
-// SubnetIdLTE applies the LTE predicate on the "SubnetId" field.
+// SubnetIdLTE applies the LTE predicate on the "subnetId" field.
 func SubnetIdLTE(v string) predicate.CloudHost {
 	return predicate.CloudHost(sql.FieldLTE(FieldSubnetId, v))
 }
 
-// SubnetIdContains applies the Contains predicate on the "SubnetId" field.
+// SubnetIdContains applies the Contains predicate on the "subnetId" field.
 func SubnetIdContains(v string) predicate.CloudHost {
 	return predicate.CloudHost(sql.FieldContains(FieldSubnetId, v))
 }
 
-// SubnetIdHasPrefix applies the HasPrefix predicate on the "SubnetId" field.
+// SubnetIdHasPrefix applies the HasPrefix predicate on the "subnetId" field.
 func SubnetIdHasPrefix(v string) predicate.CloudHost {
 	return predicate.CloudHost(sql.FieldHasPrefix(FieldSubnetId, v))
 }
 
-// SubnetIdHasSuffix applies the HasSuffix predicate on the "SubnetId" field.
+// SubnetIdHasSuffix applies the HasSuffix predicate on the "subnetId" field.
 func SubnetIdHasSuffix(v string) predicate.CloudHost {
 	return predicate.CloudHost(sql.FieldHasSuffix(FieldSubnetId, v))
 }
 
-// SubnetIdEqualFold applies the EqualFold predicate on the "SubnetId" field.
+// SubnetIdEqualFold applies the EqualFold predicate on the "subnetId" field.
 func SubnetIdEqualFold(v string) predicate.CloudHost {
 	return predicate.CloudHost(sql.FieldEqualFold(FieldSubnetId, v))
 }
 
-// SubnetIdContainsFold applies the ContainsFold predicate on the "SubnetId" field.
+// SubnetIdContainsFold applies the ContainsFold predicate on the "subnetId" field.
 func SubnetIdContainsFold(v string) predicate.CloudHost {
 	return predicate.CloudHost(sql.FieldContainsFold(FieldSubnetId, v))
 }

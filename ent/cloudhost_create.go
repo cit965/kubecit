@@ -31,7 +31,7 @@ func (chc *CloudHostCreate) SetVpcId(s string) *CloudHostCreate {
 	return chc
 }
 
-// SetSubnetId sets the "SubnetId" field.
+// SetSubnetId sets the "subnetId" field.
 func (chc *CloudHostCreate) SetSubnetId(s string) *CloudHostCreate {
 	chc.mutation.SetSubnetId(s)
 	return chc
@@ -142,7 +142,7 @@ func (chc *CloudHostCreate) check() error {
 		}
 	}
 	if _, ok := chc.mutation.SubnetId(); !ok {
-		return &ValidationError{Name: "SubnetId", err: errors.New(`ent: missing required field "CloudHost.SubnetId"`)}
+		return &ValidationError{Name: "subnetId", err: errors.New(`ent: missing required field "CloudHost.subnetId"`)}
 	}
 	if _, ok := chc.mutation.InstanceName(); !ok {
 		return &ValidationError{Name: "instanceName", err: errors.New(`ent: missing required field "CloudHost.instanceName"`)}
