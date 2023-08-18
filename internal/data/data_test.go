@@ -20,6 +20,7 @@ var cleaner func()
 
 var _ = Describe("Data", func() {
 	var ro biz.UserRepo
+	var co biz.ClusterRepo
 	BeforeEach(func() {
 		dockerEndpoint := os.Getenv("DOCKER_HOST")
 		pool, err := dockertest.NewPool(dockerEndpoint)
@@ -60,6 +61,7 @@ var _ = Describe("Data", func() {
 		}
 
 		ro = data.NewUserRepo(d, nil)
+		co = data.NewClusterRepo(d, nil)
 		// You can't defer this because os.Exit doesn't care for defer
 		cleaner = func() {
 			if err := pool.Purge(resource); err != nil {
@@ -85,6 +87,36 @@ var _ = Describe("Data", func() {
 				err = ro.Delete(ctx, userList[0].Id)
 				Expect(err).To(BeNil())
 				userList2, err := ro.List(ctx)
+				Expect(len(userList2)).To(Equal(0))
+			})
+		})
+	})
+
+	Describe("Test cluster", func() {
+		Context("register,update,list,delete", func() {
+			It("should be successful", func() {
+				ctx := context.Background()
+				log.Println("test register cluster")
+				cluster, _ := co.Register(ctx, &biz.Cluster{
+					Id:         1,
+					Kubeconfig: "kubeconfig",
+				})
+				Expect(cluster.Kubeconfig).To(Equal("kubeconfig"))
+				log.Println("test get cluster")
+				c, _ := co.Get(ctx, cluster.Id)
+				Expect(c.Kubeconfig).To(Equal(cluster.Kubeconfig))
+				log.Println("test update cluster")
+				cluster.Kubeconfig = "kubeconfig2"
+				cluster2, err := co.Update(ctx, cluster)
+				Expect(cluster2).To(Equal(cluster))
+				log.Println("test list cluster")
+				clusterList, err := co.List(ctx)
+				Expect(err).To(BeNil())
+				Expect(len(clusterList)).To(Equal(1))
+				log.Println("test delete cluster")
+				err = co.Delete(ctx, clusterList[0].Id)
+				Expect(err).To(BeNil())
+				userList2, err := co.List(ctx)
 				Expect(len(userList2)).To(Equal(0))
 			})
 		})

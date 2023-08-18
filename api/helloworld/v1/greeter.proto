@@ -51,12 +51,40 @@ service Greeter {
     };
   }
 
+  // Register a cluster
+  rpc ClusterRegister (ClusterKubeconfig) returns (ClusterBase) {
+    option (google.api.http) = {
+      post: "/cluster"
+      body: "*"
+    };
+  }
+
+  // Delete a cluster
+  rpc ClusterDelete (ClusterBase) returns (Empty) {
+    option (google.api.http) = {
+      delete: "/cluster/{id}"
+    };
+  }
+
+  // Get a cluster
+  rpc ClusterGet (ClusterBase) returns (ClusterBase) {
+    option (google.api.http) = {
+      get: "/cluster/{id}"
+    };
+  }
+
+  // Update a cluster
+  rpc ClusterUpdate (ClusterBase) returns (ClusterBase) {
+    option (google.api.http) = {
+      put: "/cluster/{id}"
+      body: "*"
+    };
+  }
+
 }
 
 
-message Empty {
-
-}
+message Empty {}
 
 message User {
   string username = 1;
@@ -100,18 +128,25 @@ message HelloReply {
   string message = 1;
 }
 
-
 message NamespaceReq{
   int32 cluster = 1;
 }
-
 
 message DeploymentReq{
   int32 cluster = 1;
   string namespace = 2;
 }
 
-
 message DeploymentResp {
   repeated string deployments =1;
 }
+
+message ClusterBase {
+  int64 id = 1;
+  string kubeconfig = 2;
+}
+
+message ClusterKubeconfig{
+  string kubeconfig = 1;
+}
+
