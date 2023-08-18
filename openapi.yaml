@@ -110,6 +110,114 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/helloworld.v1.ClusterListResponse'
+    /cmdb/SyncFromTencent:
+        post:
+            tags:
+                - Greeter
+            operationId: Greeter_SyncFromTencent
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/helloworld.v1.SyncFromTencentRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/helloworld.v1.SyncFromTencentReply'
+    /cmdb/createInstance:
+        post:
+            tags:
+                - Greeter
+            operationId: Greeter_CreateInstance
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/helloworld.v1.CreateInstanceRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/helloworld.v1.CreateInstanceReply'
+    /cmdb/deleteInstance/{InstanceId}:
+        delete:
+            tags:
+                - Greeter
+            operationId: Greeter_DeleteInstanceById
+            parameters:
+                - name: InstanceId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/helloworld.v1.DeleteInstanceReply'
+    /cmdb/getInstance/{InstanceId}:
+        get:
+            tags:
+                - Greeter
+            operationId: Greeter_GetInstance
+            parameters:
+                - name: InstanceId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/helloworld.v1.GetInstanceReply'
+    /cmdb/listInstances:
+        get:
+            tags:
+                - Greeter
+            operationId: Greeter_ListInstances
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/helloworld.v1.ListInstancesReply'
+    /cmdb/updateInstance/{InstanceId}:
+        put:
+            tags:
+                - Greeter
+            operationId: Greeter_UpdateInstance
+            parameters:
+                - name: InstanceId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/helloworld.v1.UpdateInstanceRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/helloworld.v1.UpdateInstanceReply'
     /deployments/{cluster}/{namespace}:
         get:
             tags:
@@ -233,6 +341,21 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/helloworld.v1.Cluster'
+        helloworld.v1.CreateInstanceReply:
+            type: object
+            properties:
+                Instance:
+                    $ref: '#/components/schemas/helloworld.v1.Host'
+        helloworld.v1.CreateInstanceRequest:
+            type: object
+            properties:
+                Instance:
+                    $ref: '#/components/schemas/helloworld.v1.Host'
+        helloworld.v1.DeleteInstanceReply:
+            type: object
+            properties:
+                Message:
+                    type: string
         helloworld.v1.DeploymentResp:
             type: object
             properties:
@@ -243,12 +366,59 @@ components:
         helloworld.v1.Empty:
             type: object
             properties: {}
+        helloworld.v1.GetInstanceReply:
+            type: object
+            properties:
+                Instance:
+                    $ref: '#/components/schemas/helloworld.v1.Host'
         helloworld.v1.HelloReply:
             type: object
             properties:
                 message:
                     type: string
             description: The response message containing the greetings
+        helloworld.v1.Host:
+            type: object
+            properties:
+                VpcId:
+                    type: string
+                SubnetId:
+                    type: string
+                InstanceId:
+                    type: string
+                InstanceName:
+                    type: string
+                InstanceState:
+                    type: string
+                CPU:
+                    type: integer
+                    format: int64
+                Memory:
+                    type: integer
+                    format: int64
+                CreatedTime:
+                    type: string
+                InstanceType:
+                    type: string
+                EniLimit:
+                    type: integer
+                    format: int64
+                EnilpLimit:
+                    type: integer
+                    format: int64
+                InstanceEniCount:
+                    type: integer
+                    format: int64
+        helloworld.v1.ListInstancesReply:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    format: int64
+                Instances:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/helloworld.v1.Host'
         helloworld.v1.NamespaceResp:
             type: object
             properties:
@@ -256,6 +426,39 @@ components:
                     type: array
                     items:
                         type: string
+        helloworld.v1.SyncFromTencentReply:
+            type: object
+            properties:
+                message:
+                    type: string
+                total:
+                    type: integer
+                    format: int64
+        helloworld.v1.SyncFromTencentRequest:
+            type: object
+            properties:
+                accessKey:
+                    type: string
+                secretKey:
+                    type: string
+                region:
+                    type: string
+                vpcId:
+                    type: string
+        helloworld.v1.UpdateInstanceReply:
+            type: object
+            properties:
+                Instance:
+                    $ref: '#/components/schemas/helloworld.v1.Host'
+                Message:
+                    type: string
+        helloworld.v1.UpdateInstanceRequest:
+            type: object
+            properties:
+                InstanceId:
+                    type: string
+                Instance:
+                    $ref: '#/components/schemas/helloworld.v1.Host'
         helloworld.v1.User:
             type: object
             properties:

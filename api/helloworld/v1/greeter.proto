@@ -45,6 +45,39 @@ service Greeter {
     };
   }
 
+  rpc GetInstance(GetInstanceRequest) returns (GetInstanceReply) {
+    option (google.api.http) = {
+      get: "/cmdb/getInstance/{InstanceId}",
+    };
+  };
+  rpc CreateInstance(CreateInstanceRequest) returns (CreateInstanceReply) {
+    option (google.api.http) = {
+      post: "/cmdb/createInstance",
+      body: "*",
+    };
+  };
+  rpc ListInstances(ListInstancesRequest) returns (ListInstancesReply){
+    option (google.api.http) = {
+      get: "/cmdb/listInstances",
+    };
+  };
+  rpc DeleteInstanceById(DeleteInstanceRequest) returns (DeleteInstanceReply){
+    option (google.api.http) = {
+      delete: "/cmdb/deleteInstance/{InstanceId}",
+    };
+  };
+  rpc UpdateInstance(UpdateInstanceRequest) returns (UpdateInstanceReply){
+    option (google.api.http) = {
+      put: "/cmdb/updateInstance/{InstanceId}",
+      body: "*",
+    };
+  };
+  rpc SyncFromTencent(SyncFromTencentRequest) returns (SyncFromTencentReply) {
+    option (google.api.http) = {
+      post: "/cmdb/SyncFromTencent",
+      body: "*",
+    };
+  };
   rpc DeploymentList (DeploymentReq) returns (DeploymentResp) {
     option (google.api.http) = {
       get: "/deployments/{cluster}/{namespace}"
@@ -128,6 +161,74 @@ message HelloReply {
   string message = 1;
 }
 
+message Host {
+  string VpcId = 1;
+  string SubnetId = 2;
+  string InstanceId = 3;
+  string InstanceName = 4;
+  string InstanceState = 5;
+  int64 CPU = 6;
+  int64 Memory = 7;
+  string CreatedTime = 8;
+  string InstanceType = 9;
+  int64 EniLimit = 10;
+  int64 EnilpLimit = 11;
+  int64 InstanceEniCount = 12;
+}
+
+message SyncFromTencentRequest{
+  string accessKey = 1;
+  string secretKey = 2;
+  string region = 3;
+  string vpcId = 4;
+}
+
+message SyncFromTencentReply {
+  string message = 1;
+  int64 total = 2;
+}
+
+message GetInstanceRequest {
+  string InstanceId = 1;
+}
+
+message GetInstanceReply {
+  Host Instance = 1;
+}
+
+message CreateInstanceRequest {
+  Host Instance = 1;
+}
+
+message CreateInstanceReply {
+  Host Instance = 1;
+}
+
+message ListInstancesRequest {}
+
+message ListInstancesReply {
+  int64 total = 1;
+  repeated Host Instances = 2;
+}
+
+message UpdateInstanceRequest {
+  string InstanceId = 1;
+  Host Instance = 2;
+}
+
+message UpdateInstanceReply {
+  Host Instance = 1;
+  string Message = 2;
+}
+
+message DeleteInstanceRequest {
+  string InstanceId = 1;
+}
+
+message DeleteInstanceReply {
+  string Message = 1;
+}
+
 message NamespaceReq{
   int32 cluster = 1;
 }
@@ -149,4 +250,3 @@ message ClusterBase {
 message ClusterKubeconfig{
   string kubeconfig = 1;
 }
-
