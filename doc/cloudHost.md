@@ -10,10 +10,10 @@
 ```azure
 /cmdb/instance/{instanceId}                              GET
 /cmdb/instance                                           POST
-/cmdb/instance                                           GET
+/cmdb/instances                                          GET
 /cmdb/instance/{instanceId}                              DELETE
 /cmdb/instance/{instanceId}                              PUT
-/cmdb/sync-from-tencent                                  POST
+/cmdb/sync/tencent                                       POST
 ```
 
 

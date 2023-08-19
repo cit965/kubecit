@@ -58,7 +58,7 @@ service Greeter {
   };
   rpc ListInstances(ListInstancesRequest) returns (ListInstancesReply){
     option (google.api.http) = {
-      get: "/cmdb/instance",
+      get: "/cmdb/instances",
     };
   };
   rpc DeleteInstanceById(DeleteInstanceRequest) returns (DeleteInstanceReply){
@@ -74,7 +74,7 @@ service Greeter {
   };
   rpc SyncFromTencent(SyncFromTencentRequest) returns (SyncFromTencentReply) {
     option (google.api.http) = {
-      post: "/cmdb/sync-from-tencent",
+      post: "/cmdb/sync/tencent",
       body: "*",
     };
   };
