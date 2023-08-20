@@ -21,6 +21,7 @@ var cleaner func()
 var _ = Describe("Data", func() {
 	var ro biz.UserRepo
 	var co biz.ClusterRepo
+	var ho biz.CloudHostRepo
 	BeforeEach(func() {
 		dockerEndpoint := os.Getenv("DOCKER_HOST")
 		pool, err := dockertest.NewPool(dockerEndpoint)
@@ -62,6 +63,7 @@ var _ = Describe("Data", func() {
 
 		ro = data.NewUserRepo(d, nil)
 		co = data.NewClusterRepo(d, nil)
+		ho = data.NewCloudHostRepo(d, nil)
 		// You can't defer this because os.Exit doesn't care for defer
 		cleaner = func() {
 			if err := pool.Purge(resource); err != nil {
@@ -118,6 +120,111 @@ var _ = Describe("Data", func() {
 				Expect(err).To(BeNil())
 				userList2, err := co.List(ctx)
 				Expect(len(userList2)).To(Equal(0))
+			})
+		})
+	})
+
+	Describe("Test cloudHost", func() {
+		Context("create,get,list,update,delete,sync", func() {
+			It("should be successful", func() {
+				ctx := context.Background()
+				log.Println("test create cloudHost instance")
+				host, _ := ho.Create(ctx, &biz.CloudHost{
+					VpcId:            "vpcId-foo-123",
+					SubnetId:         "subnetId-bar-456",
+					InstanceId:       "instanceId-xxx-xxx",
+					InstanceName:     "test-instanceName",
+					InstanceState:    "RUNNING",
+					CPU:              2,
+					Memory:           4096,
+					CreatedTime:      "2023-08-21 17:22:12",
+					InstanceType:     "small-v2",
+					EniLimit:         10,
+					EnilpLimit:       20,
+					InstanceEniCount: 5,
+				})
+				Expect(host).To(Equal(&biz.CloudHost{
+					VpcId:            "vpcId-foo-123",
+					SubnetId:         "subnetId-bar-456",
+					InstanceId:       "instanceId-xxx-xxx",
+					InstanceName:     "test-instanceName",
+					InstanceState:    "RUNNING",
+					CPU:              2,
+					Memory:           4096,
+					CreatedTime:      "2023-08-21 17:22:12",
+					InstanceType:     "small-v2",
+					EniLimit:         10,
+					EnilpLimit:       20,
+					InstanceEniCount: 5,
+				}))
+				log.Println("test get cloudHost instance")
+				host, _ = ho.Get(ctx, "instanceId-xxx-xxx")
+				Expect(host).To(Equal(&biz.CloudHost{
+					VpcId:            "vpcId-foo-123",
+					SubnetId:         "subnetId-bar-456",
+					InstanceId:       "instanceId-xxx-xxx",
+					InstanceName:     "test-instanceName",
+					InstanceState:    "RUNNING",
+					CPU:              2,
+					Memory:           4096,
+					CreatedTime:      "2023-08-21 17:22:12",
+					InstanceType:     "small-v2",
+					EniLimit:         10,
+					EnilpLimit:       20,
+					InstanceEniCount: 5,
+				}))
+				log.Println("test update cloudHost instance")
+				host, _ = ho.Update(ctx, "instanceId-xxx-xxx", &biz.CloudHost{
+					CPU: 4,
+				})
+				Expect(host).To(Equal(&biz.CloudHost{
+					VpcId:            "vpcId-foo-123",
+					SubnetId:         "subnetId-bar-456",
+					InstanceId:       "instanceId-xxx-xxx",
+					InstanceName:     "test-instanceName",
+					InstanceState:    "RUNNING",
+					CPU:              4,
+					Memory:           4096,
+					CreatedTime:      "2023-08-21 17:22:12",
+					InstanceType:     "small-v2",
+					EniLimit:         10,
+					EnilpLimit:       20,
+					InstanceEniCount: 5,
+				}))
+
+				log.Println("test list cloudHost instances")
+				hosts, _ := ho.List(ctx)
+				Expect(hosts[0]).To(Equal(&biz.CloudHost{
+					VpcId:            "vpcId-foo-123",
+					SubnetId:         "subnetId-bar-456",
+					InstanceId:       "instanceId-xxx-xxx",
+					InstanceName:     "test-instanceName",
+					InstanceState:    "RUNNING",
+					CPU:              4,
+					Memory:           4096,
+					CreatedTime:      "2023-08-21 17:22:12",
+					InstanceType:     "small-v2",
+					EniLimit:         10,
+					EnilpLimit:       20,
+					InstanceEniCount: 5,
+				}))
+
+				log.Println("test delete cloudHost instances")
+				host, _ = ho.Delete(ctx, "instanceId-xxx-xxx")
+				Expect(host).To(Equal(&biz.CloudHost{
+					VpcId:            "vpcId-foo-123",
+					SubnetId:         "subnetId-bar-456",
+					InstanceId:       "instanceId-xxx-xxx",
+					InstanceName:     "test-instanceName",
+					InstanceState:    "RUNNING",
+					CPU:              4,
+					Memory:           4096,
+					CreatedTime:      "2023-08-21 17:22:12",
+					InstanceType:     "small-v2",
+					EniLimit:         10,
+					EnilpLimit:       20,
+					InstanceEniCount: 5,
+				}))
 			})
 		})
 	})
