@@ -3,6 +3,7 @@
 package ent
 
 import (
+	"kubecit/ent/cloudhost"
 	"kubecit/ent/cluster"
 	"kubecit/ent/schema"
 	"kubecit/ent/user"
@@ -12,6 +13,16 @@ import (
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
+	cloudhostFields := schema.CloudHost{}.Fields()
+	_ = cloudhostFields
+	// cloudhostDescInstanceId is the schema descriptor for instanceId field.
+	cloudhostDescInstanceId := cloudhostFields[0].Descriptor()
+	// cloudhost.InstanceIdValidator is a validator for the "instanceId" field. It is called by the builders before save.
+	cloudhost.InstanceIdValidator = cloudhostDescInstanceId.Validators[0].(func(string) error)
+	// cloudhostDescVpcId is the schema descriptor for vpcId field.
+	cloudhostDescVpcId := cloudhostFields[1].Descriptor()
+	// cloudhost.VpcIdValidator is a validator for the "vpcId" field. It is called by the builders before save.
+	cloudhost.VpcIdValidator = cloudhostDescVpcId.Validators[0].(func(string) error)
 	clusterFields := schema.Cluster{}.Fields()
 	_ = clusterFields
 	// clusterDescKubeconfig is the schema descriptor for kubeconfig field.

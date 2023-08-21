@@ -6,20 +6,22 @@ import (
 
 	v1 "kubecit/api/helloworld/v1"
 	"kubecit/internal/biz"
+	"kubecit/internal/data"
 )
 
 // GreeterService is a greeter service.
 type GreeterService struct {
 	v1.UnimplementedGreeterServer
 
-	uc          *biz.GreeterUsecase
-	userCase    *biz.UserUsecase
-	clusterCase *biz.ClusterUsecase
+	uc            *biz.GreeterUsecase
+	userCase      *biz.UserUsecase
+	clusterCase   *biz.ClusterUsecase
+	cloudHostCase *biz.CloudHostUsecase
 }
 
 // NewGreeterService new a greeter service.
-func NewGreeterService(uc *biz.GreeterUsecase, userCase *biz.UserUsecase, clusterCase *biz.ClusterUsecase) *GreeterService {
-	return &GreeterService{uc: uc, userCase: userCase, clusterCase: clusterCase}
+func NewGreeterService(uc *biz.GreeterUsecase, userCase *biz.UserUsecase, clusterCase *biz.ClusterUsecase, cloudHostCase *biz.CloudHostUsecase) *GreeterService {
+	return &GreeterService{uc: uc, userCase: userCase, clusterCase: clusterCase, cloudHostCase: cloudHostCase}
 }
 
 // SayHello implements helloworld.GreeterServer.
@@ -137,4 +139,107 @@ func (s *GreeterService) ClusterDelete(ctx context.Context, in *v1.ClusterBase) 
 		return nil, err
 	}
 	return &v1.Empty{}, nil
+}
+func (s *GreeterService) GetInstance(ctx context.Context, in *v1.GetInstanceRequest) (*v1.GetInstanceReply, error) {
+	cloudHost, err := s.cloudHostCase.Get(ctx, in.InstanceId)
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	host := &v1.Host{}
+	err = data.ConvertType(cloudHost, host)
+	if err != nil {
+		return nil, err
+	}
+	res := &v1.GetInstanceReply{
+		Instance: host,
+	}
+	return res, nil
+}
+
+func (s *GreeterService) CreateInstance(ctx context.Context, in *v1.CreateInstanceRequest) (*v1.CreateInstanceReply, error) {
+	host := &biz.CloudHost{
+		VpcId:            in.Instance.VpcId,
+		SubnetId:         in.Instance.SubnetId,
+		InstanceId:       in.Instance.InstanceId,
+		InstanceName:     in.Instance.InstanceName,
+		InstanceState:    in.Instance.InstanceState,
+		CPU:              in.Instance.Cpu,
+		Memory:           in.Instance.Memory,
+		CreatedTime:      in.Instance.CreatedTime,
+		InstanceType:     in.Instance.InstanceType,
+		EniLimit:         in.Instance.EniLimit,
+		EnilpLimit:       in.Instance.EnilpLimit,
+		InstanceEniCount: in.Instance.InstanceEniCount,
+	}
+
+	_, err := s.cloudHostCase.Create(ctx, host)
+	if err != nil {
+		return nil, err
+	}
+	res := &v1.CreateInstanceReply{
+		Instance: in.Instance,
+	}
+
+	return res, err
+}
+func (s *GreeterService) ListInstances(ctx context.Context, in *v1.ListInstancesRequest) (*v1.ListInstancesReply, error) {
+	cloudHosts, err := s.cloudHostCase.List(ctx)
+	if err != nil {
+		return nil, err
+	}
+	res := &v1.ListInstancesReply{Total: int64(len(cloudHosts))}
+	for _, v := range cloudHosts {
+		instance := &v1.Host{}
+		err := data.ConvertType(v, instance)
+		if err != nil {
+			return nil, err
+		}
+		res.Instances = append(res.Instances, instance)
+	}
+	return res, nil
+}
+
+// TODO
+func (s *GreeterService) DeleteInstanceById(ctx context.Context, in *v1.DeleteInstanceRequest) (*v1.DeleteInstanceReply, error) {
+	cloudHost, err := s.cloudHostCase.Delete(ctx, in.InstanceId)
+	if err != nil {
+		return nil, err
+	}
+	res := &v1.DeleteInstanceReply{
+		Message: fmt.Sprintf("host %v delete success.", cloudHost.InstanceId),
+	}
+	return res, nil
+}
+
+// TODO
+func (s *GreeterService) UpdateInstance(ctx context.Context, in *v1.UpdateInstanceRequest) (*v1.UpdateInstanceReply, error) {
+	var host biz.CloudHost
+	err := data.ConvertType(in.Instance, &host)
+	if err != nil {
+		return nil, err
+	}
+	res := &v1.UpdateInstanceReply{}
+	instance, err := s.cloudHostCase.Update(ctx, in.InstanceId, &host)
+	if err != nil {
+		return nil, err
+	}
+
+	updatedHost := &v1.Host{}
+	err = data.ConvertType(instance, updatedHost)
+	if err != nil {
+		return nil, err
+	}
+	res.Message = "update instance success"
+	res.Instance = updatedHost
+	return res, nil
+}
+
+func (s *GreeterService) SyncFromTencent(ctx context.Context, in *v1.SyncFromTencentRequest) (*v1.SyncFromTencentReply, error) {
+	ok, total, err := s.cloudHostCase.Syncer(ctx, in.AccessKey, in.SecretKey, in.Region, in.VpcId)
+	if !ok || err != nil {
+		return nil, err
+	}
+	return &v1.SyncFromTencentReply{Message: "sync finished", Total: total}, nil
+
 }
