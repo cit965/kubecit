@@ -28,6 +28,7 @@ type CloudHost struct {
 	InstanceEniCount int64
 }
 
+//go:generate mockgen -destination=../mocks/mrepo/host.go -package=mrepo . CloudHostRepo
 type CloudHostRepo interface {
 	Get(ctx context.Context, id string) (*CloudHost, error)
 	Create(ctx context.Context, host *CloudHost) (*CloudHost, error)

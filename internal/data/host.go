@@ -37,7 +37,6 @@ func (c *cloudHostRepo) Get(ctx context.Context, id string) (*biz.CloudHost, err
 
 // Create
 func (c *cloudHostRepo) Create(ctx context.Context, host *biz.CloudHost) (*biz.CloudHost, error) {
-	fmt.Printf("%#v\n", host)
 	h, err := c.data.db.CloudHost.Create().SetVpcId(host.VpcId).SetSubnetId(host.SubnetId).SetInstanceState(host.InstanceState).
 		SetInstanceId(host.InstanceId).SetInstanceName(host.InstanceName).SetCPU(host.CPU).
 		SetMemory(host.Memory).SetCreatedTime(host.CreatedTime).SetInstanceType(host.InstanceType).
