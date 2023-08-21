@@ -19,22 +19,22 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Greeter_SayHello_FullMethodName           = "/helloworld.v1.Greeter/SayHello"
-	Greeter_UserRegister_FullMethodName       = "/helloworld.v1.Greeter/UserRegister"
-	Greeter_UserList_FullMethodName           = "/helloworld.v1.Greeter/UserList"
-	Greeter_ClusterList_FullMethodName        = "/helloworld.v1.Greeter/ClusterList"
-	Greeter_NamespaceList_FullMethodName      = "/helloworld.v1.Greeter/NamespaceList"
-	Greeter_GetInstance_FullMethodName        = "/helloworld.v1.Greeter/GetInstance"
-	Greeter_CreateInstance_FullMethodName     = "/helloworld.v1.Greeter/CreateInstance"
-	Greeter_ListInstances_FullMethodName      = "/helloworld.v1.Greeter/ListInstances"
-	Greeter_DeleteInstanceById_FullMethodName = "/helloworld.v1.Greeter/DeleteInstanceById"
-	Greeter_UpdateInstance_FullMethodName     = "/helloworld.v1.Greeter/UpdateInstance"
-	Greeter_SyncFromTencent_FullMethodName    = "/helloworld.v1.Greeter/SyncFromTencent"
-	Greeter_DeploymentList_FullMethodName     = "/helloworld.v1.Greeter/DeploymentList"
-	Greeter_ClusterRegister_FullMethodName    = "/helloworld.v1.Greeter/ClusterRegister"
-	Greeter_ClusterDelete_FullMethodName      = "/helloworld.v1.Greeter/ClusterDelete"
-	Greeter_ClusterGet_FullMethodName         = "/helloworld.v1.Greeter/ClusterGet"
-	Greeter_ClusterUpdate_FullMethodName      = "/helloworld.v1.Greeter/ClusterUpdate"
+	Greeter_SayHello_FullMethodName              = "/helloworld.v1.Greeter/SayHello"
+	Greeter_UserRegister_FullMethodName          = "/helloworld.v1.Greeter/UserRegister"
+	Greeter_UserList_FullMethodName              = "/helloworld.v1.Greeter/UserList"
+	Greeter_ClusterList_FullMethodName           = "/helloworld.v1.Greeter/ClusterList"
+	Greeter_NamespaceList_FullMethodName         = "/helloworld.v1.Greeter/NamespaceList"
+	Greeter_GetInstance_FullMethodName           = "/helloworld.v1.Greeter/GetInstance"
+	Greeter_CreateInstance_FullMethodName        = "/helloworld.v1.Greeter/CreateInstance"
+	Greeter_ListInstances_FullMethodName         = "/helloworld.v1.Greeter/ListInstances"
+	Greeter_DeleteInstanceById_FullMethodName    = "/helloworld.v1.Greeter/DeleteInstanceById"
+	Greeter_UpdateInstance_FullMethodName        = "/helloworld.v1.Greeter/UpdateInstance"
+	Greeter_SyncFromCloudProvider_FullMethodName = "/helloworld.v1.Greeter/SyncFromCloudProvider"
+	Greeter_DeploymentList_FullMethodName        = "/helloworld.v1.Greeter/DeploymentList"
+	Greeter_ClusterRegister_FullMethodName       = "/helloworld.v1.Greeter/ClusterRegister"
+	Greeter_ClusterDelete_FullMethodName         = "/helloworld.v1.Greeter/ClusterDelete"
+	Greeter_ClusterGet_FullMethodName            = "/helloworld.v1.Greeter/ClusterGet"
+	Greeter_ClusterUpdate_FullMethodName         = "/helloworld.v1.Greeter/ClusterUpdate"
 )
 
 // GreeterClient is the client API for Greeter service.
@@ -53,7 +53,7 @@ type GreeterClient interface {
 	ListInstances(ctx context.Context, in *ListInstancesRequest, opts ...grpc.CallOption) (*ListInstancesReply, error)
 	DeleteInstanceById(ctx context.Context, in *DeleteInstanceRequest, opts ...grpc.CallOption) (*DeleteInstanceReply, error)
 	UpdateInstance(ctx context.Context, in *UpdateInstanceRequest, opts ...grpc.CallOption) (*UpdateInstanceReply, error)
-	SyncFromTencent(ctx context.Context, in *SyncFromTencentRequest, opts ...grpc.CallOption) (*SyncFromTencentReply, error)
+	SyncFromCloudProvider(ctx context.Context, in *SyncFromCloudProviderRequest, opts ...grpc.CallOption) (*SyncFromCloudProviderReply, error)
 	DeploymentList(ctx context.Context, in *DeploymentReq, opts ...grpc.CallOption) (*DeploymentResp, error)
 	// Register a cluster
 	ClusterRegister(ctx context.Context, in *ClusterKubeconfig, opts ...grpc.CallOption) (*ClusterBase, error)
@@ -163,9 +163,9 @@ func (c *greeterClient) UpdateInstance(ctx context.Context, in *UpdateInstanceRe
 	return out, nil
 }
 
-func (c *greeterClient) SyncFromTencent(ctx context.Context, in *SyncFromTencentRequest, opts ...grpc.CallOption) (*SyncFromTencentReply, error) {
-	out := new(SyncFromTencentReply)
-	err := c.cc.Invoke(ctx, Greeter_SyncFromTencent_FullMethodName, in, out, opts...)
+func (c *greeterClient) SyncFromCloudProvider(ctx context.Context, in *SyncFromCloudProviderRequest, opts ...grpc.CallOption) (*SyncFromCloudProviderReply, error) {
+	out := new(SyncFromCloudProviderReply)
+	err := c.cc.Invoke(ctx, Greeter_SyncFromCloudProvider_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -233,7 +233,7 @@ type GreeterServer interface {
 	ListInstances(context.Context, *ListInstancesRequest) (*ListInstancesReply, error)
 	DeleteInstanceById(context.Context, *DeleteInstanceRequest) (*DeleteInstanceReply, error)
 	UpdateInstance(context.Context, *UpdateInstanceRequest) (*UpdateInstanceReply, error)
-	SyncFromTencent(context.Context, *SyncFromTencentRequest) (*SyncFromTencentReply, error)
+	SyncFromCloudProvider(context.Context, *SyncFromCloudProviderRequest) (*SyncFromCloudProviderReply, error)
 	DeploymentList(context.Context, *DeploymentReq) (*DeploymentResp, error)
 	// Register a cluster
 	ClusterRegister(context.Context, *ClusterKubeconfig) (*ClusterBase, error)
@@ -280,8 +280,8 @@ func (UnimplementedGreeterServer) DeleteInstanceById(context.Context, *DeleteIns
 func (UnimplementedGreeterServer) UpdateInstance(context.Context, *UpdateInstanceRequest) (*UpdateInstanceReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateInstance not implemented")
 }
-func (UnimplementedGreeterServer) SyncFromTencent(context.Context, *SyncFromTencentRequest) (*SyncFromTencentReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SyncFromTencent not implemented")
+func (UnimplementedGreeterServer) SyncFromCloudProvider(context.Context, *SyncFromCloudProviderRequest) (*SyncFromCloudProviderReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SyncFromCloudProvider not implemented")
 }
 func (UnimplementedGreeterServer) DeploymentList(context.Context, *DeploymentReq) (*DeploymentResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeploymentList not implemented")
@@ -491,20 +491,20 @@ func _Greeter_UpdateInstance_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Greeter_SyncFromTencent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SyncFromTencentRequest)
+func _Greeter_SyncFromCloudProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SyncFromCloudProviderRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GreeterServer).SyncFromTencent(ctx, in)
+		return srv.(GreeterServer).SyncFromCloudProvider(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Greeter_SyncFromTencent_FullMethodName,
+		FullMethod: Greeter_SyncFromCloudProvider_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GreeterServer).SyncFromTencent(ctx, req.(*SyncFromTencentRequest))
+		return srv.(GreeterServer).SyncFromCloudProvider(ctx, req.(*SyncFromCloudProviderRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -647,8 +647,8 @@ var Greeter_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Greeter_UpdateInstance_Handler,
 		},
 		{
-			MethodName: "SyncFromTencent",
-			Handler:    _Greeter_SyncFromTencent_Handler,
+			MethodName: "SyncFromCloudProvider",
+			Handler:    _Greeter_SyncFromCloudProvider_Handler,
 		},
 		{
 			MethodName: "DeploymentList",

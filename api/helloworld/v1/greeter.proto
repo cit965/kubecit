@@ -72,9 +72,9 @@ service Greeter {
       body: "*",
     };
   };
-  rpc SyncFromTencent(SyncFromTencentRequest) returns (SyncFromTencentReply) {
+  rpc SyncFromCloudProvider(SyncFromCloudProviderRequest) returns (SyncFromCloudProviderReply) {
     option (google.api.http) = {
-      post: "/cmdb/sync/tencent",
+      post: "/cmdb/sync/{cloudProvider}",
       body: "*",
     };
   };
@@ -176,14 +176,15 @@ message Host {
   int64 instanceEniCount = 12;
 }
 
-message SyncFromTencentRequest{
+message SyncFromCloudProviderRequest {
   string accessKey = 1;
   string secretKey = 2;
   string region = 3;
   string vpcId = 4;
+  string cloudProvider = 5;
 }
 
-message SyncFromTencentReply {
+message SyncFromCloudProviderReply {
   string message = 1;
   int64 total = 2;
 }

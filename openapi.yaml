@@ -198,16 +198,22 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/helloworld.v1.ListInstancesReply'
-    /cmdb/sync/tencent:
+    /cmdb/sync/{cloudProvider}:
         post:
             tags:
                 - Greeter
-            operationId: Greeter_SyncFromTencent
+            operationId: Greeter_SyncFromCloudProvider
+            parameters:
+                - name: cloudProvider
+                  in: path
+                  required: true
+                  schema:
+                    type: string
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/helloworld.v1.SyncFromTencentRequest'
+                            $ref: '#/components/schemas/helloworld.v1.SyncFromCloudProviderRequest'
                 required: true
             responses:
                 "200":
@@ -215,7 +221,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/helloworld.v1.SyncFromTencentReply'
+                                $ref: '#/components/schemas/helloworld.v1.SyncFromCloudProviderReply'
     /deployments/{cluster}/{namespace}:
         get:
             tags:
@@ -424,7 +430,7 @@ components:
                     type: array
                     items:
                         type: string
-        helloworld.v1.SyncFromTencentReply:
+        helloworld.v1.SyncFromCloudProviderReply:
             type: object
             properties:
                 message:
@@ -432,7 +438,7 @@ components:
                 total:
                     type: integer
                     format: int64
-        helloworld.v1.SyncFromTencentRequest:
+        helloworld.v1.SyncFromCloudProviderRequest:
             type: object
             properties:
                 accessKey:
@@ -442,6 +448,8 @@ components:
                 region:
                     type: string
                 vpcId:
+                    type: string
+                cloudProvider:
                     type: string
         helloworld.v1.UpdateInstanceReply:
             type: object
