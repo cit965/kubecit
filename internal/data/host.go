@@ -3,6 +3,10 @@ package data
 import (
 	"context"
 	"fmt"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
+	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	"reflect"
 
 	"github.com/go-kratos/kratos/v2/log"
@@ -179,4 +183,87 @@ func ConvertType(src, dest interface{}) error {
 		}
 	}
 	return nil
+}
+
+type cloudProviderRepo interface {
+	GetClient(ctx context.Context, accessKey, secretKey, region string) error
+	ListInstancesByVpc(ctx context.Context, vpcId string) ([]*biz.CloudHost, error)
+}
+
+func NewCloudProviderRepo(cloudProvider string) (cloudProviderRepo, error) {
+	switch cloudProvider {
+	case "tencent":
+		return &tencentCloudProviderRepo{}, nil
+	case "ali":
+		return &aliCloudProviderRepo{}, nil
+	default:
+		return nil, fmt.Errorf("unkown cloud provider")
+	}
+}
+
+type tencentCloudProviderRepo struct {
+	Client *vpc.Client
+	log    *log.Helper
+}
+
+func (t *tencentCloudProviderRepo) GetClient(ctx context.Context, accessKey, secretKey, region string) error {
+	credential := common.NewCredential(accessKey, secretKey)
+	cpf := profile.NewClientProfile()
+	cpf.HttpProfile.Endpoint = "vpc.tencentcloudapi.com"
+	client, err := vpc.NewClient(credential, region, cpf)
+	if err != nil {
+		return err
+	}
+	t.Client = client
+	return nil
+}
+
+func (t *tencentCloudProviderRepo) ListInstancesByVpc(ctx context.Context, vpcId string) ([]*biz.CloudHost, error) {
+	request := vpc.NewDescribeVpcInstancesRequest()
+	request.Filters = []*vpc.Filter{
+		&vpc.Filter{
+			Name:   common.StringPtr("vpc-id"),
+			Values: common.StringPtrs([]string{vpcId}),
+		},
+	}
+	response, err := t.Client.DescribeVpcInstances(request)
+	if _, ok := err.(*errors.TencentCloudSDKError); ok {
+		fmt.Printf("An API error has returned: %s", err)
+		return nil, err
+	}
+	if err != nil {
+		return nil, err
+	}
+	res := make([]*biz.CloudHost, 0)
+	for _, instance := range response.Response.InstanceSet {
+		cloudHost := &biz.CloudHost{}
+		cloudHost.VpcId = *instance.VpcId
+		cloudHost.SubnetId = *instance.SubnetId
+		cloudHost.InstanceId = *instance.InstanceId
+		cloudHost.InstanceName = *instance.InstanceName
+		cloudHost.InstanceState = *instance.InstanceState
+		cloudHost.CPU = int64(*instance.CPU)
+		cloudHost.Memory = int64(*instance.Memory)
+		cloudHost.CreatedTime = *instance.CreatedTime
+		cloudHost.InstanceType = *instance.InstanceType
+		cloudHost.EniLimit = int64(*instance.EniLimit)
+		cloudHost.EnilpLimit = int64(*instance.EniIpLimit)
+		cloudHost.InstanceEniCount = int64(*instance.InstanceEniCount)
+
+		res = append(res, cloudHost)
+	}
+	return res, nil
+}
+
+type aliCloudProviderRepo struct {
+	Client interface{}
+	log    *log.Helper
+}
+
+func (a *aliCloudProviderRepo) GetClient(ctx context.Context, accessKey, secretKey, region string) error {
+	return fmt.Errorf("not implemented")
+}
+
+func (a *aliCloudProviderRepo) ListInstancesByVpc(ctx context.Context, vpcId string) ([]*biz.CloudHost, error) {
+	return nil, fmt.Errorf("not implemented")
 }

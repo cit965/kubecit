@@ -5,12 +5,6 @@ import (
 	"fmt"
 
 	"github.com/go-kratos/kratos/v2/log"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
-	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
-
-	"kubecit/ent"
 )
 
 type CloudHost struct {
@@ -90,52 +84,28 @@ func (c *CloudHostUsecase) Update(ctx context.Context, id string, host *CloudHos
 	return h, nil
 }
 
-// TODO: implement an interface to adapter multi cloud manufacturer
-func (c *CloudHostUsecase) Syncer(ctx context.Context, accessKey string, secretKey string, region string, vpcId string) (bool, int64, error) {
-	credential := common.NewCredential(accessKey, secretKey)
-	cpf := profile.NewClientProfile()
-	cpf.HttpProfile.Endpoint = "vpc.tencentcloudapi.com"
-	client, _ := vpc.NewClient(credential, region, cpf)
+type CloudProviderRepo interface {
+	GetClient(ctx context.Context, accessKey, secretKey, region string) error
+	ListInstancesByVpc(ctx context.Context, vpcId string) ([]*CloudHost, error)
+}
 
-	request := vpc.NewDescribeVpcInstancesRequest()
-	request.Filters = []*vpc.Filter{
-		&vpc.Filter{
-			Name:   common.StringPtr("vpc-id"),
-			Values: common.StringPtrs([]string{vpcId}),
-		},
+type CloudProviderUsecase struct {
+	repo CloudProviderRepo
+	log  *log.Helper
+}
+
+func NewCloudProviderUsecase(repo CloudProviderRepo, logger log.Logger) *CloudProviderUsecase {
+	return &CloudProviderUsecase{
+		repo: repo,
+		log:  log.NewHelper(logger),
 	}
-	response, err := client.DescribeVpcInstances(request)
-	if _, ok := err.(*errors.TencentCloudSDKError); ok {
-		fmt.Printf("An API error has returned: %s", err)
-		return false, 0, err
-	}
+}
 
-	var count int64
-	for _, instance := range response.Response.InstanceSet {
-		var cloudHost CloudHost
-		cloudHost.VpcId = *instance.VpcId
-		cloudHost.SubnetId = *instance.SubnetId
-		cloudHost.InstanceId = *instance.InstanceId
-		cloudHost.InstanceName = *instance.InstanceName
-		cloudHost.InstanceState = *instance.InstanceState
-		cloudHost.CPU = int64(*instance.CPU)
-		cloudHost.Memory = int64(*instance.Memory)
-		cloudHost.CreatedTime = *instance.CreatedTime
-		cloudHost.InstanceType = *instance.InstanceType
-		cloudHost.EniLimit = int64(*instance.EniLimit)
-		cloudHost.EnilpLimit = int64(*instance.EniIpLimit)
-		cloudHost.InstanceEniCount = int64(*instance.InstanceEniCount)
+func (c *CloudProviderUsecase) GetClient(ctx context.Context, accessKey, secretKey, region string) error {
+	err := c.repo.GetClient(ctx, accessKey, secretKey, region)
+	return err
+}
 
-		_, err := c.Get(ctx, cloudHost.InstanceId)
-		if err != nil && ent.IsNotFound(err) {
-			_, err := c.Create(ctx, &cloudHost)
-			if err != nil {
-				fmt.Println("create host error: ", cloudHost)
-				continue
-			}
-			count++
-		}
-
-	}
-	return true, count, nil
+func (c *CloudProviderUsecase) ListInstancesByVpc(ctx context.Context, vpcId string) ([]*CloudHost, error) {
+	return c.repo.ListInstancesByVpc(ctx, vpcId)
 }

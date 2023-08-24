@@ -13,10 +13,11 @@ import (
 type GreeterService struct {
 	v1.UnimplementedGreeterServer
 
-	uc            *biz.GreeterUsecase
-	userCase      *biz.UserUsecase
-	clusterCase   *biz.ClusterUsecase
-	cloudHostCase *biz.CloudHostUsecase
+	uc                *biz.GreeterUsecase
+	userCase          *biz.UserUsecase
+	clusterCase       *biz.ClusterUsecase
+	cloudHostCase     *biz.CloudHostUsecase
+	cloudProviderCase *biz.CloudProviderUsecase
 }
 
 // NewGreeterService new a greeter service.
@@ -200,7 +201,6 @@ func (s *GreeterService) ListInstances(ctx context.Context, in *v1.ListInstances
 	return res, nil
 }
 
-// TODO
 func (s *GreeterService) DeleteInstanceById(ctx context.Context, in *v1.DeleteInstanceRequest) (*v1.DeleteInstanceReply, error) {
 	cloudHost, err := s.cloudHostCase.Delete(ctx, in.InstanceId)
 	if err != nil {
@@ -212,7 +212,6 @@ func (s *GreeterService) DeleteInstanceById(ctx context.Context, in *v1.DeleteIn
 	return res, nil
 }
 
-// TODO
 func (s *GreeterService) UpdateInstance(ctx context.Context, in *v1.UpdateInstanceRequest) (*v1.UpdateInstanceReply, error) {
 	var host biz.CloudHost
 	err := data.ConvertType(in.Instance, &host)
@@ -235,11 +234,33 @@ func (s *GreeterService) UpdateInstance(ctx context.Context, in *v1.UpdateInstan
 	return res, nil
 }
 
-func (s *GreeterService) SyncFromTencent(ctx context.Context, in *v1.SyncFromTencentRequest) (*v1.SyncFromTencentReply, error) {
-	ok, total, err := s.cloudHostCase.Syncer(ctx, in.AccessKey, in.SecretKey, in.Region, in.VpcId)
-	if !ok || err != nil {
-		return nil, err
+func (s *GreeterService) SyncFromCloudProvider(ctx context.Context, in *v1.SyncFromCloudProviderRequest) (*v1.SyncFromCloudProviderReply, error) {
+	cloudProviderCase, err := data.NewCloudProviderRepo(in.CloudProvider)
+	if err != nil {
+		return &v1.SyncFromCloudProviderReply{
+			Message: fmt.Sprintf("unknown provider"),
+			Total:   0,
+		}, nil
 	}
-	return &v1.SyncFromTencentReply{Message: "sync finished", Total: total}, nil
+	s.cloudProviderCase = biz.NewCloudProviderUsecase(cloudProviderCase, nil)
 
+	if err := s.cloudProviderCase.GetClient(ctx, in.AccessKey, in.SecretKey, in.Region); err != nil {
+		return &v1.SyncFromCloudProviderReply{
+			Message: fmt.Sprintf("sync error: %s", err),
+			Total:   0,
+		}, nil
+	}
+
+	res, err := s.cloudProviderCase.ListInstancesByVpc(ctx, in.VpcId)
+	if err != nil {
+		return &v1.SyncFromCloudProviderReply{
+			Message: fmt.Sprintf("sync error: %s", err),
+			Total:   0,
+		}, nil
+	}
+
+	return &v1.SyncFromCloudProviderReply{
+		Message: fmt.Sprintf("sync success"),
+		Total:   int64(len(res)),
+	}, nil
 }

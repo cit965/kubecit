@@ -31,7 +31,7 @@ const OperationGreeterGetInstance = "/helloworld.v1.Greeter/GetInstance"
 const OperationGreeterListInstances = "/helloworld.v1.Greeter/ListInstances"
 const OperationGreeterNamespaceList = "/helloworld.v1.Greeter/NamespaceList"
 const OperationGreeterSayHello = "/helloworld.v1.Greeter/SayHello"
-const OperationGreeterSyncFromTencent = "/helloworld.v1.Greeter/SyncFromTencent"
+const OperationGreeterSyncFromCloudProvider = "/helloworld.v1.Greeter/SyncFromCloudProvider"
 const OperationGreeterUpdateInstance = "/helloworld.v1.Greeter/UpdateInstance"
 const OperationGreeterUserList = "/helloworld.v1.Greeter/UserList"
 const OperationGreeterUserRegister = "/helloworld.v1.Greeter/UserRegister"
@@ -54,7 +54,7 @@ type GreeterHTTPServer interface {
 	NamespaceList(context.Context, *NamespaceReq) (*NamespaceResp, error)
 	// SayHello Sends a greeting
 	SayHello(context.Context, *HelloRequest) (*HelloReply, error)
-	SyncFromTencent(context.Context, *SyncFromTencentRequest) (*SyncFromTencentReply, error)
+	SyncFromCloudProvider(context.Context, *SyncFromCloudProviderRequest) (*SyncFromCloudProviderReply, error)
 	UpdateInstance(context.Context, *UpdateInstanceRequest) (*UpdateInstanceReply, error)
 	UserList(context.Context, *Empty) (*UserListResponse, error)
 	// UserRegister Register a user
@@ -73,7 +73,7 @@ func RegisterGreeterHTTPServer(s *http.Server, srv GreeterHTTPServer) {
 	r.GET("/cmdb/instances", _Greeter_ListInstances0_HTTP_Handler(srv))
 	r.DELETE("/cmdb/instance/{instanceId}", _Greeter_DeleteInstanceById0_HTTP_Handler(srv))
 	r.PUT("/cmdb/instance/{instanceId}", _Greeter_UpdateInstance0_HTTP_Handler(srv))
-	r.POST("/cmdb/sync/tencent", _Greeter_SyncFromTencent0_HTTP_Handler(srv))
+	r.POST("/cmdb/sync/{cloudProvider}", _Greeter_SyncFromCloudProvider0_HTTP_Handler(srv))
 	r.GET("/deployments/{cluster}/{namespace}", _Greeter_DeploymentList0_HTTP_Handler(srv))
 	r.POST("/cluster", _Greeter_ClusterRegister0_HTTP_Handler(srv))
 	r.DELETE("/cluster/{id}", _Greeter_ClusterDelete0_HTTP_Handler(srv))
@@ -295,24 +295,27 @@ func _Greeter_UpdateInstance0_HTTP_Handler(srv GreeterHTTPServer) func(ctx http.
 	}
 }
 
-func _Greeter_SyncFromTencent0_HTTP_Handler(srv GreeterHTTPServer) func(ctx http.Context) error {
+func _Greeter_SyncFromCloudProvider0_HTTP_Handler(srv GreeterHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in SyncFromTencentRequest
+		var in SyncFromCloudProviderRequest
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationGreeterSyncFromTencent)
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationGreeterSyncFromCloudProvider)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.SyncFromTencent(ctx, req.(*SyncFromTencentRequest))
+			return srv.SyncFromCloudProvider(ctx, req.(*SyncFromCloudProviderRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*SyncFromTencentReply)
+		reply := out.(*SyncFromCloudProviderReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -443,7 +446,7 @@ type GreeterHTTPClient interface {
 	ListInstances(ctx context.Context, req *ListInstancesRequest, opts ...http.CallOption) (rsp *ListInstancesReply, err error)
 	NamespaceList(ctx context.Context, req *NamespaceReq, opts ...http.CallOption) (rsp *NamespaceResp, err error)
 	SayHello(ctx context.Context, req *HelloRequest, opts ...http.CallOption) (rsp *HelloReply, err error)
-	SyncFromTencent(ctx context.Context, req *SyncFromTencentRequest, opts ...http.CallOption) (rsp *SyncFromTencentReply, err error)
+	SyncFromCloudProvider(ctx context.Context, req *SyncFromCloudProviderRequest, opts ...http.CallOption) (rsp *SyncFromCloudProviderReply, err error)
 	UpdateInstance(ctx context.Context, req *UpdateInstanceRequest, opts ...http.CallOption) (rsp *UpdateInstanceReply, err error)
 	UserList(ctx context.Context, req *Empty, opts ...http.CallOption) (rsp *UserListResponse, err error)
 	UserRegister(ctx context.Context, req *UserRegisterRequest, opts ...http.CallOption) (rsp *UserRegisterResponse, err error)
@@ -613,11 +616,11 @@ func (c *GreeterHTTPClientImpl) SayHello(ctx context.Context, in *HelloRequest, 
 	return &out, err
 }
 
-func (c *GreeterHTTPClientImpl) SyncFromTencent(ctx context.Context, in *SyncFromTencentRequest, opts ...http.CallOption) (*SyncFromTencentReply, error) {
-	var out SyncFromTencentReply
-	pattern := "/cmdb/sync/tencent"
+func (c *GreeterHTTPClientImpl) SyncFromCloudProvider(ctx context.Context, in *SyncFromCloudProviderRequest, opts ...http.CallOption) (*SyncFromCloudProviderReply, error) {
+	var out SyncFromCloudProviderReply
+	pattern := "/cmdb/sync/{cloudProvider}"
 	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationGreeterSyncFromTencent))
+	opts = append(opts, http.Operation(OperationGreeterSyncFromCloudProvider))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
