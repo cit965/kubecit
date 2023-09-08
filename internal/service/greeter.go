@@ -259,8 +259,17 @@ func (s *GreeterService) SyncFromCloudProvider(ctx context.Context, in *v1.SyncF
 		}, nil
 	}
 
+	count := 0
+	for _, v := range res {
+		_, err := s.cloudHostCase.Create(ctx, v)
+		if err != nil {
+			fmt.Printf("create instance error: %s\n", err)
+			continue
+		}
+		count++
+	}
 	return &v1.SyncFromCloudProviderReply{
 		Message: fmt.Sprintf("sync success"),
-		Total:   int64(len(res)),
+		Total:   int64(count),
 	}, nil
 }
