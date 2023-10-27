@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"kubecit/ent/cloudhost"
+	"kubecit/ent/cloudprovider"
 	"kubecit/ent/cluster"
 	"kubecit/ent/user"
 	"reflect"
@@ -75,9 +76,10 @@ var (
 func checkColumn(table, column string) error {
 	initCheck.Do(func() {
 		columnCheck = sql.NewColumnCheck(map[string]func(string) bool{
-			cloudhost.Table: cloudhost.ValidColumn,
-			cluster.Table:   cluster.ValidColumn,
-			user.Table:      user.ValidColumn,
+			cloudhost.Table:     cloudhost.ValidColumn,
+			cloudprovider.Table: cloudprovider.ValidColumn,
+			cluster.Table:       cluster.ValidColumn,
+			user.Table:          user.ValidColumn,
 		})
 	})
 	return columnCheck(table, column)

@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"kubecit/ent/cloudhost"
+	"kubecit/ent/cloudprovider"
 	"kubecit/ent/cluster"
 	"kubecit/ent/predicate"
 	"kubecit/ent/user"
@@ -25,9 +26,10 @@ const (
 	OpUpdateOne = ent.OpUpdateOne
 
 	// Node types.
-	TypeCloudHost = "CloudHost"
-	TypeCluster   = "Cluster"
-	TypeUser      = "User"
+	TypeCloudHost     = "CloudHost"
+	TypeCloudProvider = "CloudProvider"
+	TypeCluster       = "Cluster"
+	TypeUser          = "User"
 )
 
 // CloudHostMutation represents an operation that mutates the CloudHost nodes in the graph.
@@ -1116,6 +1118,530 @@ func (m *CloudHostMutation) ClearEdge(name string) error {
 // It returns an error if the edge is not defined in the schema.
 func (m *CloudHostMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown CloudHost edge %s", name)
+}
+
+// CloudProviderMutation represents an operation that mutates the CloudProvider nodes in the graph.
+type CloudProviderMutation struct {
+	config
+	op            Op
+	typ           string
+	id            *int
+	key           *string
+	secret        *string
+	_type         *int64
+	add_type      *int64
+	name          *string
+	clearedFields map[string]struct{}
+	done          bool
+	oldValue      func(context.Context) (*CloudProvider, error)
+	predicates    []predicate.CloudProvider
+}
+
+var _ ent.Mutation = (*CloudProviderMutation)(nil)
+
+// cloudproviderOption allows management of the mutation configuration using functional options.
+type cloudproviderOption func(*CloudProviderMutation)
+
+// newCloudProviderMutation creates new mutation for the CloudProvider entity.
+func newCloudProviderMutation(c config, op Op, opts ...cloudproviderOption) *CloudProviderMutation {
+	m := &CloudProviderMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeCloudProvider,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withCloudProviderID sets the ID field of the mutation.
+func withCloudProviderID(id int) cloudproviderOption {
+	return func(m *CloudProviderMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *CloudProvider
+		)
+		m.oldValue = func(ctx context.Context) (*CloudProvider, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().CloudProvider.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withCloudProvider sets the old CloudProvider of the mutation.
+func withCloudProvider(node *CloudProvider) cloudproviderOption {
+	return func(m *CloudProviderMutation) {
+		m.oldValue = func(context.Context) (*CloudProvider, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m CloudProviderMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m CloudProviderMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *CloudProviderMutation) ID() (id int, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *CloudProviderMutation) IDs(ctx context.Context) ([]int, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []int{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().CloudProvider.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetKey sets the "key" field.
+func (m *CloudProviderMutation) SetKey(s string) {
+	m.key = &s
+}
+
+// Key returns the value of the "key" field in the mutation.
+func (m *CloudProviderMutation) Key() (r string, exists bool) {
+	v := m.key
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldKey returns the old "key" field's value of the CloudProvider entity.
+// If the CloudProvider object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *CloudProviderMutation) OldKey(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldKey is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldKey requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldKey: %w", err)
+	}
+	return oldValue.Key, nil
+}
+
+// ResetKey resets all changes to the "key" field.
+func (m *CloudProviderMutation) ResetKey() {
+	m.key = nil
+}
+
+// SetSecret sets the "secret" field.
+func (m *CloudProviderMutation) SetSecret(s string) {
+	m.secret = &s
+}
+
+// Secret returns the value of the "secret" field in the mutation.
+func (m *CloudProviderMutation) Secret() (r string, exists bool) {
+	v := m.secret
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldSecret returns the old "secret" field's value of the CloudProvider entity.
+// If the CloudProvider object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *CloudProviderMutation) OldSecret(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldSecret is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldSecret requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldSecret: %w", err)
+	}
+	return oldValue.Secret, nil
+}
+
+// ResetSecret resets all changes to the "secret" field.
+func (m *CloudProviderMutation) ResetSecret() {
+	m.secret = nil
+}
+
+// SetType sets the "type" field.
+func (m *CloudProviderMutation) SetType(i int64) {
+	m._type = &i
+	m.add_type = nil
+}
+
+// GetType returns the value of the "type" field in the mutation.
+func (m *CloudProviderMutation) GetType() (r int64, exists bool) {
+	v := m._type
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldType returns the old "type" field's value of the CloudProvider entity.
+// If the CloudProvider object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *CloudProviderMutation) OldType(ctx context.Context) (v int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldType is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldType requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldType: %w", err)
+	}
+	return oldValue.Type, nil
+}
+
+// AddType adds i to the "type" field.
+func (m *CloudProviderMutation) AddType(i int64) {
+	if m.add_type != nil {
+		*m.add_type += i
+	} else {
+		m.add_type = &i
+	}
+}
+
+// AddedType returns the value that was added to the "type" field in this mutation.
+func (m *CloudProviderMutation) AddedType() (r int64, exists bool) {
+	v := m.add_type
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetType resets all changes to the "type" field.
+func (m *CloudProviderMutation) ResetType() {
+	m._type = nil
+	m.add_type = nil
+}
+
+// SetName sets the "name" field.
+func (m *CloudProviderMutation) SetName(s string) {
+	m.name = &s
+}
+
+// Name returns the value of the "name" field in the mutation.
+func (m *CloudProviderMutation) Name() (r string, exists bool) {
+	v := m.name
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldName returns the old "name" field's value of the CloudProvider entity.
+// If the CloudProvider object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *CloudProviderMutation) OldName(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldName is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldName requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldName: %w", err)
+	}
+	return oldValue.Name, nil
+}
+
+// ResetName resets all changes to the "name" field.
+func (m *CloudProviderMutation) ResetName() {
+	m.name = nil
+}
+
+// Where appends a list predicates to the CloudProviderMutation builder.
+func (m *CloudProviderMutation) Where(ps ...predicate.CloudProvider) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// WhereP appends storage-level predicates to the CloudProviderMutation builder. Using this method,
+// users can use type-assertion to append predicates that do not depend on any generated package.
+func (m *CloudProviderMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.CloudProvider, len(ps))
+	for i := range ps {
+		p[i] = ps[i]
+	}
+	m.Where(p...)
+}
+
+// Op returns the operation name.
+func (m *CloudProviderMutation) Op() Op {
+	return m.op
+}
+
+// SetOp allows setting the mutation operation.
+func (m *CloudProviderMutation) SetOp(op Op) {
+	m.op = op
+}
+
+// Type returns the node type of this mutation (CloudProvider).
+func (m *CloudProviderMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *CloudProviderMutation) Fields() []string {
+	fields := make([]string, 0, 4)
+	if m.key != nil {
+		fields = append(fields, cloudprovider.FieldKey)
+	}
+	if m.secret != nil {
+		fields = append(fields, cloudprovider.FieldSecret)
+	}
+	if m._type != nil {
+		fields = append(fields, cloudprovider.FieldType)
+	}
+	if m.name != nil {
+		fields = append(fields, cloudprovider.FieldName)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *CloudProviderMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case cloudprovider.FieldKey:
+		return m.Key()
+	case cloudprovider.FieldSecret:
+		return m.Secret()
+	case cloudprovider.FieldType:
+		return m.GetType()
+	case cloudprovider.FieldName:
+		return m.Name()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *CloudProviderMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case cloudprovider.FieldKey:
+		return m.OldKey(ctx)
+	case cloudprovider.FieldSecret:
+		return m.OldSecret(ctx)
+	case cloudprovider.FieldType:
+		return m.OldType(ctx)
+	case cloudprovider.FieldName:
+		return m.OldName(ctx)
+	}
+	return nil, fmt.Errorf("unknown CloudProvider field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *CloudProviderMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case cloudprovider.FieldKey:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetKey(v)
+		return nil
+	case cloudprovider.FieldSecret:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetSecret(v)
+		return nil
+	case cloudprovider.FieldType:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetType(v)
+		return nil
+	case cloudprovider.FieldName:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetName(v)
+		return nil
+	}
+	return fmt.Errorf("unknown CloudProvider field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *CloudProviderMutation) AddedFields() []string {
+	var fields []string
+	if m.add_type != nil {
+		fields = append(fields, cloudprovider.FieldType)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *CloudProviderMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case cloudprovider.FieldType:
+		return m.AddedType()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *CloudProviderMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case cloudprovider.FieldType:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddType(v)
+		return nil
+	}
+	return fmt.Errorf("unknown CloudProvider numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *CloudProviderMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *CloudProviderMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *CloudProviderMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown CloudProvider nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *CloudProviderMutation) ResetField(name string) error {
+	switch name {
+	case cloudprovider.FieldKey:
+		m.ResetKey()
+		return nil
+	case cloudprovider.FieldSecret:
+		m.ResetSecret()
+		return nil
+	case cloudprovider.FieldType:
+		m.ResetType()
+		return nil
+	case cloudprovider.FieldName:
+		m.ResetName()
+		return nil
+	}
+	return fmt.Errorf("unknown CloudProvider field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *CloudProviderMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *CloudProviderMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *CloudProviderMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *CloudProviderMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *CloudProviderMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *CloudProviderMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *CloudProviderMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown CloudProvider unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *CloudProviderMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown CloudProvider edge %s", name)
 }
 
 // ClusterMutation represents an operation that mutates the Cluster nodes in the graph.

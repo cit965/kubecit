@@ -30,6 +30,20 @@ var (
 		Columns:    CloudHostsColumns,
 		PrimaryKey: []*schema.Column{CloudHostsColumns[0]},
 	}
+	// CloudProvidersColumns holds the columns for the "cloud_providers" table.
+	CloudProvidersColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "key", Type: field.TypeString, Default: "unknown"},
+		{Name: "secret", Type: field.TypeString},
+		{Name: "type", Type: field.TypeInt64},
+		{Name: "name", Type: field.TypeString},
+	}
+	// CloudProvidersTable holds the schema information for the "cloud_providers" table.
+	CloudProvidersTable = &schema.Table{
+		Name:       "cloud_providers",
+		Columns:    CloudProvidersColumns,
+		PrimaryKey: []*schema.Column{CloudProvidersColumns[0]},
+	}
 	// ClustersColumns holds the columns for the "clusters" table.
 	ClustersColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -57,6 +71,7 @@ var (
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		CloudHostsTable,
+		CloudProvidersTable,
 		ClustersTable,
 		UsersTable,
 	}
