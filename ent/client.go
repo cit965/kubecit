@@ -11,6 +11,7 @@ import (
 	"kubecit/ent/migrate"
 
 	"kubecit/ent/cloudhost"
+	"kubecit/ent/cloudprovider"
 	"kubecit/ent/cluster"
 	"kubecit/ent/user"
 
@@ -26,6 +27,8 @@ type Client struct {
 	Schema *migrate.Schema
 	// CloudHost is the client for interacting with the CloudHost builders.
 	CloudHost *CloudHostClient
+	// CloudProvider is the client for interacting with the CloudProvider builders.
+	CloudProvider *CloudProviderClient
 	// Cluster is the client for interacting with the Cluster builders.
 	Cluster *ClusterClient
 	// User is the client for interacting with the User builders.
@@ -44,6 +47,7 @@ func NewClient(opts ...Option) *Client {
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
 	c.CloudHost = NewCloudHostClient(c.config)
+	c.CloudProvider = NewCloudProviderClient(c.config)
 	c.Cluster = NewClusterClient(c.config)
 	c.User = NewUserClient(c.config)
 }
@@ -126,11 +130,12 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	cfg := c.config
 	cfg.driver = tx
 	return &Tx{
-		ctx:       ctx,
-		config:    cfg,
-		CloudHost: NewCloudHostClient(cfg),
-		Cluster:   NewClusterClient(cfg),
-		User:      NewUserClient(cfg),
+		ctx:           ctx,
+		config:        cfg,
+		CloudHost:     NewCloudHostClient(cfg),
+		CloudProvider: NewCloudProviderClient(cfg),
+		Cluster:       NewClusterClient(cfg),
+		User:          NewUserClient(cfg),
 	}, nil
 }
 
@@ -148,11 +153,12 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	cfg := c.config
 	cfg.driver = &txDriver{tx: tx, drv: c.driver}
 	return &Tx{
-		ctx:       ctx,
-		config:    cfg,
-		CloudHost: NewCloudHostClient(cfg),
-		Cluster:   NewClusterClient(cfg),
-		User:      NewUserClient(cfg),
+		ctx:           ctx,
+		config:        cfg,
+		CloudHost:     NewCloudHostClient(cfg),
+		CloudProvider: NewCloudProviderClient(cfg),
+		Cluster:       NewClusterClient(cfg),
+		User:          NewUserClient(cfg),
 	}, nil
 }
 
@@ -182,6 +188,7 @@ func (c *Client) Close() error {
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
 	c.CloudHost.Use(hooks...)
+	c.CloudProvider.Use(hooks...)
 	c.Cluster.Use(hooks...)
 	c.User.Use(hooks...)
 }
@@ -190,6 +197,7 @@ func (c *Client) Use(hooks ...Hook) {
 // In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
 func (c *Client) Intercept(interceptors ...Interceptor) {
 	c.CloudHost.Intercept(interceptors...)
+	c.CloudProvider.Intercept(interceptors...)
 	c.Cluster.Intercept(interceptors...)
 	c.User.Intercept(interceptors...)
 }
@@ -199,6 +207,8 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 	switch m := m.(type) {
 	case *CloudHostMutation:
 		return c.CloudHost.mutate(ctx, m)
+	case *CloudProviderMutation:
+		return c.CloudProvider.mutate(ctx, m)
 	case *ClusterMutation:
 		return c.Cluster.mutate(ctx, m)
 	case *UserMutation:
@@ -323,6 +333,124 @@ func (c *CloudHostClient) mutate(ctx context.Context, m *CloudHostMutation) (Val
 		return (&CloudHostDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
 	default:
 		return nil, fmt.Errorf("ent: unknown CloudHost mutation op: %q", m.Op())
+	}
+}
+
+// CloudProviderClient is a client for the CloudProvider schema.
+type CloudProviderClient struct {
+	config
+}
+
+// NewCloudProviderClient returns a client for the CloudProvider from the given config.
+func NewCloudProviderClient(c config) *CloudProviderClient {
+	return &CloudProviderClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `cloudprovider.Hooks(f(g(h())))`.
+func (c *CloudProviderClient) Use(hooks ...Hook) {
+	c.hooks.CloudProvider = append(c.hooks.CloudProvider, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `cloudprovider.Intercept(f(g(h())))`.
+func (c *CloudProviderClient) Intercept(interceptors ...Interceptor) {
+	c.inters.CloudProvider = append(c.inters.CloudProvider, interceptors...)
+}
+
+// Create returns a builder for creating a CloudProvider entity.
+func (c *CloudProviderClient) Create() *CloudProviderCreate {
+	mutation := newCloudProviderMutation(c.config, OpCreate)
+	return &CloudProviderCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of CloudProvider entities.
+func (c *CloudProviderClient) CreateBulk(builders ...*CloudProviderCreate) *CloudProviderCreateBulk {
+	return &CloudProviderCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for CloudProvider.
+func (c *CloudProviderClient) Update() *CloudProviderUpdate {
+	mutation := newCloudProviderMutation(c.config, OpUpdate)
+	return &CloudProviderUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *CloudProviderClient) UpdateOne(cp *CloudProvider) *CloudProviderUpdateOne {
+	mutation := newCloudProviderMutation(c.config, OpUpdateOne, withCloudProvider(cp))
+	return &CloudProviderUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *CloudProviderClient) UpdateOneID(id int) *CloudProviderUpdateOne {
+	mutation := newCloudProviderMutation(c.config, OpUpdateOne, withCloudProviderID(id))
+	return &CloudProviderUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for CloudProvider.
+func (c *CloudProviderClient) Delete() *CloudProviderDelete {
+	mutation := newCloudProviderMutation(c.config, OpDelete)
+	return &CloudProviderDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *CloudProviderClient) DeleteOne(cp *CloudProvider) *CloudProviderDeleteOne {
+	return c.DeleteOneID(cp.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *CloudProviderClient) DeleteOneID(id int) *CloudProviderDeleteOne {
+	builder := c.Delete().Where(cloudprovider.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &CloudProviderDeleteOne{builder}
+}
+
+// Query returns a query builder for CloudProvider.
+func (c *CloudProviderClient) Query() *CloudProviderQuery {
+	return &CloudProviderQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeCloudProvider},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a CloudProvider entity by its id.
+func (c *CloudProviderClient) Get(ctx context.Context, id int) (*CloudProvider, error) {
+	return c.Query().Where(cloudprovider.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *CloudProviderClient) GetX(ctx context.Context, id int) *CloudProvider {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *CloudProviderClient) Hooks() []Hook {
+	return c.hooks.CloudProvider
+}
+
+// Interceptors returns the client interceptors.
+func (c *CloudProviderClient) Interceptors() []Interceptor {
+	return c.inters.CloudProvider
+}
+
+func (c *CloudProviderClient) mutate(ctx context.Context, m *CloudProviderMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&CloudProviderCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&CloudProviderUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&CloudProviderUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&CloudProviderDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown CloudProvider mutation op: %q", m.Op())
 	}
 }
 
@@ -565,9 +693,9 @@ func (c *UserClient) mutate(ctx context.Context, m *UserMutation) (Value, error)
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		CloudHost, Cluster, User []ent.Hook
+		CloudHost, CloudProvider, Cluster, User []ent.Hook
 	}
 	inters struct {
-		CloudHost, Cluster, User []ent.Interceptor
+		CloudHost, CloudProvider, Cluster, User []ent.Interceptor
 	}
 )
