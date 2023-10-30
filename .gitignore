@@ -39,3 +39,6 @@ bin/
 
 
 cmd/kubecit/test.db
+./test.db
+./configs/config_dev.yaml
+

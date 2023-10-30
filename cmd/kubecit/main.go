@@ -2,18 +2,23 @@ package main
 
 import (
 	"flag"
+	"github.com/davecgh/go-spew/spew"
+	nacosconfig "github.com/go-kratos/kratos/contrib/config/nacos/v2"
+	"github.com/go-kratos/kratos/v2/config"
+	"github.com/go-kratos/kratos/v2/config/file"
+	"github.com/nacos-group/nacos-sdk-go/clients"
+	"github.com/nacos-group/nacos-sdk-go/vo"
 	"os"
+	"strings"
 
 	"kubecit/internal/conf"
 
 	"github.com/go-kratos/kratos/v2"
-	"github.com/go-kratos/kratos/v2/config"
-	"github.com/go-kratos/kratos/v2/config/file"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/tracing"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
-
+	"github.com/nacos-group/nacos-sdk-go/common/constant"
 	_ "go.uber.org/automaxprocs"
 )
 
@@ -58,30 +63,95 @@ func main() {
 		"trace.id", tracing.TraceID(),
 		"span.id", tracing.SpanID(),
 	)
-	c := config.New(
-		config.WithSource(
-			file.NewSource(flagconf),
-		),
-	)
-	defer c.Close()
 
-	if err := c.Load(); err != nil {
-		panic(err)
+	if !strings.Contains(flagconf, "local") {
+
+		c := config.New(
+			config.WithSource(
+				file.NewSource(flagconf),
+			),
+		)
+		defer c.Close()
+
+		if err := c.Load(); err != nil {
+			panic(err)
+		}
+
+		var bct conf.RemoteStrap
+		if err := c.Scan(&bct); err != nil {
+			panic(err)
+		}
+
+		cc := constant.ClientConfig{
+			NamespaceId:         bct.Nacos.Namespace,
+			TimeoutMs:           5000,
+			NotLoadCacheAtStart: true,
+			LogDir:              "/tmp/nacos/log",
+			CacheDir:            "/tmp/nacos/cache",
+			LogLevel:            "debug",
+		}
+
+		client, err := clients.NewConfigClient(
+			vo.NacosClientParam{
+				ClientConfig: &cc,
+				ServerConfigs: []constant.ServerConfig{
+					*constant.NewServerConfig(bct.Nacos.Ip, bct.Nacos.Port),
+				},
+			},
+		)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		ccc := config.New(config.WithSource(nacosconfig.NewConfigSource(client, nacosconfig.WithGroup(bct.Nacos.Group), nacosconfig.WithDataID(bct.Nacos.DataId))))
+		defer ccc.Close()
+
+		if err := ccc.Load(); err != nil {
+			panic(err)
+		}
+		var bc conf.Bootstrap
+		if err := ccc.Scan(&bc); err != nil {
+			panic(err)
+		}
+
+		spew.Dump(bc)
+		app, cleanup, err := wireApp(bc.Server, bc.Data, logger)
+		if err != nil {
+			panic(err)
+		}
+		defer cleanup()
+
+		// start and wait for stop signal
+		if err := app.Run(); err != nil {
+			panic(err)
+		}
+
+	} else {
+		c := config.New(
+			config.WithSource(
+				file.NewSource(flagconf),
+			),
+		)
+		defer c.Close()
+
+		if err := c.Load(); err != nil {
+			panic(err)
+		}
+
+		var bc conf.Bootstrap
+		if err := c.Scan(&bc); err != nil {
+			panic(err)
+		}
+		app, cleanup, err := wireApp(bc.Server, bc.Data, logger)
+		if err != nil {
+			panic(err)
+		}
+		defer cleanup()
+
+		// start and wait for stop signal
+		if err := app.Run(); err != nil {
+			panic(err)
+		}
 	}
 
-	var bc conf.Bootstrap
-	if err := c.Scan(&bc); err != nil {
-		panic(err)
-	}
-
-	app, cleanup, err := wireApp(bc.Server, bc.Data, logger)
-	if err != nil {
-		panic(err)
-	}
-	defer cleanup()
-
-	// start and wait for stop signal
-	if err := app.Run(); err != nil {
-		panic(err)
-	}
 }

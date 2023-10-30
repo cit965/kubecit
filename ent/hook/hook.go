@@ -20,6 +20,18 @@ func (f CloudHostFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, e
 	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.CloudHostMutation", m)
 }
 
+// The CloudProviderFunc type is an adapter to allow the use of ordinary
+// function as CloudProvider mutator.
+type CloudProviderFunc func(context.Context, *ent.CloudProviderMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f CloudProviderFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.CloudProviderMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.CloudProviderMutation", m)
+}
+
 // The ClusterFunc type is an adapter to allow the use of ordinary
 // function as Cluster mutator.
 type ClusterFunc func(context.Context, *ent.ClusterMutation) (ent.Value, error)

@@ -4,6 +4,7 @@ package ent
 
 import (
 	"kubecit/ent/cloudhost"
+	"kubecit/ent/cloudprovider"
 	"kubecit/ent/cluster"
 	"kubecit/ent/schema"
 	"kubecit/ent/user"
@@ -23,6 +24,12 @@ func init() {
 	cloudhostDescVpcId := cloudhostFields[1].Descriptor()
 	// cloudhost.VpcIdValidator is a validator for the "vpcId" field. It is called by the builders before save.
 	cloudhost.VpcIdValidator = cloudhostDescVpcId.Validators[0].(func(string) error)
+	cloudproviderFields := schema.CloudProvider{}.Fields()
+	_ = cloudproviderFields
+	// cloudproviderDescKey is the schema descriptor for key field.
+	cloudproviderDescKey := cloudproviderFields[0].Descriptor()
+	// cloudprovider.DefaultKey holds the default value on creation for the key field.
+	cloudprovider.DefaultKey = cloudproviderDescKey.Default.(string)
 	clusterFields := schema.Cluster{}.Fields()
 	_ = clusterFields
 	// clusterDescKubeconfig is the schema descriptor for kubeconfig field.

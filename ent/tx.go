@@ -14,6 +14,8 @@ type Tx struct {
 	config
 	// CloudHost is the client for interacting with the CloudHost builders.
 	CloudHost *CloudHostClient
+	// CloudProvider is the client for interacting with the CloudProvider builders.
+	CloudProvider *CloudProviderClient
 	// Cluster is the client for interacting with the Cluster builders.
 	Cluster *ClusterClient
 	// User is the client for interacting with the User builders.
@@ -150,6 +152,7 @@ func (tx *Tx) Client() *Client {
 
 func (tx *Tx) init() {
 	tx.CloudHost = NewCloudHostClient(tx.config)
+	tx.CloudProvider = NewCloudProviderClient(tx.config)
 	tx.Cluster = NewClusterClient(tx.config)
 	tx.User = NewUserClient(tx.config)
 }
