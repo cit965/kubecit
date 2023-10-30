@@ -1,6 +1,8 @@
 GOHOSTOS:=$(shell go env GOHOSTOS)
 GOPATH:=$(shell go env GOPATH)
 VERSION=$(shell git describe --tags --always)
+PROJECT_NAME := $(shell go list -m)
+EXECUTABLE_NAME := $(shell basename $(PROJECT_NAME))
 
 ifeq ($(GOHOSTOS), windows)
 	#the `find.exe` is different from `find` in bash/shell.
@@ -51,8 +53,11 @@ build:
 
 .PHONY: run
 run: build
-	kratos run
+	./bin/$(EXECUTABLE_NAME) -conf "./configs/config_local.yaml"
 
+.PHONY: run
+rundev: build
+	./bin/$(EXECUTABLE_NAME) -conf "./configs/config_dev.yaml"
 
 .PHONY: test
 test:

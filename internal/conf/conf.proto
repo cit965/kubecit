@@ -10,6 +10,19 @@ message Bootstrap {
   Data data = 2;
 }
 
+
+message RemoteStrap {
+  Nacos nacos = 1;
+}
+
+message Nacos {
+  string ip = 1;
+  uint64 port = 2;
+  string group = 3;
+  string dataId = 4;
+  string namespace = 5;
+}
+
 message Server {
   message HTTP {
     string network = 1;
